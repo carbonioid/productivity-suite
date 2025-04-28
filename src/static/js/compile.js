@@ -1,16 +1,16 @@
-export { addElement, editElement, startup };
+export { addElement, editElement, load };
 import { registerElement } from "./ui.js";
 import { displayError } from "./error.js";
 
-async function startup() {
+async function load(scope) {
   /*
-  Populate the page from a saved file on startup
+  Populate part of all of the page from the given scope.
   */
   await fetch("/data",  {
     method: "GET",
     headers: {
       'Content-Type': 'application/json',
-      'Scope': '*'
+      'Scope': scope
     }
   }).then(response => {
     return response.json()
@@ -21,15 +21,21 @@ async function startup() {
 
       // Add a new container to the parent container for this day
       let parent = document.querySelector('.parent-container');
-      parent.insertAdjacentHTML("beforeend", `<div class="container" id="${name}"></div>`);
-      let new_obj = parent.lastElementChild;
 
-      // Give the container a title
-      new_obj.insertAdjacentHTML("beforeend", `<p class="day-title">${name}</p><br>`)
+      let target_obj = null;
+      if (document.getElementById(name) == null) { // If the element doesn't already exist
+        parent.insertAdjacentHTML("beforeend", `<div class="container" id="${name}"><p class="day-title">${name}</p></div>`);
+        target_obj = parent.lastElementChild;
+        console.log(target_obj);
+      } else {
+        target_obj = parent.querySelector(`[id=\"${name}\"]`);
+        target_obj.outerHTML = `<div class="container" id="${name}"><p class="day-title">${name}</p> </div>`;
+        target_obj = parent.querySelector(`[id=\"${name}\"]`); // Reselect to reflect changes.
+      }
 
       // Then add all the day's elements into the new flexbox
       entries.forEach(row => {
-        loadElementIntoHTML(row['id'], row['name'], row['start'], row['end'], row['color'], new_obj);
+        loadElementIntoHTML(row['id'], row['name'], row['start'], row['end'], row['color'], target_obj);
       })
     })
   })
@@ -68,6 +74,21 @@ function createElementHTML(id, name, start, end, color) {
   return element;
 }
 
+function loadElementIntoHTML(id, name, start, end, color, container) {
+  /*
+  Add element HTML with the passed data to the correct container (i.e., day)
+  */
+
+  console.log(`Adding into`)
+  console.log(container)
+  let element = createElementHTML(id, name, start, end, color);
+
+  container.insertAdjacentHTML('beforeend', element);
+
+  let new_elem = container.lastElementChild;
+  registerElement(new_elem);
+}
+
 async function addElement(name, start, end, color, day=null) {
   /*
   More general add-element which takes care of the entire process.
@@ -93,28 +114,13 @@ async function addElement(name, start, end, color, day=null) {
   })
 
   if (response.status == 201) {
-    // The first parameter is the ID that was passed to us by the backend
-    loadElementIntoHTML(Number(await response.text()), name, start, end, color, document
-      .querySelector('.parent-container').querySelector(`[id=\"${day}\"]`));
+    // Update this change by re-loading the day we just added to
+    load(day)
 
     return true
   } else {
     return (await response.text()) // return the erro so form.js can deal with it.
   }
-
-}
-
-function loadElementIntoHTML(id, name, start, end, color, container) {
-  /*
-  Add element HTML with the passed data to the correct container (i.e., day)
-  */
-
-  let element = createElementHTML(id, name, start, end, color);
-
-  container.insertAdjacentHTML('beforeend', element);
-
-  let new_elem = container.lastElementChild;
-  registerElement(new_elem);
 }
 
 async function editElement(id, name, start, end, color, day) {
@@ -135,12 +141,8 @@ async function editElement(id, name, start, end, color, day) {
   })
   .then(async function(response) {
     if (response.status == 201) {
-      // The first parameter is the ID that was passed to us by the backend
-      editElementInHTML(id, name, start, end, color, document.querySelector('.parent-container').querySelector(`[id=\"${day}\"]`));
-
-      // Set the start value to the current value of end - QoL.
-      // TODO: reset to previous form content
-      // TODO: remove `editing:x,y` from form
+      // Update this change by re-loading the day we just edited
+      load(day)
     } else {
       displayError(await response.text());
     }

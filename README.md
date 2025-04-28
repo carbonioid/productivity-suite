@@ -3,4 +3,4 @@ Simple timetracker made in JS and Python. Made mostly for personal use, but you'
 
 > Controls: Add items to your day using the form at the top; Double click on items to edit them.
 
-To use, run `python3 app.py` then access at `127.0.0.1:8000`
+To use, run `python3 src/app.py` then access at `127.0.0.1:8000`
