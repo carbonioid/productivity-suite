@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<head>
+    <title>Squee</title>
+    <link href="{{ url_for('static', filename='styles.css') }}" rel="stylesheet">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+
+    <script src="{{ url_for('static', filename='js/compile.js') }}" type="module"></script>
+    <script src="{{ url_for('static', filename='js/form.js') }}" type="module"></script>
+    <script src="{{ url_for('static', filename='js/error.js') }}" type="module"></script>
+    <script src="{{ url_for('static', filename='js/ui.js') }}" type="module"></script>
+
+    <script src="{{ url_for('static', filename='js/run.js') }}" type="module"></script>
+
+</head>
+<html>
+    <body>
+        <p class="editing-indicator soft-hidden">editing - <a class="editing-exit-button">exit</a></p>
+        <form class="form-body" action="#" data-mode="add">
+            <input type="submit" class="mono add-btn" value="+">
+            <input class="mono" type="text" placeholder="Activity name" style="width:15rem;" id="name">
+            <p>from</p>
+            <input class="mono" type="time" style="width:3rem;" id="start">
+            <p>to</p>
+            <input class="mono" type="time" style="width:3rem;" id="end">
+            <div class="tag-select">
+                <input type="radio" name="tag" class="tag" style="--col:220, 220, 220" checked id="default-tag">
+                <input type="radio" name="tag" class="tag" style="--col:219, 43, 78">
+                <input type="radio" name="tag" class="tag" style="--col:241, 154, 200">
+                <input type="radio" name="tag" class="tag" style="--col:250, 159, 78">
+                <input type="radio" name="tag" class="tag" style="--col:242, 207, 31">
+                <input type="radio" name="tag" class="tag" style="--col:127, 210, 81">
+                <input type="radio" name="tag" class="tag" style="--col:115, 191, 250">
+                <input type="radio" name="tag" class="tag" style="--col:18, 72, 161">
+                <input type="radio" name="tag" class="tag" style="--col:141, 96, 191">
+            </div>
+        </form>
+
+        <div class="display-form">
+            <input type="checkbox" id="show-others">
+            <label for="show-others">Hide other days</label>
+            <br>
+            <input type="checkbox" id="compact-mode">
+            <label for="compact">Compact layout</label>
+        </div>
+
+        <div class="parent-container"></div>
+        <div class="errorbox hidden"></div>
+    </body>
+</html>
