@@ -2,6 +2,7 @@ import os
 import traceback
 from flask import Flask, render_template, request, Response, jsonify
 from database import fetch_db_contents, add_row, edit_row, delete_row
+from utils import hhmm_to_minutes, time_validation
 
 app = Flask(__name__)
 
@@ -24,6 +25,9 @@ def upload():
 
     if '' in values:
         return Response(response='One or more of your fields is blank', status=400)
+
+    if not time_validation(json['start'], json['end']):
+        return Response(response="The times you inputted aren't valid.", status=400)
 
     try:
         new_id = add_row(filename, *values)
@@ -101,9 +105,7 @@ def fetch_data():
 
     return jsonify(fetch_db_contents(scope))
 
-# TODO: esc exists editing mode
-# TODO: better time validation (serverside) and placement (probably also serverside) - rigid mode
-# TODO: better day ordering (current day on top?)
+# TODO: rigid placement mode
 # TODO: adds new file each new day
 # TODO: pie chart of each tag per day (+general per-day info)
 # TODO: identical names merge into same element - this happens on backend as adding is now handled by backend too via /data
