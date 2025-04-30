@@ -130,10 +130,8 @@ function addFormListeners() {
 
   // Listener for ctrl-equals - sets "end" value to the current time (even if already set) - for me, the power user.
   // Only activates when one of the form elements is selected (hence the forEach)
-  const form_inputs = form.querySelectorAll('input');
-  form_inputs.forEach(input => {
-    input.addEventListener('keyup', function (event) {
-      if (event.ctrlKey && event.key == '=') {
+  document.addEventListener('keyup', async function (event) {
+      if (event.ctrlKey && event.key === ' ') {
         // Get curent date in HH:mm
         const now = new Date();
         const hours = String(now.getHours()).padStart(2, '0');
@@ -143,8 +141,11 @@ function addFormListeners() {
         // Set it in the form.
         setFormContent(null, null, currentTime, null);
       }
+      else if (event.key === 'Escape') {
+        // Exit editing mode on escape key press
+        exitEditMode();
+      }
     })
-  });
 
   form.addEventListener("submit", async function (event) {
     event.preventDefault();

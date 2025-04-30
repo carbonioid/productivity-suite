@@ -1,4 +1,4 @@
 env/
 .ropeproject
 res/*
-__pycache__
+src/__pycache__
