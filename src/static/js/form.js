@@ -2,7 +2,7 @@
 This file handles the main form of the page. Some functionality is exported to ui.js
 */
 
-import { addElement, editElement } from "./compile.js";
+import { addElement, editElement, deleteElement } from "./compile.js";
 import { displayError } from "./error.js";
 export { addFormListeners, registerEditing }
 
@@ -114,7 +114,11 @@ async function submitForm() {
     let day_name = editing_info[0];
     let id = editing_info[1];
 
-    editElement(id, name, start, end, color, day_name);
+    if (name !== "") {
+      editElement(id, name, start, end, color, day_name);
+    } else {
+      deleteElement(id, day_name);
+    }
 
     console.log(`Editing ${id} at ${day_name}`);
     exitEditMode();
@@ -144,7 +148,6 @@ function addFormListeners() {
 
   form.addEventListener("submit", async function (event) {
     event.preventDefault();
-    console.log(event.shiftKey);
     await submitForm();
   });
 

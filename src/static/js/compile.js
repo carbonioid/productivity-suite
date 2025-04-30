@@ -1,4 +1,4 @@
-export { addElement, editElement, load };
+export { addElement, editElement, deleteElement, load };
 import { registerElement } from "./ui.js";
 import { displayError } from "./error.js";
 
@@ -26,7 +26,6 @@ async function load(scope) {
       if (document.getElementById(name) == null) { // If the element doesn't already exist
         parent.insertAdjacentHTML("beforeend", `<div class="container" id="${name}"><p class="day-title">${name}</p></div>`);
         target_obj = parent.lastElementChild;
-        console.log(target_obj);
       } else {
         target_obj = parent.querySelector(`[id=\"${name}\"]`);
         target_obj.outerHTML = `<div class="container" id="${name}"><p class="day-title">${name}</p> </div>`;
@@ -53,7 +52,8 @@ function format_mins(mins) {
   let hours = Math.floor(mins / 60);
   let minutes = mins % 60;
 
-  if (hours > 0) {  return `${hours}h${minutes}m`; }
+  if (hours > 0 && minutes > 0) {  return `${hours}h${minutes}m`; }
+  else if (hours > 0 && minutes == 0) { return `${hours}h`; }
   else { return `${minutes}m`; }
 }
 
@@ -79,8 +79,6 @@ function loadElementIntoHTML(id, name, start, end, color, container) {
   Add element HTML with the passed data to the correct container (i.e., day)
   */
 
-  console.log(`Adding into`)
-  console.log(container)
   let element = createElementHTML(id, name, start, end, color);
 
   container.insertAdjacentHTML('beforeend', element);
@@ -146,20 +144,44 @@ async function editElement(id, name, start, end, color, day) {
     } else {
       displayError(await response.text());
     }
-  })}
-
-function editElementInHTML(id, name, start, end, color, container) {
-  /*
-  Add element HTML with the passed data to the correct container (i.e., day)
-  */
-
-  let elementHTML = createElementHTML(id, name, start, end, color);
-  let target = container.querySelector(`[id=\"${id}\"]`);
-
-  target.outerHTML = elementHTML; // Update element HTML
-
-  // We have to get this again bedcause we just changed it and our element is now out of date.
-  target = container.querySelector(`[id=\"${id}\"]`);
-
-  registerElement(target);
+  })
 }
+
+async function deleteElement(id, day) {
+  var data = JSON.stringify({
+    "id": id,
+  });
+  await fetch("/delete",  {
+    method: "POST",
+    headers: {
+      'Content-Type': 'application/json',
+      'File': day
+    },
+    body: data
+  })
+  .then(async function(response) {
+    if (response.status == 201) {
+      // Update this change by re-loading the day we just edited
+      load(day)
+    } else {
+      displayError(await response.text());
+    }
+  })
+}
+
+
+// function editElementInHTML(id, name, start, end, color, container) {
+//   /*
+//   Add element HTML with the passed data to the correct container (i.e., day)
+//   */
+
+//   let elementHTML = createElementHTML(id, name, start, end, color);
+//   let target = container.querySelector(`[id=\"${id}\"]`);
+
+//   target.outerHTML = elementHTML; // Update element HTML
+
+//   // We have to get this again bedcause we just changed it and our element is now out of date.
+//   target = container.querySelector(`[id=\"${id}\"]`);
+
+//   registerElement(target);
+// }

@@ -1,7 +1,7 @@
 import os
 import traceback
 from flask import Flask, render_template, request, Response, jsonify
-from database import fetch_db_contents, add_row, edit_row
+from database import fetch_db_contents, add_row, edit_row, delete_row
 
 app = Flask(__name__)
 
@@ -36,7 +36,7 @@ def upload():
         return Response(response=f'Something went wrong: {e} (code 500); more info: {traceback.format_exc()}', status=500)
 
 @app.route("/edit", methods=["POST"])
-def update_db():
+def update_item():
     """
     Takes:
     headers:
@@ -48,7 +48,6 @@ def update_db():
         }
     And updates this element in the DB.
     Returns 400 if id/file doesn't exist, 500 if an unknown error occurs, and 201 if the resource was successfully edited.
-    If "name" is empty, the entry is deleted.
     """
     json = request.get_json()
     filename = request.headers['File']
@@ -58,6 +57,30 @@ def update_db():
 
     try:
         outcome = edit_row(filename, *json.values())
+        if outcome is None: return Response(response=f'The specified day ({filename}) does not exist.', status=400)
+        else: return Response(status=201)
+
+    except Exception as e:
+        return Response(response=f'Something went wrong: {e}', status=500)
+
+@app.route("/delete", methods=["POST"])
+def delete_item():
+    """
+    Takes:
+    headers:
+        "File": <filename w/o extension e.g. 24-apr> (in header)
+    body:
+        {
+            "id": <id of element to change>,
+        }
+    And updates this element in the DB.
+    Returns 400 if file doesn't exist, 500 if an unknown error occurs (or the id is invalid), and 201 if the resource was successfully edited.
+    """
+    json = request.get_json()
+    filename = request.headers['File']
+
+    try:
+        outcome = delete_row(filename, json['id'])
         if outcome is None: return Response(response=f'The specified day ({filename}) does not exist.', status=400)
         else: return Response(status=201)
 
@@ -78,13 +101,14 @@ def fetch_data():
 
     return jsonify(fetch_db_contents(scope))
 
-# TODO: deleting should be its own thing and not in /edit
 # TODO: esc exists editing mode
-# TODO: better time validation (serverside) and placement (probably also serverside)
+# TODO: better time validation (serverside) and placement (probably also serverside) - rigid mode
+# TODO: better day ordering (current day on top?)
 # TODO: adds new file each new day
-# TODO: allow deletion of entire day (?)
+# TODO: pie chart of each tag per day (+general per-day info)
 # TODO: identical names merge into same element - this happens on backend as adding is now handled by backend too via /data
 # TODO: make tags less dumb (don't rely on colors rather ids probably)
 # TODO: realtime visualistaion of what you're adding?
-# TODO: pie chart of each tag per day (+general per-day info)
+# TODO: make some documentation
+# TODO: clean-up database stuff - add common function for db writing and validation
 app.run(port=8000)

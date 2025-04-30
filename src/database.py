@@ -49,7 +49,7 @@ def add_row(filename, name, start, end, color):
 
 def edit_row(filename, id, new_name, new_start, new_end, new_color):
     filepath = f'res/{filename}.csv'
-    print(filepath)
+
     if not os.path.exists(filepath): return None
 
     # It is not convenient ot edit specific lines in a CSV file directly, so we will
@@ -61,6 +61,26 @@ def edit_row(filename, id, new_name, new_start, new_end, new_color):
             if row[0] == str(id):
                 new_file.append([id, new_name, new_start, new_end, new_color])
             else:
+                new_file.append(list(row))
+
+    # Now it has been constructed, write to disk
+    with open(filepath, 'w', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerows(new_file)
+
+    return True
+
+def delete_row(filename, id):
+    filepath = f'res/{filename}.csv'
+
+    if not os.path.exists(filepath): return None
+
+    # Iterate through and add items to a new file, except the deleted row.
+    with open(filepath, 'r') as file:
+        reader = csv.reader(file, delimiter=',')
+        new_file = [] # List of rows
+        for row in reader:
+            if row[0] != str(id):
                 new_file.append(list(row))
 
     # Now it has been constructed, write to disk
