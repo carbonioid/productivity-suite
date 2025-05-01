@@ -1,8 +1,10 @@
 import csv, os
+from utils import hhmm_to_minutes
 
 def fetch_db_contents(scope):
     """
     Takes scope as list of filenames and returns their contents in neatly formatted JSON to be passed to the frontend.
+    Sorts them in order of start time.
     Returns None if one of the files doesn't exist.
     """
 
@@ -27,7 +29,7 @@ def fetch_db_contents(scope):
 
         # Take only file name - e.g. just "24-apr" from "24-apr.csv" for the entry in the json
         name = os.path.splitext(filename)[0]
-        final_json[name] = file_json
+        final_json[name] = sorted(file_json, key=lambda x: hhmm_to_minutes(x['start']))
 
     return final_json
 

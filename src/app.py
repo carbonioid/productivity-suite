@@ -114,8 +114,6 @@ def fetch_data():
     else:
         return Response('The Scope that you supplied was invalid.', status=400)
 
-# TODO: format strings with Date(day, month).toLocaleString()
-# TODO: better day ordering
 # TODO: rigid placement mode
 # TODO: flask default error handling?
 # TODO: make tags less dumb (don't rely on colors rather ids probably - red, blue etc)

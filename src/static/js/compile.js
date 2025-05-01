@@ -26,7 +26,8 @@ async function load(scope) {
   }).then(response => {
     return response.json()
   }).then(data => {
-    Object.entries(data).forEach(day => {
+    // This syntactic mess reverses the object
+    [...Object.entries(data)].reverse().forEach(day => {
       let name = day[0];
       let entries = day[1];
 
