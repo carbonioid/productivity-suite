@@ -2,12 +2,18 @@ import os
 import traceback
 from flask import Flask, render_template, request, Response, jsonify
 from database import fetch_db_contents, add_row, edit_row, delete_row
-from utils import hhmm_to_minutes, time_validation
+from utils import hhmm_to_minutes, time_validation, add_new_file_if_needed
 
 app = Flask(__name__)
 
 @app.route("/")
 def main():
+    """
+    Main route for the website. Renders the website and also runs additional checks on load:
+        (1) Adds a new day file if one currently doesn't exist
+    """
+    add_new_file_if_needed() # (1)
+
     return render_template("index.html")
 
 # This part of the code keeps a live, up-to-date version of the current data on-screen
@@ -102,14 +108,19 @@ def fetch_data():
     else:
         scope = scope.split(',')
 
+    data = fetch_db_contents(scope)
+    if data is not None:
+        return jsonify(data)
+    else:
+        return Response('The Scope that you supplied was invalid.', status=400)
 
-    return jsonify(fetch_db_contents(scope))
-
+# TODO: format strings with Date(day, month).toLocaleString()
+# TODO: better day ordering
 # TODO: rigid placement mode
-# TODO: adds new file each new day
+# TODO: flask default error handling?
+# TODO: make tags less dumb (don't rely on colors rather ids probably - red, blue etc)
 # TODO: pie chart of each tag per day (+general per-day info)
 # TODO: identical names merge into same element - this happens on backend as adding is now handled by backend too via /data
-# TODO: make tags less dumb (don't rely on colors rather ids probably)
 # TODO: realtime visualistaion of what you're adding?
 # TODO: make some documentation
 # TODO: clean-up database stuff - add common function for db writing and validation

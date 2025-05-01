@@ -2,6 +2,17 @@ export { addElement, editElement, deleteElement, load };
 import { registerElement } from "./ui.js";
 import { displayError } from "./error.js";
 
+function format_yyyymmdd(string) {
+  let [year, month, day] = string.split('-');
+  // We ignore the year for now
+  const months = [
+    "Jan", "Feb", "Mar", "Apr", "May", "June",
+    "July", "Aug", "Sept", "Oct", "Nov", "Dec"
+  ];
+  month = months[Number(month)]
+  return `${Number(day)} ${month}`
+}
+
 async function load(scope) {
   /*
   Populate part of all of the page from the given scope.
@@ -23,12 +34,13 @@ async function load(scope) {
       let parent = document.querySelector('.parent-container');
 
       let target_obj = null;
+      let initial_html = `<div class="container" id="${name}"><p class="day-title">${format_yyyymmdd(name)}</p></div>`;
       if (document.getElementById(name) == null) { // If the element doesn't already exist
-        parent.insertAdjacentHTML("beforeend", `<div class="container" id="${name}"><p class="day-title">${name}</p></div>`);
+        parent.insertAdjacentHTML("beforeend", initial_html);
         target_obj = parent.lastElementChild;
       } else {
         target_obj = parent.querySelector(`[id=\"${name}\"]`);
-        target_obj.outerHTML = `<div class="container" id="${name}"><p class="day-title">${name}</p> </div>`;
+        target_obj.outerHTML = initial_html;
         target_obj = parent.querySelector(`[id=\"${name}\"]`); // Reselect to reflect changes.
       }
 

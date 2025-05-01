@@ -10,6 +10,7 @@ def fetch_db_contents(scope):
     for filename in scope: # Iterate through each day
         file_json = []
         filepath = f'res/{filename}.csv'
+        if not os.path.exists(filepath): return None
 
         with open(filepath, 'r') as file:
             reader = csv.reader(file)

@@ -9,8 +9,6 @@ when the file is loaded, to avoid any loading order conflicts etc.
 
 await load('*') // Scope: * (all)
 
-await load('25-apr') // Scope: * (all)
-
 addFormListeners()
 
 // Dummy-run these to reflect any saved user  preferences
