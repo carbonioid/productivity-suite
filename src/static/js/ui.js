@@ -2,7 +2,7 @@
 This file handles the main UI of the page, except the form. That is managed by form.js and some of its functionality is impoted here.
 */
 
-export { registerElement, showOthers, compactMode }
+export { registerElement, registerPopup, showOthers, compactMode, rigidMode }
 import { registerEditing } from "./form.js"
 /*
 These are the options and functions that add event listeners to the main container items.
@@ -73,7 +73,7 @@ document.querySelector('#show-others').addEventListener('click', (event) => { sh
 
 function compactMode() {
   let obj = document.querySelector('#compact-mode')
-  let days = Array.from(document.querySelector('.parent-container').children); // Do not include last element
+  let days = Array.from(document.querySelector('.parent-container').children);
   days.forEach(day => {
     if (obj.checked) { day.classList.remove("padded-container"); }
     else             { day.classList.add("padded-container"); }
@@ -81,3 +81,18 @@ function compactMode() {
 }
 
 document.querySelector('#compact-mode').addEventListener('click', (event) => { compactMode(); })
+
+function rigidMode() {
+  let obj = document.querySelector('#rigid-mode')
+  let days = Array.from(document.querySelector('.parent-container').children); // Do not include last element
+  days.forEach(day => {
+    Array.from(day.children).forEach(item => {
+      if (item.classList.contains("pad-item")) { // We only do this for padding items
+        if (obj.checked) { item.classList.remove("hidden"); }
+        else { item.classList.add("hidden"); }
+      }
+    })
+  })
+}
+
+document.querySelector('#rigid-mode').addEventListener('click', (event) => { rigidMode(); })

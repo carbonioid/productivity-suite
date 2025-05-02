@@ -1,5 +1,5 @@
 export { addElement, editElement, deleteElement, load };
-import { registerElement } from "./ui.js";
+import { registerElement, registerPopup } from "./ui.js";
 import { displayError } from "./error.js";
 
 function format_yyyymmdd(string) {
@@ -11,46 +11,6 @@ function format_yyyymmdd(string) {
   ];
   month = months[Number(month)]
   return `${Number(day)} ${month}`
-}
-
-async function load(scope) {
-  /*
-  Populate part of all of the page from the given scope.
-  */
-  await fetch("/data",  {
-    method: "GET",
-    headers: {
-      'Content-Type': 'application/json',
-      'Scope': scope
-    }
-  }).then(response => {
-    return response.json()
-  }).then(data => {
-    // This syntactic mess reverses the object
-    [...Object.entries(data)].reverse().forEach(day => {
-      let name = day[0];
-      let entries = day[1];
-
-      // Add a new container to the parent container for this day
-      let parent = document.querySelector('.parent-container');
-
-      let target_obj = null;
-      let initial_html = `<div class="container" id="${name}"><p class="day-title">${format_yyyymmdd(name)}</p></div>`;
-      if (document.getElementById(name) == null) { // If the element doesn't already exist
-        parent.insertAdjacentHTML("beforeend", initial_html);
-        target_obj = parent.lastElementChild;
-      } else {
-        target_obj = parent.querySelector(`[id=\"${name}\"]`);
-        target_obj.outerHTML = initial_html;
-        target_obj = parent.querySelector(`[id=\"${name}\"]`); // Reselect to reflect changes.
-      }
-
-      // Then add all the day's elements into the new flexbox
-      entries.forEach(row => {
-        loadElementIntoHTML(row['id'], row['name'], row['start'], row['end'], row['color'], target_obj);
-      })
-    })
-  })
 }
 
 function string_to_mins(s) {
@@ -70,12 +30,69 @@ function format_mins(mins) {
   else { return `${minutes}m`; }
 }
 
-function createElementHTML(id, name, start, end, color) {
+async function load(scope) {
+  /*
+  Populate part of all of the page from the given scope.
+  */
+  await fetch("/data",  {
+    method: "GET",
+    headers: {
+      'Content-Type': 'application/json',
+      'Scope': scope
+    }
+  }).then(response => {
+    return response.json()
+  }).then(data => {
+    // This syntactic mess reverses the object
+    let days = [...Object.entries(data)].reverse();
+    days.forEach(day => {
+      let name = day[0];
+      let entries = day[1];
+
+      // Add a new container to the parent container for this day
+      let parent = document.querySelector('.parent-container');
+
+      let target_obj = null;
+      let classes = "container"
+      if (!document.querySelector('#compact-mode').checked) {classes += " padded-container"}
+      let initial_html = `<div class="${classes}" id="${name}"><p class="day-title">${format_yyyymmdd(name)}</p></div>`;
+
+      if (document.getElementById(name) == null) { // If the element doesn't already exist
+        parent.insertAdjacentHTML("beforeend", initial_html);
+        target_obj = parent.lastElementChild;
+      } else {
+        target_obj = parent.querySelector(`[id=\"${name}\"]`);
+        target_obj.outerHTML = initial_html;
+        target_obj = parent.querySelector(`[id=\"${name}\"]`); // Reselect to reflect changes.
+      }
+
+      // Then add all the day's elements into the new flexbox.
+      if (entries.length > 0) {
+        let prev_end = entries[0]['start']
+        entries.forEach(row => {
+          // First, if there is an unaccounted gap between the end of the last element and the start of this (time that wasn't stracked)
+          // we add a buffer element to accoutn for it.
+          if (prev_end !== row['start']) {
+            loadPadItem(prev_end, row['start'], target_obj);
+          }
+          loadItem(row['id'], row['name'], row['start'], row['end'], row['color'], target_obj);
+
+          prev_end = row['end']
+        })
+      }
+    })
+  })
+}
+
+function loadItem(id, name, start, end, color, container) {
+  /*
+  Add element HTML with the passed data to the correct container (i.e., day)
+  */
   let start_mins = string_to_mins(start);
   let end_mins = string_to_mins(end);
   let duration = end_mins - start_mins;
 
-  let element = `
+  let html = `
   <div class="item" style="--col:${color}; --f:${duration};" data-api-info="${name}\\${start}\\${end}\\${color}" id="${id}">
     <p class="heading">${name}</p>
     <div class="mono popup hover-popup">
@@ -84,20 +101,30 @@ function createElementHTML(id, name, start, end, color) {
       <p>${format_mins(duration)}</p>
     </div>
   </div>`;
-  return element;
-}
 
-function loadElementIntoHTML(id, name, start, end, color, container) {
-  /*
-  Add element HTML with the passed data to the correct container (i.e., day)
-  */
-
-  let element = createElementHTML(id, name, start, end, color);
-
-  container.insertAdjacentHTML('beforeend', element);
+  container.insertAdjacentHTML('beforeend', html);
 
   let new_elem = container.lastElementChild;
   registerElement(new_elem);
+}
+
+function loadPadItem(start, end, container) {
+  let start_mins = string_to_mins(start);
+  let end_mins = string_to_mins(end);
+  let duration = end_mins - start_mins;
+
+  let html = `
+  <div class="pad-item hidden" style="--f:${duration};">
+    <div class="mono popup hover-popup">
+      <p>${start} - ${end}</p>
+      <p>${format_mins(duration)}</p>
+    </div>
+  </div>`;
+
+  container.insertAdjacentHTML('beforeend', html);
+
+  let new_elem = container.lastElementChild;
+  registerPopup(new_elem);
 }
 
 async function addElement(name, start, end, color, day=null) {
@@ -106,7 +133,7 @@ async function addElement(name, start, end, color, day=null) {
   Returns True is succesful, the error message otherwise.
   */
 
-  if (day === null) {day = document.querySelector('.parent-container').lastElementChild.id}
+  if (day === null) {day = document.querySelector('.parent-container').firstElementChild.id}
   // Prompt backend with new info using fetch()
   var data = JSON.stringify({
     "name": name,

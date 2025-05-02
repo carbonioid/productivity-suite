@@ -45,6 +45,10 @@ div.item {
     user-select: none;
 }
 
+div.pad-item {
+    flex: var(--f);
+}
+
 div.item p {
     white-space:nowrap;
     text-overflow:ellipsis;

@@ -114,7 +114,9 @@ def fetch_data():
     else:
         return Response('The Scope that you supplied was invalid.', status=400)
 
+# fix "hide other days"
 # TODO: rigid placement mode
+# TODO: we need to make the layout options better
 # TODO: flask default error handling?
 # TODO: make tags less dumb (don't rely on colors rather ids probably - red, blue etc)
 # TODO: pie chart of each tag per day (+general per-day info)
