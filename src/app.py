@@ -105,8 +105,6 @@ def fetch_data():
     else:
         return Response('The Scope that you supplied was invalid.', status=400)
 
-# TODO: switching between editing better
-# TODO: make tags less dumb (don't rely on colors rather ids probably - red, blue etc)
 # TODO: identical names merge into same element - this happens on backend as adding is now handled by backend too via /data
 # TODO: overhaul functionality where start date is set after adding - stuff that isn't placed at end doesn't get it and editing last item does get it
 # TODO: realtime visualistaion of what you're adding?

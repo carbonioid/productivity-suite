@@ -1,5 +1,5 @@
 import { addFormListeners } from "./form.js";
-import { showOthers } from "./ui.js";
+import { addCheckboxListeners } from "./ui.js";
 import { load } from "./compile.js"
 
 /*
@@ -9,7 +9,5 @@ when the file is loaded, to avoid any loading order conflicts.
 
 await load('*') // Scope: * (all)
 
+addCheckboxListeners()
 addFormListeners()
-
-// Dummy-run to reflect any saved user preferences
-showOthers()

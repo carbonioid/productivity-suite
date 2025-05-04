@@ -2,8 +2,24 @@
 This file handles the main UI of the page, except the form. That is managed by form.js and some of its functionality is impoted here.
 */
 
-export { registerPopup, registerEditing, setCompact, setRigidity, showOthers }
+export { registerPopup, registerEditing, setCompact, setRigidity, showOthers, displayError, addCheckboxListeners }
 import { registerEditing } from "./form.js"
+/*
+Error displaying
+*/
+
+function displayError(msg) {
+  let errorbox = document.querySelector(".errorbox")
+
+  console.log(`Receieved error: ${msg}`);
+  errorbox.classList.remove("hidden")
+  errorbox.textContent = msg;
+  setTimeout(() => {
+    errorbox.classList.add("hidden");
+    errorbox.textContent = "";
+  }, 4500)
+}
+
 /*
 These are the options and functions that add event listeners to the main container items (things *in* days and the days themselves).
 */
@@ -90,27 +106,20 @@ of the days themselves. These are also used by run.js to make sure anything save
 checkboxes is taken into account on refresh. These functions are added as onclick listeners
 to the checkboxes.
 */
-function showOthers() {
-  let obj = document.querySelector('#show-others')
-  let days = Array.from(document.querySelector('.parent-container').children).slice(1); // Do not include first element
+function showOthers(obj) {
+  let hidden = document.querySelector('#show-others').checked;
+  let days = Array.from(obj.children).slice(1); // Do not include first element
   days.forEach(day => {
-    if (obj.checked) { day.classList.add("hidden"); }
-    else             { day.classList.remove("hidden"); }
+    if (hidden) { day.classList.add("hidden"); }
+    else        { day.classList.remove("hidden"); }
   })
 }
-
-document.querySelector('#show-others').addEventListener('click', (event) => { showOthers(); })
 
 function setCompact(obj) {
   let compact = document.querySelector('#compact-mode').checked
   if (compact) { obj.classList.remove("padded-container"); }
   else             { obj.classList.add("padded-container"); }
 }
-
-document.querySelector('#compact-mode').addEventListener('click', (event) => {
-  let days = Array.from(document.querySelector('.parent-container').children);
-  days.forEach(day => setCompact(day))
-})
 
 function setRigidity(obj) {
   let rigid = document.querySelector('#rigid-mode').checked
@@ -122,7 +131,16 @@ function setRigidity(obj) {
   })
 }
 
-document.querySelector('#rigid-mode').addEventListener('click', (event) => {
-  let days = Array.from(document.querySelector('.parent-container').children); // Do not include last element
-  days.forEach(day => setRigidity(day))
-})
+function addCheckboxListeners() {
+  document.querySelector('#show-others').addEventListener('click', (event) => { showOthers(document.querySelector('.parent-container')); })
+
+  document.querySelector('#compact-mode').addEventListener('click', (event) => {
+    let days = Array.from(document.querySelector('.parent-container').children);
+    days.forEach(day => setCompact(day))
+  })
+
+  document.querySelector('#rigid-mode').addEventListener('click', (event) => {
+    let days = Array.from(document.querySelector('.parent-container').children); // Do not include last element
+    days.forEach(day => setRigidity(day))
+  })
+}

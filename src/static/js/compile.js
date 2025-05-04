@@ -1,86 +1,11 @@
-export { addElement, editElement, deleteElement, load, format_mins };
-import { registerEditing, registerPopup, setCompact, setRigidity } from "./ui.js";
-import { displayError } from "./error.js";
+/*
+This file handles taking input form the server and compiling it to HTML.
+It also handles adding, editing and deleting elements.
+*/
 
-function format_yyyymmdd(string) {
-  let [year, month, day] = string.split('-');
-  // We ignore the year for now
-  const months = [
-    "Jan", "Feb", "Mar", "Apr", "May", "June",
-    "July", "Aug", "Sept", "Oct", "Nov", "Dec"
-  ];
-  month = months[Number(month)]
-  return `${Number(day)} ${month}`
-}
-
-function string_to_mins(s) {
-  let parts = s.split(":");
-  let hours = Number(parts[0]);
-  let mins = Number(parts[1]);
-
-  return hours * 60 + mins;
-}
-
-function format_mins(mins) {
-  let hours = Math.floor(mins / 60);
-  let minutes = mins % 60;
-
-  if (hours > 0 && minutes > 0) {  return `${hours}h${minutes}m`; }
-  else if (hours > 0 && minutes == 0) { return `${hours}h`; }
-  else { return `${minutes}m`; }
-}
-
-function duration(start, end) {
-  let start_mins = string_to_mins(start);
-  let end_mins = string_to_mins(end);
-  return end_mins - start_mins;
-}
-
-async function load(scope) {
-  /*
-  Populate part of all of the page from the given scope.
-  */
-  await fetch("/data",  {
-    method: "GET",
-    headers: {
-      'Content-Type': 'application/json',
-      'Scope': scope
-    }
-  }).then(response => {
-    return response.json()
-  }).then(data => {
-    // This syntactic mess reverses the object
-    let days = [...Object.entries(data)].reverse();
-    days.forEach(day => {
-      let name = day[0];
-      let entries = day[1];
-
-      // Add a new container to the parent container for this day, as well as the title and its popup
-      let parent = document.querySelector('.parent-container');
-
-      loadDay(name, entries, parent);
-
-      let target_obj = document.getElementById(name);
-      // Then add all the day's elements into the new flexbox.
-      if (entries.length > 0) {
-        let prev_end = entries[0]['start']
-        entries.forEach(row => {
-          // First, if there is an unaccounted gap between the end of the last element and the start of this (time that wasn't stracked)
-          // we add a buffer element to accoutn for it.
-          if (prev_end !== row['start']) {
-            loadPadItem(prev_end, row['start'], target_obj);
-          }
-          loadItem(row['id'], row['name'], row['start'], row['end'], row['color'], target_obj);
-
-          prev_end = row['end']
-        })
-      }
-
-      setRigidity(target_obj)
-      setCompact(target_obj)
-    })
-  })
-}
+export { addElement, editElement, deleteElement, load };
+import { registerEditing, registerPopup, setCompact, setRigidity, displayError, showOthers } from "./ui.js";
+import { format_mins, format_yyyymmdd, string_to_mins, duration } from './utils.js'
 
 function loadItem(id, name, start, end, color, container) {
   /*
@@ -106,6 +31,9 @@ function loadItem(id, name, start, end, color, container) {
 }
 
 function loadPadItem(start, end, container) {
+  /*
+  Add a padding item to the specified table
+  */
   let start_mins = string_to_mins(start);
   let end_mins = string_to_mins(end);
   let duration = end_mins - start_mins;
@@ -124,7 +52,31 @@ function loadPadItem(start, end, container) {
   registerPopup(new_elem, "hover");
 }
 
+function loadDayEntries(entries, container) {
+  /*
+  Load all the entries as formatted HTML into the given container,
+  creating the entires based on the given `entries` JSON.
+  */
+  if (entries.length > 0) {
+    let prev_end = entries[0]['start']
+    entries.forEach(row => {
+      // First, if there is an unaccounted gap between the end of the last element and the start of this (time that wasn't stracked)
+      // we add a buffer element to account for it.
+      if (prev_end !== row['start']) { loadPadItem(prev_end, row['start'], container); }
+
+      // Now, add actual item.
+      loadItem(row['id'], row['name'], row['start'], row['end'], row['color'], container);
+
+      prev_end = row['end']
+    })
+  }
+}
+
 function loadDay(name, entries, parent) {
+  /*
+  This function loads the initial HTML (container, title, title popup) for any given day.
+  The container is selected/made based on `name` (as the container's id)
+  */
   // Create popup body
   let popup_body = `<p><b>${format_yyyymmdd(name)}</b></p>
   <p>DUR long</p><br>
@@ -152,8 +104,7 @@ function loadDay(name, entries, parent) {
     </div>
   </div>`;
 
-  // Add initial HTML and determine target for next part of code.
-  // This code will either add to the proper container or create a new one if it doesn't exist
+  // Add initial HTML (This code will either add to the proper container or create a new one if it doesn't exist)
   if (document.getElementById(name) == null) { // If the element doesn't already exist, it's the newest one so we need to add it at the end
     parent.insertAdjacentHTML("beforeend", initial_html);
     registerPopup(Array.from(parent.lastElementChild.children)[0], "rclick")
@@ -220,6 +171,42 @@ function loadDay(name, entries, parent) {
           }
       }
   });
+}
+
+async function load(scope) {
+  /*
+  Populate parts of the page from the given scope.
+  */
+  await fetch("/data",  {
+    method: "GET",
+    headers: {
+      'Content-Type': 'application/json',
+      'Scope': scope
+    }
+  }).then(response => {
+    return response.json()
+  }).then(data => {
+    // This syntactic mess reverses the object
+    let days = [...Object.entries(data)].reverse();
+    days.forEach(day => {
+      let name = day[0];
+      let entries = day[1];
+
+      // Add a new container to the parent container for this day, as well as the title and its popup
+      loadDay(name, entries, document.querySelector('.parent-container'));
+
+      // Then add all the day's elements (from the given entries) into the new flexbox.
+      let container = document.getElementById(name);
+      loadDayEntries(entries, container)
+
+      // These change the display of rigid items and the element's paddign respectively.
+      setRigidity(container)
+      setCompact(container)
+    })
+  })
+
+  // Just to be safe, refresh the "show others" option in case we just added the new day - this was is just cleaner
+  showOthers(document.querySelector(".parent-container"))
 }
 
 async function addElement(name, start, end, color, day=null) {
@@ -303,20 +290,3 @@ async function deleteElement(id, day) {
     }
   })
 }
-
-
-// function editElementInHTML(id, name, start, end, color, container) {
-//   /*
-//   Add element HTML with the passed data to the correct container (i.e., day)
-//   */
-
-//   let elementHTML = createElementHTML(id, name, start, end, color);
-//   let target = container.querySelector(`[id=\"${id}\"]`);
-
-//   target.outerHTML = elementHTML; // Update element HTML
-
-//   // We have to get this again bedcause we just changed it and our element is now out of date.
-//   target = container.querySelector(`[id=\"${id}\"]`);
-
-//   registerElement(target);
-// }
