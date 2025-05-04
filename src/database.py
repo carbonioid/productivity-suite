@@ -11,7 +11,7 @@ def fetch_db_contents(scope):
     final_json = {}
     for filename in scope: # Iterate through each day
         file_json = []
-        filepath = f'res/{filename}.csv'
+        filepath = f'res/{filename}'
         if not os.path.exists(filepath):
             print(f'{filepath} was invalid')
             return None
@@ -37,11 +37,9 @@ def fetch_db_contents(scope):
 
 def add_row(filename, name, start, end, color):
     """
-    Adds this entry to the file at `filename`. Returns the id of the newly added row and None if the file doesn't exist.
+    Adds this entry to the file at `filename`. Returns the id of the newly added row
     """
     filepath = f'res/{filename}.csv'
-
-    if not os.path.exists(filepath): return None
 
     num_lines = len(list(csv.reader(open(filepath)))) # This is the row's id.
     with open(filepath, "a") as file:
@@ -54,8 +52,6 @@ def add_row(filename, name, start, end, color):
 
 def edit_row(filename, id, new_name, new_start, new_end, new_color):
     filepath = f'res/{filename}.csv'
-
-    if not os.path.exists(filepath): return None
 
     # It is not convenient ot edit specific lines in a CSV file directly, so we will
     # simply construct the entire file again and write that to the file.
@@ -94,3 +90,26 @@ def delete_row(filename, id):
         writer.writerows(new_file)
 
     return True
+
+def invalid(json, day):
+    """
+    Takes a request JSON (from /edit or /add) and verifies it:
+    - end must be after start (equal timestamps are invalid)
+    - checks there are no blank fields
+    - checks that these timestamps do not overlap any other events in the given `day`
+
+    Returns the error message if invalid, None otherwise
+    """
+
+    if '' in json.values(): return 'One or more of your fields is blank'
+
+    if hhmm_to_minutes(json['end']) <= hhmm_to_minutes(json['start']): return "The times you inputted aren't valid."
+
+    start, end = hhmm_to_minutes(json['start']), hhmm_to_minutes(json['end'])
+    data = fetch_db_contents([day+'.csv'])
+    if data is None: return f"The requested file ({day}) does not exist"
+    for row in list(data.values())[0]:
+        row_start, row_end = hhmm_to_minutes(row['start']), hhmm_to_minutes(row['end'])
+
+        if (row_start < start and row_end > start) or (row_start > start and row_start < end):
+            return f"The inputted activity overlaps another: {row['name']}"

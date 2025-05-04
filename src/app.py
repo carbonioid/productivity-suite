@@ -1,7 +1,7 @@
 import os
 from flask import Flask, render_template, request, Response, jsonify
-from database import fetch_db_contents, add_row, edit_row, delete_row
-from utils import time_validation, add_new_file_if_needed
+from database import fetch_db_contents, add_row, edit_row, delete_row, invalid
+from utils import add_new_file_if_needed
 
 app = Flask(__name__)
 
@@ -30,20 +30,13 @@ def upload():
     # On the 201 response, returns the new database entry.
     json = request.get_json()
     filename = request.headers['File']
-    filepath = f'res/{filename}.csv'
-    values = list(json.values())
 
-    if '' in values:
-        return Response(response='One or more of your fields is blank', status=400)
+    valid = invalid(json, filename)
+    if type(valid) == str:
+        return Response(response=valid, status=400)
 
-    if not time_validation(json['start'], json['end']):
-        return Response(response="The times you inputted aren't valid.", status=400)
-
-    new_id = add_row(filename, *values)
-    if new_id is None:
-        return Response(response=f'The selected day ({filepath}) does not exist.')
-    else:
-        return Response(response=str(new_id), status=201)
+    new_id = add_row(filename, *json.values())
+    return Response(response=str(new_id), status=201)
 
 @app.route("/edit", methods=["POST"])
 def update_item():
@@ -62,12 +55,12 @@ def update_item():
     json = request.get_json()
     filename = request.headers['File']
 
-    if '' in json.values():
-        return Response(response='One or more of your fields is blank', status=400)
+    valid = invalid(json, filename)
+    if type(valid) == str:
+        return Response(response=valid, status=400)
 
-    outcome = edit_row(filename, *json.values())
-    if outcome is None: return Response(response=f'The specified day ({filename}) does not exist.', status=400)
-    else: return Response(status=201)
+    edit_row(filename, *json.values())
+    return Response(status=201)
 
 @app.route("/delete", methods=["POST"])
 def delete_item():
@@ -95,9 +88,9 @@ def fetch_data():
     # Aliases: * for all data. Otherwise takes comma-separated filenames e.g. 2025-05-02,2025-05-03
     scope = request.headers['Scope']
     if scope == '*': # All files
-        scope = [str(file).replace('.csv', '') for file in os.listdir('res') if os.path.splitext(file)[1] == '.csv']
+        scope = [str(file) for file in os.listdir('res') if os.path.splitext(file)[1] == '.csv']
     else:
-        scope = scope.split(',')
+        scope = [file+'.csv' for file in scope.split(',')]
 
     data = fetch_db_contents(scope)
     if data is not None:
@@ -105,6 +98,7 @@ def fetch_data():
     else:
         return Response('The Scope that you supplied was invalid.', status=400)
 
+# TODO: you cannot add an element which overlaps another
 # TODO: identical names merge into same element - this happens on backend as adding is now handled by backend too via /data
 # TODO: overhaul functionality where start date is set after adding - stuff that isn't placed at end doesn't get it and editing last item does get it
 # TODO: realtime visualistaion of what you're adding?
