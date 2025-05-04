@@ -1,5 +1,5 @@
-export { addElement, editElement, deleteElement, load };
-import { registerElement, registerPopup } from "./ui.js";
+export { addElement, editElement, deleteElement, load, format_mins };
+import { registerEditing, registerPopup } from "./ui.js";
 import { displayError } from "./error.js";
 
 function format_yyyymmdd(string) {
@@ -30,6 +30,12 @@ function format_mins(mins) {
   else { return `${minutes}m`; }
 }
 
+function duration(start, end) {
+  let start_mins = string_to_mins(start);
+  let end_mins = string_to_mins(end);
+  return end_mins - start_mins;
+}
+
 async function load(scope) {
   /*
   Populate part of all of the page from the given scope.
@@ -49,23 +55,12 @@ async function load(scope) {
       let name = day[0];
       let entries = day[1];
 
-      // Add a new container to the parent container for this day
+      // Add a new container to the parent container for this day, as well as the title and its popup
       let parent = document.querySelector('.parent-container');
 
-      let target_obj = null;
-      let classes = "container"
-      if (!document.querySelector('#compact-mode').checked) {classes += " padded-container"}
-      let initial_html = `<div class="${classes}" id="${name}"><p class="day-title">${format_yyyymmdd(name)}</p></div>`;
+      loadDay(name, entries, parent);
 
-      if (document.getElementById(name) == null) { // If the element doesn't already exist
-        parent.insertAdjacentHTML("beforeend", initial_html);
-        target_obj = parent.lastElementChild;
-      } else {
-        target_obj = parent.querySelector(`[id=\"${name}\"]`);
-        target_obj.outerHTML = initial_html;
-        target_obj = parent.querySelector(`[id=\"${name}\"]`); // Reselect to reflect changes.
-      }
-
+      let target_obj = document.getElementById(name);
       // Then add all the day's elements into the new flexbox.
       if (entries.length > 0) {
         let prev_end = entries[0]['start']
@@ -88,24 +83,23 @@ function loadItem(id, name, start, end, color, container) {
   /*
   Add element HTML with the passed data to the correct container (i.e., day)
   */
-  let start_mins = string_to_mins(start);
-  let end_mins = string_to_mins(end);
-  let duration = end_mins - start_mins;
+  let _duration = duration(start, end);
 
   let html = `
-  <div class="item" style="--col:${color}; --f:${duration};" data-api-info="${name}\\${start}\\${end}\\${color}" id="${id}">
+  <div class="item" style="--col:${color}; --f:${_duration};" data-api-info="${name}\\${start}\\${end}\\${color}" id="${id}">
     <p class="heading">${name}</p>
     <div class="mono popup hover-popup">
       <p><b>${name}</b></p>
       <p>${start} - ${end}</p>
-      <p>${format_mins(duration)}</p>
+      <p>${format_mins(_duration)}</p>
     </div>
   </div>`;
 
   container.insertAdjacentHTML('beforeend', html);
 
   let new_elem = container.lastElementChild;
-  registerElement(new_elem);
+  registerEditing(new_elem);
+  registerPopup(new_elem, "hover");
 }
 
 function loadPadItem(start, end, container) {
@@ -115,7 +109,7 @@ function loadPadItem(start, end, container) {
 
   let html = `
   <div class="pad-item hidden" style="--f:${duration};">
-    <div class="mono popup hover-popup">
+    <div class="mono popup">
       <p>${start} - ${end}</p>
       <p>${format_mins(duration)}</p>
     </div>
@@ -124,7 +118,107 @@ function loadPadItem(start, end, container) {
   container.insertAdjacentHTML('beforeend', html);
 
   let new_elem = container.lastElementChild;
-  registerPopup(new_elem);
+  registerPopup(new_elem, "hover");
+}
+
+function loadDay(name, entries, parent) {
+  // Create popup body
+  let popup_body = "";
+  if (entries.length > 0) {
+    let wokeAt = entries[0]['start'];
+    popup_body += `<br>Woke at <b>${wokeAt}</b><br>`
+
+    let sleptAt = entries[entries.length - 1]['end'];
+    popup_body += `Slept at <b>${sleptAt}</b><br>`
+  }
+
+  // Create classes
+  let classes = "container";
+  if (!document.querySelector('#compact-mode').checked) {classes += " padded-container"}
+
+  // Create HTML
+  let initial_html = `<div class="${classes}" id="${name}">
+    <div class="day-title">
+    ${format_yyyymmdd(name)}
+    <div class="mono popup">
+      <p><b>${format_yyyymmdd(name)}</b></p><br>
+      <canvas id="chart-${name}" width="100" height="100"></canvas>
+      ${popup_body}
+    </div>
+    </div>
+  </div>`;
+
+  // Add initial HTML and determine target for next part of code.
+  // This code will either add to the proper container or create a new one if it doesn't exist
+  if (document.getElementById(name) == null) { // If the element doesn't already exist, it's the newest one so we need to add it at the end
+    parent.insertAdjacentHTML("beforeend", initial_html);
+    registerPopup(Array.from(parent.lastElementChild.children)[0], "rclick")
+  } else {
+    let target_obj = parent.querySelector(`[id=\"${name}\"]`);
+    target_obj.outerHTML = initial_html;
+    registerPopup(Array.from(target_obj.children)[0], "rclick")
+  }
+
+  // Now, the complex part: load the popup's pie chart (the canvas element)
+  // The data is just the amount of time each color took.
+  const dictionary = new Object();
+  entries.forEach(row => {
+    let _duration = duration(row['start'], row['end'])
+    if (dictionary[row['color']] == null) {dictionary[row['color']] = _duration}
+      else {dictionary[row['color']] = dictionary[row['color']] + _duration}
+  })
+
+  let data = Object.values(dictionary)
+  let colors = Object.keys(dictionary)
+  let backgroundColor = []
+  colors.forEach(color => {
+    backgroundColor.push(`rgb(${color})`)
+  })
+
+  console.log(backgroundColor)
+  console.log(data)
+  const obj = document.getElementById(`chart-${name}`).getContext('2d');
+
+  Chart.defaults.font.family = 'YourFont';
+  let x = new Chart(obj, {
+      type: 'pie',
+      data: {
+        labels: colors,
+          datasets: [{
+            label: `${name}`,
+              data: data,
+              backgroundColor: backgroundColor,
+              hoverOffset: 0
+          }]
+      },
+      options: {
+          responsive: false, // Ensure the size is fixed
+          maintainAspectRatio: false,
+          animation:true,
+          plugins: {
+              legend: {
+                display:false
+              },
+              tooltip: {
+                displayColors: false,
+                backgroundColor: "rgb(192, 192, 192)",
+                cornerRadius: 0,
+                borderColor: "#ccc",
+                borderWidth: 1,
+                bodyFont: {
+                  family: `font-family: Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace`,
+                },
+                callbacks: {
+                  label: function(context) {
+                    return format_mins(context.formattedValue);
+                  },
+                  title: function () { return ''}
+                }
+              }
+          }
+      }
+  });
+
 }
 
 async function addElement(name, start, end, color, day=null) {

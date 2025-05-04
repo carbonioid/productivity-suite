@@ -4,14 +4,14 @@ import { load } from "./compile.js"
 
 /*
 This file co-ordinates any functions that need to be run (boileplate or otherwise)
-when the file is loaded, to avoid any loading order conflicts etc.
+when the file is loaded, to avoid any loading order conflicts.
 */
 
 await load('*') // Scope: * (all)
 
 addFormListeners()
 
-// Dummy-run these to reflect any saved user  preferences
+// Dummy-run these to reflect any saved user preferences
 showOthers()
 compactMode()
 rigidMode()

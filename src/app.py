@@ -114,7 +114,7 @@ def fetch_data():
     else:
         return Response('The Scope that you supplied was invalid.', status=400)
 
-# TODO: pie chart of each tag per day (+general per-day info)
+# TODO: overhaul functionality where start date is set after adding - stuff that isn't placed at end doesn't get it and editing last item does get it
 # TODO: we need to make the layout options better on the backend - just make a function "modifyRow" or "modifyDays" that you can run. Then both load() and the dropdowns can use it.
 # TODO: flask default error handling?
 # TODO: make tags less dumb (don't rely on colors rather ids probably - red, blue etc)

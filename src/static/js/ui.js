@@ -2,56 +2,87 @@
 This file handles the main UI of the page, except the form. That is managed by form.js and some of its functionality is impoted here.
 */
 
-export { registerElement, registerPopup, showOthers, compactMode, rigidMode }
+export { registerPopup, registerEditing, showOthers, compactMode, rigidMode }
 import { registerEditing } from "./form.js"
 /*
-These are the options and functions that add event listeners to the main container items.
+These are the options and functions that add event listeners to the main container items (things *in* days and the days themselves).
 */
-function registerElement(obj) {
-  /*
-  This function is run for every new item added to the containers.
-  It registers all the event listeners that each item must have to function properly.
-  */
 
-  registerPopup(obj);
-  registerEditing(obj);
+function setPopupPosition(popup, mouseX, mouseY) {
+  // Adjust the popup position so it follows the cursor
+  // You might want to add some offset to prevent overlap
+  popup.style.left = mouseX + 1 + 'px'; // Add 10px offset to the right
+  popup.style.top = mouseY + 1 + 'px';  // Add 10px offset to the bottom
+
+  // Keep the popup within the viewport
+  const popupWidth = popup.offsetWidth;
+  const popupHeight = popup.offsetHeight;
+  const windowWidth = window.innerWidth;
+  const windowHeight = window.innerHeight;
+
+  if (mouseX + popupWidth > windowWidth) {
+    popup.style.left = mouseX - popupWidth - 1 + 'px'; // Move to the left
+  }
+
+  if (mouseY + popupHeight > windowHeight) {
+    popup.style.top = mouseY - popupHeight - 1 + 'px';   // Move upwards
+  }
 }
 
-function registerPopup(obj) {
-  let popup = obj.querySelector(".hover-popup");
+function registerPopup(obj, type) {
+  /*
+  Register the correct event listeners for this object's popup (with class .popup).
+  Valid types:
+  hover: actives simply on hover and disappears once the mouse leaves
+  rclick: actives on right click and disappears when clicking off
+  */
+  let popup = obj.querySelector(".popup");
 
-  obj.addEventListener('mouseenter', () => {
-    popup.style.display = 'block';
-  });
+  if (type === "hover") {
+    obj.addEventListener('mouseenter', () => {
+      popup.style.display = 'block';
+    });
 
-  obj.addEventListener('mouseleave', () => {
-    popup.style.display = 'none';
-  })
+    obj.addEventListener('mouseleave', () => {
+      popup.style.display = 'none';
+    })
 
-  obj.addEventListener('mousemove', (event) => {
-    // Get the coordinates of the mouse relative to the viewport
-    const mouseX = event.clientX;
-    const mouseY = event.clientY;
+    obj.addEventListener('mousemove', (event) => {
+      // Get the coordinates of the mouse relative to the viewport
+      const mouseX = event.clientX;
+      const mouseY = event.clientY;
 
-    // Adjust the popup position so it follows the cursor
-    // You might want to add some offset to prevent overlap
-    popup.style.left = mouseX + 1 + 'px'; // Add 10px offset to the right
-    popup.style.top = mouseY + 1 + 'px';  // Add 10px offset to the bottom
+      setPopupPosition(popup, mouseX, mouseY);
+    })
+  }
 
-    // Keep the popup within the viewport
-    const popupWidth = popup.offsetWidth;
-    const popupHeight = popup.offsetHeight;
-    const windowWidth = window.innerWidth;
-    const windowHeight = window.innerHeight;
+  else if (type === "rclick") {
+    obj.addEventListener('contextmenu', (event) => {
+      event.preventDefault();
 
-    if (mouseX + popupWidth > windowWidth) {
-      popup.style.left = mouseX - popupWidth - 1 + 'px'; // Move to the left
-    }
+      // Toggle whether hidden
+      if (popup.style.display === "block") {popup.style.display = 'none';}
+      else  {popup.style.display = 'block';}
 
-    if (mouseY + popupHeight > windowHeight) {
-      popup.style.top = mouseY - popupHeight - 1 + 'px';   // Move upwards
-    }
-  })
+
+      // Get the coordinates of the mouse relative to the viewport
+      const mouseX = event.clientX;
+      const mouseY = event.clientY;
+      setPopupPosition(popup, mouseX, mouseY)
+    })
+
+    document.addEventListener('click', (event) => {
+      if (event.target !== popup && event.target !== obj) {
+        popup.style.display = 'none';
+      }
+    })
+
+    document.addEventListener('contextmenu', (event) => {
+      if (event.target !== obj && event.target !== popup) {
+        popup.style.display = 'none';
+      }
+    })
+  }
 }
 
 /*
