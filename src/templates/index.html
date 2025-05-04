@@ -17,11 +17,11 @@
         <p class="editing-indicator soft-hidden">editing - <a class="editing-exit-button">exit</a></p>
         <form class="form-body" action="#" data-mode="add">
             <input type="submit" class="mono add-btn" value="+">
-            <input class="mono" type="text" placeholder="Activity name" style="width:15rem;" id="name">
+            <input class="mono" type="text" placeholder="Activity name" style="width:15rem;" id="name" required>
             <p>from</p>
-            <input class="mono" type="time" style="width:3rem;" id="start">
+            <input class="mono" type="time" style="width:3rem;" id="start" required>
             <p>to</p>
-            <input class="mono" type="time" style="width:3rem;" id="end">
+            <input class="mono" type="time" style="width:3rem;" id="end" required>
             <div class="tag-select">
                 <input type="radio" name="tag" class="tag" style="--col:220, 220, 220" checked id="default-tag">
                 <input type="radio" name="tag" class="tag" style="--col:219, 43, 78">

@@ -114,8 +114,6 @@ def fetch_data():
     else:
         return Response('The Scope that you supplied was invalid.', status=400)
 
-# fix "hide other days"
-# just make the fields required rather than backend validation
 # TODO: pie chart of each tag per day (+general per-day info)
 # TODO: we need to make the layout options better on the backend - just make a function "modifyRow" or "modifyDays" that you can run. Then both load() and the dropdowns can use it.
 # TODO: flask default error handling?

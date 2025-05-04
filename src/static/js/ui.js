@@ -62,7 +62,7 @@ to the checkboxes.
 */
 function showOthers() {
   let obj = document.querySelector('#show-others')
-  let days = Array.from(document.querySelector('.parent-container').children).slice(0, -1); // Do not include last element
+  let days = Array.from(document.querySelector('.parent-container').children).slice(1); // Do not include first element
   days.forEach(day => {
     if (obj.checked) { day.classList.add("hidden"); }
     else             { day.classList.remove("hidden"); }
