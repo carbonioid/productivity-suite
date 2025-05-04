@@ -123,13 +123,16 @@ function loadPadItem(start, end, container) {
 
 function loadDay(name, entries, parent) {
   // Create popup body
-  let popup_body = "";
+  let popup_body = `<p><b>${format_yyyymmdd(name)}</b></p>
+  <p>DUR long</p><br>
+  <canvas id="chart-${name}" width="100" height="100"></canvas>`;
   if (entries.length > 0) {
     let wokeAt = entries[0]['start'];
     popup_body += `<br>Woke at <b>${wokeAt}</b><br>`
 
     let sleptAt = entries[entries.length - 1]['end'];
     popup_body += `Slept at <b>${sleptAt}</b><br>`
+    popup_body = popup_body.replace('DUR', format_mins(duration(wokeAt, sleptAt)))
   }
 
   // Create classes
@@ -141,8 +144,6 @@ function loadDay(name, entries, parent) {
     <div class="day-title">
     ${format_yyyymmdd(name)}
     <div class="mono popup">
-      <p><b>${format_yyyymmdd(name)}</b></p><br>
-      <canvas id="chart-${name}" width="100" height="100"></canvas>
       ${popup_body}
     </div>
     </div>
@@ -175,12 +176,10 @@ function loadDay(name, entries, parent) {
     backgroundColor.push(`rgb(${color})`)
   })
 
-  console.log(backgroundColor)
-  console.log(data)
   const obj = document.getElementById(`chart-${name}`).getContext('2d');
 
   Chart.defaults.font.family = 'YourFont';
-  let x = new Chart(obj, {
+  new Chart(obj, {
       type: 'pie',
       data: {
         labels: colors,
@@ -218,7 +217,6 @@ function loadDay(name, entries, parent) {
           }
       }
   });
-
 }
 
 async function addElement(name, start, end, color, day=null) {

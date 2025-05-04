@@ -61,8 +61,7 @@ function registerPopup(obj, type) {
       event.preventDefault();
 
       // Toggle whether hidden
-      if (popup.style.display === "block") {popup.style.display = 'none';}
-      else  {popup.style.display = 'block';}
+      popup.style.display = 'block';
 
 
       // Get the coordinates of the mouse relative to the viewport
@@ -72,13 +71,13 @@ function registerPopup(obj, type) {
     })
 
     document.addEventListener('click', (event) => {
-      if (event.target !== popup && event.target !== obj) {
+      if (event.target !== popup && event.target.parent !== popup) {
         popup.style.display = 'none';
       }
     })
 
     document.addEventListener('contextmenu', (event) => {
-      if (event.target !== obj && event.target !== popup) {
+      if (event.target !== popup && event.target !== obj) {
         popup.style.display = 'none';
       }
     })

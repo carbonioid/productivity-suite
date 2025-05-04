@@ -2,9 +2,13 @@ import os
 import traceback
 from flask import Flask, render_template, request, Response, jsonify
 from database import fetch_db_contents, add_row, edit_row, delete_row
-from utils import hhmm_to_minutes, time_validation, add_new_file_if_needed
+from utils import time_validation, add_new_file_if_needed
 
 app = Flask(__name__)
+
+@app.errorhandler(Exception)
+def handle(e):
+    return Response(response=f'Something went wrong: {e}', status=500)
 
 @app.route("/")
 def main():
@@ -35,15 +39,12 @@ def upload():
     if not time_validation(json['start'], json['end']):
         return Response(response="The times you inputted aren't valid.", status=400)
 
-    try:
-        new_id = add_row(filename, *values)
-        if new_id is None:
-            return Response(response=f'The selected day ({filepath}) does not exist.')
-        else:
-            return Response(response=str(new_id), status=201)
+    new_id = add_row(filename, *values)
+    if new_id is None:
+        return Response(response=f'The selected day ({filepath}) does not exist.')
+    else:
+        return Response(response=str(new_id), status=201)
 
-    except Exception as e:
-        return Response(response=f'Something went wrong: {e} (code 500); more info: {traceback.format_exc()}', status=500)
 
 @app.route("/edit", methods=["POST"])
 def update_item():
@@ -65,13 +66,9 @@ def update_item():
     if '' in json.values():
         return Response(response='One or more of your fields is blank', status=400)
 
-    try:
-        outcome = edit_row(filename, *json.values())
-        if outcome is None: return Response(response=f'The specified day ({filename}) does not exist.', status=400)
-        else: return Response(status=201)
-
-    except Exception as e:
-        return Response(response=f'Something went wrong: {e}', status=500)
+    outcome = edit_row(filename, *json.values())
+    if outcome is None: return Response(response=f'The specified day ({filename}) does not exist.', status=400)
+    else: return Response(status=201)
 
 @app.route("/delete", methods=["POST"])
 def delete_item():
@@ -89,13 +86,10 @@ def delete_item():
     json = request.get_json()
     filename = request.headers['File']
 
-    try:
-        outcome = delete_row(filename, json['id'])
-        if outcome is None: return Response(response=f'The specified day ({filename}) does not exist.', status=400)
-        else: return Response(status=201)
+    outcome = delete_row(filename, json['id'])
+    if outcome is None: return Response(response=f'The specified day ({filename}) does not exist.', status=400)
+    else: return Response(status=201)
 
-    except Exception as e:
-        return Response(response=f'Something went wrong: {e}', status=500)
 
 @app.route("/data", methods=["GET"])
 def fetch_data():
@@ -114,13 +108,14 @@ def fetch_data():
     else:
         return Response('The Scope that you supplied was invalid.', status=400)
 
-# TODO: overhaul functionality where start date is set after adding - stuff that isn't placed at end doesn't get it and editing last item does get it
 # TODO: we need to make the layout options better on the backend - just make a function "modifyRow" or "modifyDays" that you can run. Then both load() and the dropdowns can use it.
-# TODO: flask default error handling?
 # TODO: make tags less dumb (don't rely on colors rather ids probably - red, blue etc)
 # TODO: identical names merge into same element - this happens on backend as adding is now handled by backend too via /data
+# TODO: overhaul functionality where start date is set after adding - stuff that isn't placed at end doesn't get it and editing last item does get it
 # TODO: realtime visualistaion of what you're adding?
 # TODO: make some documentation
 # TODO: clean-up database stuff - add common function for db writing and validation (and better validation in general)
+# TODO: more input options - timer etc
+# TODO: untracked time in pie chart & make them a bit less janky with selecting/deselecting
 # TODO: ability to "select day" to add things to it
 app.run(port=8000)
