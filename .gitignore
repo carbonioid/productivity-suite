@@ -1,5 +1,4 @@
 env/
 .ropeproject
-res/*
 __pycache__
 .DS_Store

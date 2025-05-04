@@ -2,7 +2,7 @@
 This file handles the main UI of the page, except the form. That is managed by form.js and some of its functionality is impoted here.
 */
 
-export { registerPopup, registerEditing, showOthers, compactMode, rigidMode }
+export { registerPopup, registerEditing, setCompact, setRigidity, showOthers }
 import { registerEditing } from "./form.js"
 /*
 These are the options and functions that add event listeners to the main container items (things *in* days and the days themselves).
@@ -101,28 +101,28 @@ function showOthers() {
 
 document.querySelector('#show-others').addEventListener('click', (event) => { showOthers(); })
 
-function compactMode() {
-  let obj = document.querySelector('#compact-mode')
+function setCompact(obj) {
+  let compact = document.querySelector('#compact-mode').checked
+  if (compact) { obj.classList.remove("padded-container"); }
+  else             { obj.classList.add("padded-container"); }
+}
+
+document.querySelector('#compact-mode').addEventListener('click', (event) => {
   let days = Array.from(document.querySelector('.parent-container').children);
-  days.forEach(day => {
-    if (obj.checked) { day.classList.remove("padded-container"); }
-    else             { day.classList.add("padded-container"); }
+  days.forEach(day => setCompact(day))
+})
+
+function setRigidity(obj) {
+  let rigid = document.querySelector('#rigid-mode').checked
+  Array.from(obj.children).forEach(item => {
+    if (item.classList.contains("pad-item")) { // We only do this for padding items
+      if (rigid) { item.classList.remove("hidden"); }
+      else { item.classList.add("hidden"); }
+    }
   })
 }
 
-document.querySelector('#compact-mode').addEventListener('click', (event) => { compactMode(); })
-
-function rigidMode() {
-  let obj = document.querySelector('#rigid-mode')
+document.querySelector('#rigid-mode').addEventListener('click', (event) => {
   let days = Array.from(document.querySelector('.parent-container').children); // Do not include last element
-  days.forEach(day => {
-    Array.from(day.children).forEach(item => {
-      if (item.classList.contains("pad-item")) { // We only do this for padding items
-        if (obj.checked) { item.classList.remove("hidden"); }
-        else { item.classList.add("hidden"); }
-      }
-    })
-  })
-}
-
-document.querySelector('#rigid-mode').addEventListener('click', (event) => { rigidMode(); })
+  days.forEach(day => setRigidity(day))
+})

@@ -1,5 +1,5 @@
 import { addFormListeners } from "./form.js";
-import { showOthers, compactMode, rigidMode } from "./ui.js";
+import { showOthers } from "./ui.js";
 import { load } from "./compile.js"
 
 /*
@@ -11,7 +11,5 @@ await load('*') // Scope: * (all)
 
 addFormListeners()
 
-// Dummy-run these to reflect any saved user preferences
+// Dummy-run to reflect any saved user preferences
 showOthers()
-compactMode()
-rigidMode()

@@ -1,5 +1,5 @@
 export { addElement, editElement, deleteElement, load, format_mins };
-import { registerEditing, registerPopup } from "./ui.js";
+import { registerEditing, registerPopup, setCompact, setRigidity } from "./ui.js";
 import { displayError } from "./error.js";
 
 function format_yyyymmdd(string) {
@@ -75,6 +75,9 @@ async function load(scope) {
           prev_end = row['end']
         })
       }
+
+      setRigidity(target_obj)
+      setCompact(target_obj)
     })
   })
 }

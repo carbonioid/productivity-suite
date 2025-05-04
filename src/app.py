@@ -1,5 +1,4 @@
 import os
-import traceback
 from flask import Flask, render_template, request, Response, jsonify
 from database import fetch_db_contents, add_row, edit_row, delete_row
 from utils import time_validation, add_new_file_if_needed
@@ -8,6 +7,7 @@ app = Flask(__name__)
 
 @app.errorhandler(Exception)
 def handle(e):
+    print(f'Error occured: {e}')
     return Response(response=f'Something went wrong: {e}', status=500)
 
 @app.route("/")
@@ -22,7 +22,7 @@ def main():
 
 # This part of the code keeps a live, up-to-date version of the current data on-screen
 # so that it isn't lost on refresh and can be loaded when the page is opened after being closed
-# It is stored in res/data.csv
+# It is stored in the res/ folder
 @app.route("/add", methods=["POST"])
 def upload():
     # POST method: adding an item.
@@ -44,7 +44,6 @@ def upload():
         return Response(response=f'The selected day ({filepath}) does not exist.')
     else:
         return Response(response=str(new_id), status=201)
-
 
 @app.route("/edit", methods=["POST"])
 def update_item():
@@ -90,15 +89,13 @@ def delete_item():
     if outcome is None: return Response(response=f'The specified day ({filename}) does not exist.', status=400)
     else: return Response(status=201)
 
-
 @app.route("/data", methods=["GET"])
 def fetch_data():
     # We return the current contents of the the databases in the requested scope and return them.
-    # Aliases: * for all data, . for most recent entry. Otherwise takes comma-separated filenames
-    # e.g. 24-apr,25-apr,26-apr
+    # Aliases: * for all data. Otherwise takes comma-separated filenames e.g. 2025-05-02,2025-05-03
     scope = request.headers['Scope']
     if scope == '*': # All files
-        scope = [str(n).replace('.csv', '') for n in os.listdir('res')]
+        scope = [str(file).replace('.csv', '') for file in os.listdir('res') if os.path.splitext(file)[1] == '.csv']
     else:
         scope = scope.split(',')
 
@@ -108,7 +105,7 @@ def fetch_data():
     else:
         return Response('The Scope that you supplied was invalid.', status=400)
 
-# TODO: we need to make the layout options better on the backend - just make a function "modifyRow" or "modifyDays" that you can run. Then both load() and the dropdowns can use it.
+# TODO: switching between editing better
 # TODO: make tags less dumb (don't rely on colors rather ids probably - red, blue etc)
 # TODO: identical names merge into same element - this happens on backend as adding is now handled by backend too via /data
 # TODO: overhaul functionality where start date is set after adding - stuff that isn't placed at end doesn't get it and editing last item does get it
@@ -118,4 +115,5 @@ def fetch_data():
 # TODO: more input options - timer etc
 # TODO: untracked time in pie chart & make them a bit less janky with selecting/deselecting
 # TODO: ability to "select day" to add things to it
+
 app.run(port=8000)
