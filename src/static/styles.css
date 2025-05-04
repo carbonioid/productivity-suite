@@ -47,6 +47,7 @@ div.item {
 
 div.pad-item {
     flex: var(--f);
+    user-select:none;
 }
 
 div.item p {
@@ -70,7 +71,7 @@ div.popup p {
 div.popup {
     font-family: Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
     display: none; /* initially hidden */
-    position: absolute;
+    position:fixed;
     width:fit-content;
     padding: 10px;
     z-index: 999; /* ensure above other elements */
@@ -178,7 +179,6 @@ div.tag-select {
     /* border:2px solid rgb(240,240,240); */
     background-color:rgba(240,240,240, 0.5);
 
-    user-select: none;
     text-align: center;
 }
 

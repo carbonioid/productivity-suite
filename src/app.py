@@ -115,13 +115,14 @@ def fetch_data():
         return Response('The Scope that you supplied was invalid.', status=400)
 
 # fix "hide other days"
-# TODO: rigid placement mode
-# TODO: we need to make the layout options better
+# just make the fields required rather than backend validation
+# TODO: pie chart of each tag per day (+general per-day info)
+# TODO: we need to make the layout options better on the backend - just make a function "modifyRow" or "modifyDays" that you can run. Then both load() and the dropdowns can use it.
 # TODO: flask default error handling?
 # TODO: make tags less dumb (don't rely on colors rather ids probably - red, blue etc)
-# TODO: pie chart of each tag per day (+general per-day info)
 # TODO: identical names merge into same element - this happens on backend as adding is now handled by backend too via /data
 # TODO: realtime visualistaion of what you're adding?
 # TODO: make some documentation
-# TODO: clean-up database stuff - add common function for db writing and validation
+# TODO: clean-up database stuff - add common function for db writing and validation (and better validation in general)
+# TODO: ability to "select day" to add things to it
 app.run(port=8000)
