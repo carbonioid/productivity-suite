@@ -8,6 +8,7 @@ app = Flask(__name__)
 @app.errorhandler(Exception)
 def handle(e):
     print(f'Error occured: {e}')
+    raise e
     return Response(response=f'Something went wrong: {e}', status=500)
 
 @app.route("/")
@@ -99,9 +100,9 @@ def fetch_data():
     # Aliases: * for all data. Otherwise takes comma-separated filenames e.g. 2025-05-02,2025-05-03
     scope = request.headers['Scope']
     if scope == '*': # All files
-        scope = [str(file) for file in os.listdir('res') if os.path.splitext(file)[1] == '.csv']
+        scope = ['res/'+str(file) for file in os.listdir('res') if os.path.splitext(file)[1] == '.csv']
     else:
-        scope = [file+'.csv' for file in scope.split(',')]
+        scope = [f'res/{file}.csv' for file in scope.split(',')]
 
     data = fetch_db_contents(scope)
     if data is not None:
@@ -109,12 +110,11 @@ def fetch_data():
     else:
         return Response('The Scope that you supplied was invalid.', status=400)
 
-# TODO: submitForm() should set end value by just grabbing most recent item rather than relying on added item being most recent. Make a form.js function to get item data from data-api-info to make this easier.
-# TODO: identical names merge into same element - this happens on backend as adding is now handled by backend too via /data
 # TODO: overhaul functionality where start date is set after adding - stuff that isn't placed at end doesn't get it and editing last item does get it
 # TODO: realtime visualistaion of what you're adding?
 # TODO: search function with filters
 # TODO: make some documentation
+# TODO: submitForm() should set end value by just grabbing most recent item rather than relying on added item being most recent. Make a form.js function to get item data from data-api-info to make this easier.
 # TODO: add common function for db writing
 # TODO: more input options - timer etc
 # TODO: untracked time in pie chart & make them a bit less janky with selecting/deselecting
