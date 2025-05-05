@@ -1,4 +1,4 @@
-import os
+import os, traceback
 from flask import Flask, render_template, request, Response, jsonify
 from database import fetch_db_contents, add_row, edit_row, delete_row, invalid
 from utils import add_new_file_if_needed
@@ -8,7 +8,7 @@ app = Flask(__name__)
 @app.errorhandler(Exception)
 def handle(e):
     print(f'Error occured: {e}')
-    raise e
+    traceback.print_exception(e)
     return Response(response=f'Something went wrong: {e}', status=500)
 
 @app.route("/")
@@ -110,14 +110,17 @@ def fetch_data():
     else:
         return Response('The Scope that you supplied was invalid.', status=400)
 
-# TODO: overhaul functionality where start date is set after adding - stuff that isn't placed at end doesn't get it and editing last item does get it
-# TODO: realtime visualistaion of what you're adding?
+app.run(port=8000)
+
 # TODO: search function with filters
 # TODO: make some documentation
-# TODO: submitForm() should set end value by just grabbing most recent item rather than relying on added item being most recent. Make a form.js function to get item data from data-api-info to make this easier.
-# TODO: add common function for db writing
 # TODO: more input options - timer etc
-# TODO: untracked time in pie chart & make them a bit less janky with selecting/deselecting
+# TODO: refactor dbl-click and right-click behaviour to be context menus instead
 # TODO: ability to "select day" to add things to it
+# TODO: realtime visualistaion of what you're adding?
 
-app.run(port=8000)
+# ----
+# LONG TERM ADDITIONS:
+# CGP-style goal tracker
+# To-do lists
+# ----

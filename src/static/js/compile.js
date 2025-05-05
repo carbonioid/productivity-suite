@@ -7,6 +7,36 @@ export { addElement, editElement, deleteElement, load };
 import { registerEditing, registerPopup, setCompact, setRigidity, displayError, showOthers } from "./ui.js";
 import { format_mins, format_yyyymmdd, string_to_mins, duration } from './utils.js'
 
+function addEntryPadding(entries) {
+  /*
+  Adds padding items (untracked time) to a list of entries.
+  e.g. if one activity ends at 10:30 and the next one starts at 10:50, this
+  program will add a "padding element" from 10:30 to 10:50.
+  This takes a single list of entries (a single day)
+  */
+  let new_entries = [];
+  if (entries.length > 0) {
+    let prev_end = entries[0]['start']
+    entries.forEach(row => {
+      if (prev_end !== row['start']) {
+        new_entries.push({
+          "pad": true,
+          "start": prev_end,
+          "end": row['start']
+        })
+      }
+
+      new_entries.push({
+        "pad": false,
+        ...row
+      })
+      prev_end = row['end']
+    })
+  }
+
+  return new_entries
+}
+
 function loadItem(id, name, start, end, color, container) {
   /*
   Add element HTML with the passed data to the correct container (i.e., day)
@@ -57,19 +87,11 @@ function loadDayEntries(entries, container) {
   Load all the entries as formatted HTML into the given container,
   creating the entires based on the given `entries` JSON.
   */
-  if (entries.length > 0) {
-    let prev_end = entries[0]['start']
-    entries.forEach(row => {
-      // First, if there is an unaccounted gap between the end of the last element and the start of this (time that wasn't stracked)
-      // we add a buffer element to account for it.
-      if (prev_end !== row['start']) { loadPadItem(prev_end, row['start'], container); }
-
-      // Now, add actual item.
-      loadItem(row['id'], row['name'], row['start'], row['end'], row['color'], container);
-
-      prev_end = row['end']
-    })
-  }
+  let padded_entries = addEntryPadding(entries)
+  padded_entries.forEach(row => {
+    if (row['pad']) { loadPadItem(row['start'], row['end'], container); }
+    else { loadItem(row['id'], row['name'], row['start'], row['end'], row['color'], container); }
+  })
 }
 
 function loadDay(name, entries, parent) {
@@ -110,23 +132,25 @@ function loadDay(name, entries, parent) {
   // Add initial HTML (This code will either add to the proper container or create a new one if it doesn't exist)
   if (document.getElementById(name) == null) { // If the element doesn't already exist, it's the newest one so we need to add it at the end
     parent.insertAdjacentHTML("beforeend", initial_html);
-    registerPopup(Array.from(parent.lastElementChild.children)[0], "rclick")
+    registerPopup(parent.lastElementChild.firstElementChild, "rclick")
   } else {
     let target_obj = parent.querySelector(`[id=\"${name}\"]`);
-    console.log(Array.from(target_obj.children)[0])
     target_obj.outerHTML = initial_html;
     target_obj = parent.querySelector(`[id=\"${name}\"]`); // Reselect to reflect changes - otherwise listeners aren't added properly
-    registerPopup(Array.from(target_obj.children)[0], "rclick")
-
+    registerPopup(target_obj.firstElementChild, "rclick")
   }
 
   // Now, the complex part: load the popup's pie chart (the canvas element)
   // The data is just the amount of time each color took.
   const dictionary = new Object();
-  entries.forEach(row => {
+  let padded_entries = addEntryPadding(entries); // We want to count untracked/padded time as well
+  padded_entries.forEach(row => {
     let _duration = duration(row['start'], row['end'])
-    if (dictionary[row['color']] == null) {dictionary[row['color']] = _duration}
-      else {dictionary[row['color']] = dictionary[row['color']] + _duration}
+    let color = row['pad'] ? '255, 255, 255' : row['color'] // Untracked/padded time is just white
+
+    // Then, add this duration to the appropriate place in the dictionary
+    if (dictionary[color] == null) {dictionary[color] = _duration}
+    else {dictionary[color] = dictionary[color] + _duration}
   })
 
   let data = Object.values(dictionary)

@@ -36,7 +36,7 @@ div.item {
     padding: 0.4rem;
 
     flex: var(--f);
-    box-sixing:border-box;
+    box-sizing:border-box;
 
     border:2px solid rgb(var(--col));
     background-color:rgba(var(--col), 0.5);

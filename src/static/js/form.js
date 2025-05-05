@@ -70,6 +70,21 @@ function setFormContent(name, start, end, color) {
   }
 }
 
+function parseElementApiInfo(element) {
+  /*
+  Parse the `data-api-info` parameter of an HTML object into a computer-readable JSON format.
+  */
+  let id = element.id;
+  let data = element.getAttribute('data-api-info').split('\\');
+  let name = data[0];
+  let start = data[1];
+  let end = data[2];
+  let color = data[3];
+
+  return [id, name, start, end, color]
+}
+
+
 async function submitForm() {
   /*
   This function handles form submission and has two modes:
@@ -84,7 +99,7 @@ async function submitForm() {
     let outcome = await addElement(name, start, end, color);
     if (outcome === true) {
       // Set the start value to the current value of end - QoL.
-      setFormContent('', end, '', '220, 220, 220')
+      setFormContent('', end, '', '220, 220, 220');
     } else { // It was unsuccessful
       displayError(outcome);
     }
@@ -129,7 +144,7 @@ function exitEditMode() {
 }
 
 function registerEditing(obj) {
-  // Register the editing mode -
+  // Register the editing mode (in the form; this doesn't actually do the editing) -
   // what this does is set the input area to the values of this object
   // and set some parameters in the input area to let the rest of the world
   // know we are editing.
@@ -138,15 +153,11 @@ function registerEditing(obj) {
     event.preventDefault();
 
     // Parse data-api-info atrribute to get appropriate data
-    let id = obj.id;
-    let data = obj.getAttribute('data-api-info').split('\\');
-    let name = data[0];
-    let start = data[1];
-    let end = data[2];
-    let color = data[3];
+    let [id, name, start, end, color] = parseElementApiInfo(obj)
 
     // Populate the input section with the editing data with this info and save copies of it
     let form = document.querySelector('.form-body');
+
     // Explanation for this:
     // If we are already editing the form, we do not want to go back to that content. If we were to do so,
     // consider the case where we are editing an element and switch to another:

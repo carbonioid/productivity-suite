@@ -79,23 +79,20 @@ function registerPopup(obj, type) {
       // Toggle whether hidden
       popup.style.display = 'block';
 
-
       // Get the coordinates of the mouse relative to the viewport
       const mouseX = event.clientX;
       const mouseY = event.clientY;
       setPopupPosition(popup, mouseX, mouseY)
     })
 
-    document.addEventListener('click', (event) => {
-      if (event.target !== popup && event.target.parent !== popup) {
-        popup.style.display = 'none';
-      }
+    document.addEventListener('contextmenu', (event) => {
+      // Check if the target is `obj` or a child of `obj`. If not, make this popup disappear.
+      if (!obj.contains(event.target)) { popup.style.display = 'none'; }
     })
 
-    document.addEventListener('contextmenu', (event) => {
-      if (event.target !== popup && event.target !== obj) {
-        popup.style.display = 'none';
-      }
+    document.addEventListener('click', (event) => {
+      // Check if the target is `popup` or a child of `popup`. If not, make this popup disappear.
+      if (!popup.contains(event.target)) { popup.style.display = 'none'; }
     })
   }
 }
