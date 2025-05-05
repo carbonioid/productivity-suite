@@ -77,9 +77,13 @@ function loadDay(name, entries, parent) {
   This function loads the initial HTML (container, title, title popup) for any given day.
   The container is selected/made based on `name` (as the container's id)
   */
+  // Get day of the week
+  let date = new Date(name)
+  const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  let dayName = days[date.getDay()];
   // Create popup body
   let popup_body = `<p><b>${format_yyyymmdd(name)}</b></p>
-  <p>DUR long</p><br>
+    <p>${dayName}</p><br>
   <canvas id="chart-${name}" width="100" height="100"></canvas>`;
   if (entries.length > 0) {
     let wokeAt = entries[0]['start'];
@@ -87,7 +91,6 @@ function loadDay(name, entries, parent) {
 
     let sleptAt = entries[entries.length - 1]['end'];
     popup_body += `Slept at <b>${sleptAt}</b><br>`
-    popup_body = popup_body.replace('DUR', format_mins(duration(wokeAt, sleptAt)))
   }
 
   // Create classes
@@ -110,8 +113,11 @@ function loadDay(name, entries, parent) {
     registerPopup(Array.from(parent.lastElementChild.children)[0], "rclick")
   } else {
     let target_obj = parent.querySelector(`[id=\"${name}\"]`);
+    console.log(Array.from(target_obj.children)[0])
     target_obj.outerHTML = initial_html;
+    target_obj = parent.querySelector(`[id=\"${name}\"]`); // Reselect to reflect changes - otherwise listeners aren't added properly
     registerPopup(Array.from(target_obj.children)[0], "rclick")
+
   }
 
   // Now, the complex part: load the popup's pie chart (the canvas element)

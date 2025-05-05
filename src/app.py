@@ -25,9 +25,20 @@ def main():
 # It is stored in the res/ folder
 @app.route("/add", methods=["POST"])
 def upload():
-    # POST method: adding an item.
-    # Returns 400 if the data is invalid, 201 otherwise
-    # On the 201 response, returns the new database entry.
+    """
+    Takes:
+    headers:
+        "File": <filename w/o extension>, (in header)
+    body:
+        {
+            name: <new item name>,
+            start: <new item start time>,
+            end: <new item end time>,
+            color: <new item color in "R, G, B">
+        }
+    And adds this element to the DB.
+    Returns 400 if id/file doesn't exist, 500 if an unknown error occurs, and 201 if the resource was successfully edited.
+    """
     json = request.get_json()
     filename = request.headers['File']
 
@@ -98,12 +109,13 @@ def fetch_data():
     else:
         return Response('The Scope that you supplied was invalid.', status=400)
 
-# TODO: you cannot add an element which overlaps another
+# TODO: submitForm() should set end value by just grabbing most recent item rather than relying on added item being most recent. Make a form.js function to get item data from data-api-info to make this easier.
 # TODO: identical names merge into same element - this happens on backend as adding is now handled by backend too via /data
 # TODO: overhaul functionality where start date is set after adding - stuff that isn't placed at end doesn't get it and editing last item does get it
 # TODO: realtime visualistaion of what you're adding?
+# TODO: search function with filters
 # TODO: make some documentation
-# TODO: clean-up database stuff - add common function for db writing and validation (and better validation in general)
+# TODO: add common function for db writing
 # TODO: more input options - timer etc
 # TODO: untracked time in pie chart & make them a bit less janky with selecting/deselecting
 # TODO: ability to "select day" to add things to it

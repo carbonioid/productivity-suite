@@ -94,22 +94,27 @@ def delete_row(filename, id):
 def invalid(json, day):
     """
     Takes a request JSON (from /edit or /add) and verifies it:
-    - end must be after start (equal timestamps are invalid)
-    - checks there are no blank fields
-    - checks that these timestamps do not overlap any other events in the given `day`
+        (1) the new end time must be after the new start time (equal timestamps are invalid)
+        (2) checks there are no blank fields
+        (3) the request file exists (so no other functions have to do this check)
+        (4) checks that these timestamps do not overlap any other events in the given `day`
 
     Returns the error message if invalid, None otherwise
     """
 
-    if '' in json.values(): return 'One or more of your fields is blank'
+    if hhmm_to_minutes(json['end']) <= hhmm_to_minutes(json['start']): return "The times you inputted aren't valid." # (1)
 
-    if hhmm_to_minutes(json['end']) <= hhmm_to_minutes(json['start']): return "The times you inputted aren't valid."
+    if '' in json.values(): return 'One or more of your fields is blank' # (2)
 
     start, end = hhmm_to_minutes(json['start']), hhmm_to_minutes(json['end'])
     data = fetch_db_contents([day+'.csv'])
-    if data is None: return f"The requested file ({day}) does not exist"
+    if data is None: return f"The requested file ({day}) does not exist" # (3)
+
+    # Check no times overlap - (4)
     for row in list(data.values())[0]:
         row_start, row_end = hhmm_to_minutes(row['start']), hhmm_to_minutes(row['end'])
-
-        if (row_start < start and row_end > start) or (row_start > start and row_start < end):
+        # Either: it starts before the new activity but ends after it starts OR it starts somewhere in this activity
+        if (row_start < start < row_end) or (start < row_start < end):
             return f"The inputted activity overlaps another: {row['name']}"
+
+    return None # not invalid
