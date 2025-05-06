@@ -1,4 +1,4 @@
-export { format_mins, format_yyyymmdd, duration, string_to_mins }
+export { format_mins, format_yyyymmdd, duration, string_to_mins, dayOfWeek }
 
 function format_yyyymmdd(string) {
   let [year, month, day] = string.split('-');
@@ -32,4 +32,11 @@ function duration(start, end) {
   let start_mins = string_to_mins(start);
   let end_mins = string_to_mins(end);
   return end_mins - start_mins;
+}
+
+function dayOfWeek(date) {
+  /* Takes YYYY-MM-DD date and returns day of week */
+  let dateObject = new Date(date);
+  const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  return days[dateObject.getDay()];
 }

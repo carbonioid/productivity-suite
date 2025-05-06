@@ -20,7 +20,7 @@ div.container {
 }
 
 .padded-container {
-    margin-bottom:2rem;
+    margin:1rem 0;
 }
 
 @property --col {
@@ -167,20 +167,31 @@ div.tag-select {
 }
 
 .day-title {
-    width:3rem;
+    width:4.5rem;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     font-size:0.75rem;
-    text-decoration:underline;
-    text-decoration-thickness: 1.5px;
+    font-weight:bold;
 
     padding: 0.4rem;
+    padding-left:0;
 
     /* border:2px solid rgb(240,240,240); */
     background-color:rgba(240,240,240, 0.5);
 
-    text-align: center;
+    display:flex;
+    justify-content: center;
+    align-items:center;
+}
+
+.day-title .popup {
+    text-align:center;
+    font-weight:normal;
+}
+
+.day-title img.menu {
+    margin-right:0.1rem;
 }
 
 .display-form {
@@ -221,4 +232,24 @@ div.tag-select {
     text-decoration:underline;
     text-decoration-thickness: 0.5px;
     cursor: pointer;
+}
+
+.menu {
+    padding:0.1rem;
+    border-radius: 50%;
+    overflow: hidden;
+    object-fit: cover;
+}
+.menu:hover {
+    background:rgba(120, 120, 120, 0.5);
+}
+
+.week-separator {
+    font-size:1rem;
+    font-weight:bold;
+    margin:1rem 0;
+
+    /* This is for the little vertical line */
+    border-left: 2px solid black;
+    padding-left:0.5rem;
 }

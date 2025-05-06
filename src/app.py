@@ -112,15 +112,16 @@ def fetch_data():
 
 app.run(port=8000)
 
+# TODO: refactor dbl-click and right-click behaviour to be context menus instead
 # TODO: search function with filters
 # TODO: make some documentation
 # TODO: more input options - timer etc
-# TODO: refactor dbl-click and right-click behaviour to be context menus instead
 # TODO: ability to "select day" to add things to it
 # TODO: realtime visualistaion of what you're adding?
+# TODO: combination should work for editing too (maybe remove combination; its kinda dumb)
 
 # ----
 # LONG TERM ADDITIONS:
 # CGP-style goal tracker
-# To-do lists
+# To-do lists (separate ones for daily and overall; daily one could overflow into next day)
 # ----

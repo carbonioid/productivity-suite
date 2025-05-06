@@ -5,7 +5,7 @@ It also handles adding, editing and deleting elements.
 
 export { addElement, editElement, deleteElement, load };
 import { registerEditing, registerPopup, setCompact, setRigidity, displayError, showOthers } from "./ui.js";
-import { format_mins, format_yyyymmdd, string_to_mins, duration } from './utils.js'
+import { format_mins, format_yyyymmdd, string_to_mins, duration, dayOfWeek } from './utils.js'
 
 function addEntryPadding(entries) {
   /*
@@ -100,13 +100,14 @@ function loadDay(name, entries, parent) {
   The container is selected/made based on `name` (as the container's id)
   */
   // Get day of the week
-  let date = new Date(name)
-  const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-  let dayName = days[date.getDay()];
+  let dayName = dayOfWeek(name);
+
   // Create popup body
-  let popup_body = `<p><b>${format_yyyymmdd(name)}</b></p>
-    <p>${dayName}</p><br>
+  let popup_body = `
+  <p><b>${format_yyyymmdd(name)}</b></p>
+  <p>${dayName}</p><br>
   <canvas id="chart-${name}" width="100" height="100"></canvas>`;
+
   if (entries.length > 0) {
     let wokeAt = entries[0]['start'];
     popup_body += `<br>Woke at <b>${wokeAt}</b><br>`
@@ -122,6 +123,7 @@ function loadDay(name, entries, parent) {
   // Create HTML
   let initial_html = `<div class="${classes}" id="${name}">
     <div class="day-title">
+    <img src="/static/img/menu.png" width="12px" height="12px" class="menu">
     ${format_yyyymmdd(name)}
     <div class="mono popup">
       ${popup_body}
@@ -159,7 +161,7 @@ function loadDay(name, entries, parent) {
   colors.forEach(color => {
     backgroundColor.push(`rgb(${color})`)
   })
-
+  let dataTotal = data.reduce((a, b) => a + b); // sum values
   const obj = document.getElementById(`chart-${name}`).getContext('2d');
 
   Chart.defaults.font.family = 'YourFont';
@@ -193,7 +195,7 @@ function loadDay(name, entries, parent) {
                 },
                 callbacks: {
                   label: function(context) {
-                    return format_mins(context.formattedValue);
+                    return `${format_mins(context.formattedValue)} (${(100*Number(context.formattedValue)/dataTotal).toFixed(0)}%)`;
                   },
                   title: function () { return ''}
                 }
@@ -222,8 +224,15 @@ async function load(scope) {
       let name = day[0];
       let entries = day[1];
 
+      let parent = document.querySelector('.parent-container');
+
+      // Add week separators
+      if (dayOfWeek(name) == 'Sunday') {
+        parent.insertAdjacentHTML("beforeend", `<div class="week-separator">Week ending ${format_yyyymmdd(name)}</div>`)
+      }
+
       // Add a new container to the parent container for this day, as well as the title and its popup
-      loadDay(name, entries, document.querySelector('.parent-container'));
+      loadDay(name, entries, parent);
 
       // Then add all the day's elements (from the given entries) into the new flexbox.
       let container = document.getElementById(name);

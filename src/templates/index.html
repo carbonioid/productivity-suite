@@ -2,7 +2,7 @@
 <head>
     <title>Squee</title>
     <link href="{{ url_for('static', filename='styles.css') }}" rel="stylesheet">
-    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- for pie charts -->
 
     <script src="{{ url_for('static', filename='js/compile.js') }}" type="module"></script>
@@ -14,6 +14,7 @@
 </head>
 <html>
     <body>
+        <!-- <img src="{{ url_for('static', filename='img/menu.png') }}" width="16px" class="menu"> -->
         <p class="editing-indicator soft-hidden">editing - <a class="editing-exit-button">exit</a></p>
         <form class="form-body" action="#" data-mode="add">
             <input type="submit" class="mono add-btn" value="+">
