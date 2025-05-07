@@ -124,7 +124,7 @@ function loadDay(name, entries, parent) {
   let initial_html = `<div class="${classes}" id="${name}">
     <div class="day-title">
     <img src="/static/img/menu.png" width="12px" height="12px" class="menu-button">
-    ${format_yyyymmdd(name)}
+    <p class="title">${format_yyyymmdd(name)}</p>
     <div class="mono context-menu hidden">
       ${popup_body}
     </div>

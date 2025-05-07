@@ -181,16 +181,17 @@ div.tag-select {
     font-weight:bold;
 
     padding: 0.4rem;
-    padding-left:0;
 
     background-color:rgba(240,240,240, 0.5);
 
-    display:flex;
     position:relative;
-    justify-content: center;
-    align-items:center;
 
     overflow:visible;
+}
+
+.day-title .title {
+    position:relative;
+    float:left;
 }
 
 .day-title .context-menu {
@@ -203,12 +204,14 @@ div.tag-select {
 
 .day-title img.menu-button {
     margin-right:0.1rem;
+    position:relative;
+    float:left;
 }
 
 .display-form {
     margin-bottom:1.75rem;
-    float:right;
     font-size: 0.75rem;
+    float:right;
 }
 
 .display-form input {
