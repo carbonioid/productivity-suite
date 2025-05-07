@@ -7,7 +7,7 @@ function format_yyyymmdd(string) {
     "Jan", "Feb", "Mar", "Apr", "May", "June",
     "July", "Aug", "Sept", "Oct", "Nov", "Dec"
   ];
-  month = months[Number(month)]
+  month = months[Number(month)-1]
   return `${Number(day)} ${month}`
 }
 
