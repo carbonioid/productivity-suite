@@ -2,7 +2,7 @@
 This file handles the main UI of the page, except the form. That is managed by form.js and some of its functionality is impoted here.
 */
 
-export { registerPopup, registerEditing, setCompact, setRigidity, showOthers, displayError, addCheckboxListeners }
+export { registerPopup, registerEditing, setCompact, setRigidity, showOthers, displayError, addCheckboxListeners, registerContextMenu }
 import { registerEditing } from "./form.js"
 /*
 Error displaying
@@ -45,58 +45,38 @@ function setPopupPosition(popup, mouseX, mouseY) {
   }
 }
 
-function registerPopup(obj, type) {
+function registerPopup(parent, popup) {
   /*
   Register the correct event listeners for this object's popup (with class .popup).
-  Valid types:
-  hover: actives simply on hover and disappears once the mouse leaves
-  rclick: actives on right click and disappears when clicking off
   */
-  let popup = obj.querySelector(".popup");
+  parent.addEventListener('mouseenter', () => {
+    popup.style.display = 'block';
+  });
 
-  if (type === "hover") {
-    obj.addEventListener('mouseenter', () => {
-      popup.style.display = 'block';
-    });
+  parent.addEventListener('mouseleave', () => {
+    popup.style.display = 'none';
+  })
 
-    obj.addEventListener('mouseleave', () => {
-      popup.style.display = 'none';
-    })
+  parent.addEventListener('mousemove', (event) => {
+    // Get the coordinates of the mouse relative to the viewport
+    const mouseX = event.clientX;
+    const mouseY = event.clientY;
 
-    obj.addEventListener('mousemove', (event) => {
-      // Get the coordinates of the mouse relative to the viewport
-      const mouseX = event.clientX;
-      const mouseY = event.clientY;
-
-      setPopupPosition(popup, mouseX, mouseY);
-    })
-  }
-
-  else if (type === "rclick") {
-    obj.addEventListener('contextmenu', (event) => {
-      event.preventDefault();
-
-      // Toggle whether hidden
-      popup.style.display = 'block';
-
-      // Get the coordinates of the mouse relative to the viewport
-      const mouseX = event.clientX;
-      const mouseY = event.clientY;
-      setPopupPosition(popup, mouseX, mouseY)
-    })
-
-    document.addEventListener('contextmenu', (event) => {
-      // Check if the target is `obj` or a child of `obj`. If not, make this popup disappear.
-      if (!obj.contains(event.target)) { popup.style.display = 'none'; }
-    })
-
-    document.addEventListener('click', (event) => {
-      // Check if the target is `popup` or a child of `popup`. If not, make this popup disappear.
-      if (!popup.contains(event.target)) { popup.style.display = 'none'; }
-    })
-  }
+    setPopupPosition(popup, mouseX, mouseY);
+  })
 }
 
+function registerContextMenu(button, popup) {
+  button.addEventListener('click', (event) => {
+    // Toggle whether hidden
+    popup.classList.toggle("hidden");
+  })
+
+  document.addEventListener('click', (event) => {
+    // Check if the target is `button` or a child of `button`. If not, make this popup disappear.
+    if (!button.contains(event.target) && !popup.contains(event.target)) { popup.classList.add("hidden") }
+  })
+}
 /*
 These are the options and functions for the checkboxes that edit the display
 of the days themselves. These are also used by run.js to make sure anything saved in these

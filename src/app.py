@@ -112,7 +112,8 @@ def fetch_data():
 
 app.run(port=8000)
 
-# TODO: refactor dbl-click and right-click behaviour to be context menus instead
+# TODO: add more functionality to context menus
+# TODO: ability to collapse weeks
 # TODO: search function with filters
 # TODO: make some documentation
 # TODO: more input options - timer etc

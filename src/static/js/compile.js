@@ -4,7 +4,7 @@ It also handles adding, editing and deleting elements.
 */
 
 export { addElement, editElement, deleteElement, load };
-import { registerEditing, registerPopup, setCompact, setRigidity, displayError, showOthers } from "./ui.js";
+import { registerEditing, registerPopup, setCompact, setRigidity, displayError, showOthers, registerContextMenu } from "./ui.js";
 import { format_mins, format_yyyymmdd, string_to_mins, duration, dayOfWeek } from './utils.js'
 
 function addEntryPadding(entries) {
@@ -57,7 +57,7 @@ function loadItem(id, name, start, end, color, container) {
 
   let new_elem = container.lastElementChild;
   registerEditing(new_elem);
-  registerPopup(new_elem, "hover");
+  registerPopup(new_elem, new_elem.querySelector('.popup'));
 }
 
 function loadPadItem(start, end, container) {
@@ -79,7 +79,7 @@ function loadPadItem(start, end, container) {
   container.insertAdjacentHTML('beforeend', html);
 
   let new_elem = container.lastElementChild;
-  registerPopup(new_elem, "hover");
+  registerPopup(new_elem, new_elem.querySelector('.popup'));
 }
 
 function loadDayEntries(entries, container) {
@@ -123,9 +123,9 @@ function loadDay(name, entries, parent) {
   // Create HTML
   let initial_html = `<div class="${classes}" id="${name}">
     <div class="day-title">
-    <img src="/static/img/menu.png" width="12px" height="12px" class="menu">
+    <img src="/static/img/menu.png" width="12px" height="12px" class="menu-button">
     ${format_yyyymmdd(name)}
-    <div class="mono popup">
+    <div class="mono context-menu hidden">
       ${popup_body}
     </div>
     </div>
@@ -134,75 +134,78 @@ function loadDay(name, entries, parent) {
   // Add initial HTML (This code will either add to the proper container or create a new one if it doesn't exist)
   if (document.getElementById(name) == null) { // If the element doesn't already exist, it's the newest one so we need to add it at the end
     parent.insertAdjacentHTML("beforeend", initial_html);
-    registerPopup(parent.lastElementChild.firstElementChild, "rclick")
+    registerContextMenu(parent.lastElementChild.firstElementChild.querySelector('.menu-button'), parent.lastElementChild.firstElementChild.querySelector('.context-menu'))
   } else {
     let target_obj = parent.querySelector(`[id=\"${name}\"]`);
     target_obj.outerHTML = initial_html;
     target_obj = parent.querySelector(`[id=\"${name}\"]`); // Reselect to reflect changes - otherwise listeners aren't added properly
-    registerPopup(target_obj.firstElementChild, "rclick")
+    registerContextMenu(target_obj.firstElementChild.querySelector('.menu-button'), target_obj.firstElementChild.querySelector('.context-menu'))
   }
 
-  // Now, the complex part: load the popup's pie chart (the canvas element)
-  // The data is just the amount of time each color took.
-  const dictionary = new Object();
-  let padded_entries = addEntryPadding(entries); // We want to count untracked/padded time as well
-  padded_entries.forEach(row => {
-    let _duration = duration(row['start'], row['end'])
-    let color = row['pad'] ? '255, 255, 255' : row['color'] // Untracked/padded time is just white
+  if (entries.length > 0) {
 
-    // Then, add this duration to the appropriate place in the dictionary
-    if (dictionary[color] == null) {dictionary[color] = _duration}
-    else {dictionary[color] = dictionary[color] + _duration}
-  })
+    // Now, the complex part: load the popup's pie chart (the canvas element)
+    // The data is just the amount of time each color took.
+    const dictionary = new Object();
+    let padded_entries = addEntryPadding(entries); // We want to count untracked/padded time as well
+    padded_entries.forEach(row => {
+      let _duration = duration(row['start'], row['end'])
+      let color = row['pad'] ? '255, 255, 255' : row['color'] // Untracked/padded time is just white
 
-  let data = Object.values(dictionary)
-  let colors = Object.keys(dictionary)
-  let backgroundColor = []
-  colors.forEach(color => {
-    backgroundColor.push(`rgb(${color})`)
-  })
-  let dataTotal = data.reduce((a, b) => a + b); // sum values
-  const obj = document.getElementById(`chart-${name}`).getContext('2d');
+      // Then, add this duration to the appropriate place in the dictionary
+      if (dictionary[color] == null) { dictionary[color] = _duration }
+      else { dictionary[color] = dictionary[color] + _duration }
+    })
 
-  Chart.defaults.font.family = 'YourFont';
-  new Chart(obj, {
+    let data = Object.values(dictionary)
+    let colors = Object.keys(dictionary)
+    let backgroundColor = []
+    colors.forEach(color => {
+      backgroundColor.push(`rgb(${color})`)
+    })
+    let dataTotal = data.reduce((a, b) => a + b); // sum values
+    const obj = document.getElementById(`chart-${name}`).getContext('2d');
+
+    Chart.defaults.font.family = 'YourFont';
+    new Chart(obj, {
       type: 'pie',
       data: {
         labels: colors,
-          datasets: [{
-            label: `${name}`,
-              data: data,
-              backgroundColor: backgroundColor,
-              hoverOffset: 0
-          }]
+        datasets: [{
+          label: `${name}`,
+          data: data,
+          backgroundColor: backgroundColor,
+          hoverOffset: 0
+        }]
       },
       options: {
-          responsive: false, // Ensure the size is fixed
-          maintainAspectRatio: false,
-          animation:true,
-          plugins: {
-              legend: {
-                display:false
+        responsive: false, // Ensure the size is fixed
+        maintainAspectRatio: false,
+        animation: true,
+        plugins: {
+          legend: {
+            display: false
+          },
+          tooltip: {
+            displayColors: false,
+            backgroundColor: "rgb(192, 192, 192)",
+            cornerRadius: 0,
+            borderColor: "#ccc",
+            borderWidth: 1,
+            bodyFont: {
+              family: `font-family: Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace`,
+            },
+            callbacks: {
+              label: function (context) {
+                return `${format_mins(context.formattedValue)} (${(100 * Number(context.formattedValue) / dataTotal).toFixed(0)}%)`;
               },
-              tooltip: {
-                displayColors: false,
-                backgroundColor: "rgb(192, 192, 192)",
-                cornerRadius: 0,
-                borderColor: "#ccc",
-                borderWidth: 1,
-                bodyFont: {
-                  family: `font-family: Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace`,
-                },
-                callbacks: {
-                  label: function(context) {
-                    return `${format_mins(context.formattedValue)} (${(100*Number(context.formattedValue)/dataTotal).toFixed(0)}%)`;
-                  },
-                  title: function () { return ''}
-                }
-              }
+              title: function () { return '' }
+            }
           }
+        }
       }
-  });
+    });
+  }
 }
 
 async function load(scope) {

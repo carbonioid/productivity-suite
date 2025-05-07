@@ -64,11 +64,6 @@ p.heading {
     font-weight: 500;
 }
 
-div.popup p {
-    font-size: 0.75rem;
-    line-height: 1rem;
-}
-
 div.popup {
     font-family: Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
     display: none; /* initially hidden */
@@ -76,6 +71,18 @@ div.popup {
     width:fit-content;
     padding: 10px;
     z-index: 999; /* ensure above other elements */
+    font-size: 0.75rem;
+    line-height: 1rem;
+}
+
+div.context-menu {
+    width:fit-content;
+    padding: 10px;
+    z-index: 999; /* ensure above other elements */
+    font-size: 0.75rem;
+    line-height: 1rem;
+
+    position:absolute;
 }
 
 .mono {
@@ -93,7 +100,6 @@ div.popup {
     display:inline-flex;
     align-items:center;
     vertical-align: top;
-    /* height:100%; */
     font-size: 0.75rem;
     margin-bottom:1.75rem;
 
@@ -177,20 +183,25 @@ div.tag-select {
     padding: 0.4rem;
     padding-left:0;
 
-    /* border:2px solid rgb(240,240,240); */
     background-color:rgba(240,240,240, 0.5);
 
     display:flex;
+    position:relative;
     justify-content: center;
     align-items:center;
+
+    overflow:visible;
 }
 
-.day-title .popup {
+.day-title .context-menu {
     text-align:center;
     font-weight:normal;
+
+    left:20px;
+    top:5px;
 }
 
-.day-title img.menu {
+.day-title img.menu-button {
     margin-right:0.1rem;
 }
 
@@ -234,14 +245,14 @@ div.tag-select {
     cursor: pointer;
 }
 
-.menu {
+.menu-button {
     padding:0.1rem;
     border-radius: 50%;
     overflow: hidden;
     object-fit: cover;
 }
-.menu:hover {
-    background:rgba(120, 120, 120, 0.5);
+.menu-button:hover {
+    background:rgba(120, 120, 120, 0.3);
 }
 
 .week-separator {
