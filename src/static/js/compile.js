@@ -4,7 +4,8 @@ It also handles adding, editing and deleting elements.
 */
 
 export { addElement, editElement, deleteElement, load };
-import { registerEditing, registerPopup, setCompact, setRigidity, displayError, showOthers, registerContextMenu } from "./ui.js";
+import { registerEditing, registerPopup, setCompact, setRigidity, displayError, showOthers, 
+  registerContextMenu, registerWeekCollapseIcon } from "./ui.js";
 import { format_mins, format_yyyymmdd, string_to_mins, duration, dayOfWeek } from './utils.js'
 
 function addEntryPadding(entries) {
@@ -125,7 +126,7 @@ function loadDay(name, entries, parent) {
     <div class="day-title">
     <img src="/static/img/menu.png" width="12px" height="12px" class="menu-button">
     <p class="title">${format_yyyymmdd(name)}</p>
-    <div class="mono context-menu hidden">
+    <div class="mono context-menu hidden soft-hidden">
       ${popup_body}
     </div>
     </div>
@@ -143,7 +144,6 @@ function loadDay(name, entries, parent) {
   }
 
   if (entries.length > 0) {
-
     // Now, the complex part: load the popup's pie chart (the canvas element)
     // The data is just the amount of time each color took.
     const dictionary = new Object();
@@ -166,7 +166,6 @@ function loadDay(name, entries, parent) {
     let dataTotal = data.reduce((a, b) => a + b); // sum values
     const obj = document.getElementById(`chart-${name}`).getContext('2d');
 
-    Chart.defaults.font.family = 'YourFont';
     new Chart(obj, {
       type: 'pie',
       data: {
@@ -208,11 +207,21 @@ function loadDay(name, entries, parent) {
   }
 }
 
+function loadWeekContainer(date, parent) {
+  // Figure out when the week *started*
+  parent.insertAdjacentHTML("beforeend", `<div class="week-container" id="week-${date}"><div class="week-separator">Week ending ${format_yyyymmdd(date)}<img src="/static/img/arrow.png" width="12px" height="12px" class="week-collapse-icon"></div><div class="days"></div></div>`)
+  parent = document.querySelector('.parent-container'); // Reselect to reflect changes
+
+  registerWeekCollapseIcon(parent.lastElementChild, parent.lastElementChild.querySelector('.week-collapse-icon'));
+
+  return parent.lastElementChild.querySelector('.days'); // Return week container
+}
+
 async function load(scope) {
   /*
   Populate parts of the page from the given scope.
   */
-  await fetch("/data",  {
+  await fetch("/data", {
     method: "GET",
     headers: {
       'Content-Type': 'application/json',
@@ -221,33 +230,40 @@ async function load(scope) {
   }).then(response => {
     return response.json()
   }).then(data => {
-    // This syntactic mess reverses the object
     let days = [...Object.entries(data)].reverse();
+
+    const parent = document.querySelector('.parent-container');
+
+    // Set week container
+    let currentWeekContainer = null;
+    if (dayOfWeek(days[0][0]) != 'Sunday') {
+      let currentWeekContainer = loadWeekContainer(days[0][0], parent)
+    } // it will be set on the next iteration if the day is already sunday
+
+    // This syntactic mess reverses the object
     days.forEach(day => {
       let name = day[0];
       let entries = day[1];
 
-      let parent = document.querySelector('.parent-container');
-
-      // Add week separators
+      // Update week separator if relevant
       if (dayOfWeek(name) == 'Sunday') {
-        parent.insertAdjacentHTML("beforeend", `<div class="week-separator">Week ending ${format_yyyymmdd(name)}</div>`)
+        currentWeekContainer = loadWeekContainer(name, parent)
       }
 
       // Add a new container to the parent container for this day, as well as the title and its popup
-      loadDay(name, entries, parent);
+      loadDay(name, entries, currentWeekContainer);
 
       // Then add all the day's elements (from the given entries) into the new flexbox.
       let container = document.getElementById(name);
       loadDayEntries(entries, container)
 
-      // These change the display of rigid items and the element's paddign respectively.
+      // These change the display of rigid items and the element's padding respectively, to reflect user choices
       setRigidity(container)
       setCompact(container)
     })
   })
 
-  // Just to be safe, refresh the "show others" option in case we just added the new day - this was is just cleaner
+  // Just to be safe, refresh the "show others" option in case we just added the new day - this was just cleaner
   showOthers(document.querySelector(".parent-container"))
 }
 

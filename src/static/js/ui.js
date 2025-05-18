@@ -2,8 +2,10 @@
 This file handles the main UI of the page, except the form. That is managed by form.js and some of its functionality is impoted here.
 */
 
-export { registerPopup, registerEditing, setCompact, setRigidity, showOthers, displayError, addCheckboxListeners, registerContextMenu }
+export { registerPopup, registerEditing, setCompact, setRigidity, showOthers, displayError, addCheckboxListeners, registerContextMenu, registerWeekCollapseIcon }
 import { registerEditing } from "./form.js"
+import { getCookies } from "./utils.js"
+
 /*
 Error displaying
 */
@@ -14,6 +16,7 @@ function displayError(msg) {
   console.log(`Receieved error: ${msg}`);
   errorbox.classList.remove("hidden")
   errorbox.textContent = msg;
+
   setTimeout(() => {
     errorbox.classList.add("hidden");
     errorbox.textContent = "";
@@ -21,7 +24,7 @@ function displayError(msg) {
 }
 
 /*
-These are the options and functions that add event listeners to the main container items (things *in* days and the days themselves).
+These are the options and functions that add event listeners
 */
 
 function setPopupPosition(popup, mouseX, mouseY) {
@@ -70,13 +73,36 @@ function registerContextMenu(button, popup) {
   button.addEventListener('click', (event) => {
     // Toggle whether hidden
     popup.classList.toggle("hidden");
+    popup.classList.toggle("soft-hidden");
   })
 
   document.addEventListener('click', (event) => {
     // Check if the target is `button` or a child of `button`. If not, make this popup disappear.
-    if (!button.contains(event.target) && !popup.contains(event.target)) { popup.classList.add("hidden") }
+    if (!button.contains(event.target) && !popup.contains(event.target)) {
+      popup.classList.add("soft-hidden");
+      popup.classList.add("hidden");
+    }
   })
 }
+
+function registerWeekCollapseIcon(parent, button) {
+  button.addEventListener('click', (event) => {
+    // Toggle rotation
+    parent.classList.toggle("collapsed");
+    button.classList.toggle("rotated");
+
+    // Save status in cookie
+    const status = parent.classList.contains('collapsed') ? 'closed' : 'open'
+    document.cookie = `${parent.id}=${status}`
+  })
+
+  // Respect saved status (in cookie)
+  const savedValue = getCookies()[parent.id]
+  if (savedValue == 'closed') {
+    button.dispatchEvent(new Event('click'))
+  }
+}
+
 /*
 These are the options and functions for the checkboxes that edit the display
 of the days themselves. These are also used by run.js to make sure anything saved in these

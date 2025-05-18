@@ -78,11 +78,12 @@ div.popup {
 div.context-menu {
     width:fit-content;
     padding: 10px;
-    z-index: 999; /* ensure above other elements */
+    z-index: 1006; /* ensure above other elements */
     font-size: 0.75rem;
     line-height: 1rem;
 
     position:absolute;
+    transition: opacity 0.1s ease-in-out; /* for animations */
 }
 
 .mono {
@@ -102,8 +103,6 @@ div.context-menu {
     vertical-align: top;
     font-size: 0.75rem;
     margin-bottom:1.75rem;
-
-    .clearfix::after
 }
 
 .form-body input[type="text"],input[type="time"] {
@@ -266,4 +265,26 @@ div.tag-select {
     /* This is for the little vertical line */
     border-left: 2px solid black;
     padding-left:0.5rem;
+}
+
+.collapsed .days {
+    max-height:0;
+}
+
+.days {
+    max-height:207.2px;
+    transition: max-height 0.25s ease-in-out;
+    overflow:hidden;
+}
+
+.week-collapse-icon {
+    display: inline-block;
+    cursor:pointer;
+    transition: transform 0.25s ease-in-out;
+    margin-left:0.5rem;
+}
+
+/* for .week-collapse-icon */
+.rotated {
+    transform:rotate(90deg);
 }
