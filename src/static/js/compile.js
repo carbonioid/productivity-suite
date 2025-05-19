@@ -3,7 +3,7 @@ This file handles taking input form the server and compiling it to HTML.
 It also handles adding, editing and deleting elements.
 */
 
-export { addElement, editElement, deleteElement, load };
+export { addElement, editElement, deleteElement, load, initialiseContainers };
 import { registerEditing, registerPopup, setCompact, setRigidity, displayError, showOthers, 
   registerContextMenu, registerWeekCollapseIcon } from "./ui.js";
 import { format_mins, format_yyyymmdd, string_to_mins, duration, dayOfWeek } from './utils.js'
@@ -36,6 +36,43 @@ function addEntryPadding(entries) {
   }
 
   return new_entries
+}
+
+async function initialiseContainers() {
+  await fetch("/data", {
+    method: "GET",
+    headers: {
+      'Content-Type': 'application/json',
+      'Scope': '*'
+    }
+  }).then(response => {
+    return response.json()
+  }).then(data => {
+    let days = [...Object.entries(data)].reverse();
+
+    const parent = document.querySelector('.parent-container');
+
+    // Set week container
+    let currentWeekContainer = null;
+    if (dayOfWeek(days[0][0]) != 'Sunday') {
+      currentWeekContainer = loadWeekContainer(days[0][0], parent)
+    } // it will be set on the next iteration if the day is already sunday
+
+    // This syntactic mess reverses the object
+    days.forEach(day => {
+      let name = day[0];
+
+      // Update week separator if relevant
+      if (dayOfWeek(name) == 'Sunday') {
+        currentWeekContainer = loadWeekContainer(name, parent)
+      }
+
+      const dayObject = document.createElement('div')
+      dayObject.id = name;
+
+      currentWeekContainer.appendChild(dayObject)
+    })
+  })
 }
 
 function loadItem(id, name, start, end, color, container) {
@@ -95,7 +132,7 @@ function loadDayEntries(entries, container) {
   })
 }
 
-function loadDay(name, entries, parent) {
+function loadDay(name, entries) {
   /*
   This function loads the initial HTML (container, title, title popup) for any given day.
   The container is selected/made based on `name` (as the container's id)
@@ -132,16 +169,11 @@ function loadDay(name, entries, parent) {
     </div>
   </div>`;
 
-  // Add initial HTML (This code will either add to the proper container or create a new one if it doesn't exist)
-  if (document.getElementById(name) == null) { // If the element doesn't already exist, it's the newest one so we need to add it at the end
-    parent.insertAdjacentHTML("beforeend", initial_html);
-    registerContextMenu(parent.lastElementChild.firstElementChild.querySelector('.menu-button'), parent.lastElementChild.firstElementChild.querySelector('.context-menu'))
-  } else {
-    let target_obj = document.getElementById(name);
-    target_obj.outerHTML = initial_html;
-    target_obj = document.getElementById(name) // Reselect to reflect changes - otherwise listeners aren't added properly
-    registerContextMenu(target_obj.firstElementChild.querySelector('.menu-button'), target_obj.firstElementChild.querySelector('.context-menu'))
-  }
+  // Add initial HTML (This code assumes the container already exists)
+  let target_obj = document.getElementById(name);
+  target_obj.outerHTML = initial_html;
+  target_obj = document.getElementById(name) // Reselect to reflect changes - otherwise listeners aren't added properly
+  registerContextMenu(target_obj.firstElementChild.querySelector('.menu-button'), target_obj.firstElementChild.querySelector('.context-menu'))
 
   if (entries.length > 0) {
     // Now, the complex part: load the popup's pie chart (the canvas element)
@@ -233,24 +265,13 @@ async function load(scope) {
 
     const parent = document.querySelector('.parent-container');
 
-    // Set week container
-    let currentWeekContainer = null;
-    if (dayOfWeek(days[0][0]) != 'Sunday') {
-      currentWeekContainer = loadWeekContainer(days[0][0], parent)
-    } // it will be set on the next iteration if the day is already sunday
-
     // This syntactic mess reverses the object
     days.forEach(day => {
       let name = day[0];
       let entries = day[1];
 
-      // Update week separator if relevant
-      if (dayOfWeek(name) == 'Sunday') {
-        currentWeekContainer = loadWeekContainer(name, parent)
-      }
-
       // Add a new container to the parent container for this day, as well as the title and its popup
-      loadDay(name, entries, currentWeekContainer);
+      loadDay(name, entries);
 
       // Then add all the day's elements (from the given entries) into the new flexbox.
       let container = document.getElementById(name);

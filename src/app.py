@@ -112,16 +112,10 @@ def fetch_data():
 
 app.run(port=8000, host="0.0.0.0")
 
-# TODO: move day/week div making to new function and then load() only has to populate these divs
-# TODO: refactor the contextmenu api to move it out of scope so it's not cut off (an object could be passed and then the api populates it)
 # TODO: refactor to have listener.js, compile/populate.js and fetching.js (and utils obviously)
 
-# fix collapsing/rigid mode now that we have containers - make function to return all days as singe list, probably
-# popups can get cut off by week containers
-# only add pie chart if day has content
-# editing an activity can overlap itsef
+# only add pie chart if day has content & if rigid mode is disabled, untracked time isn't shown on pie charts.
 # fix popups going off-screen
-# FT: if rigid mode is disabled, untracked time isn't shown on pie charts.
 # FT: up arrow to edit most recent item
 # FT: more diagnostics - change pie chart to bar chart / pie and bar charts for weeks / graph for weeks or months of overall activity (or rolling average)
 

@@ -6,6 +6,16 @@ export { registerPopup, registerEditing, setCompact, setRigidity, showOthers, di
 import { registerEditing } from "./form.js"
 import { getCookies } from "./utils.js"
 
+
+function getAllDays() {
+  let days = [];
+  Array.from(document.querySelector('.parent-container').children).forEach(week => {
+    days = [...days, ...Array.from(week.querySelector('.days').children)] // slice(1) so that we don't include the title
+  })
+
+  return days;
+}
+
 /*
 Error displaying
 */
@@ -152,12 +162,11 @@ function addCheckboxListeners() {
   document.querySelector('#show-others').addEventListener('click', (event) => { showOthers(document.querySelector('.parent-container')); })
 
   document.querySelector('#compact-mode').addEventListener('click', (event) => {
-    let days = Array.from(document.querySelector('.parent-container').children);
-    days.forEach(day => setCompact(day))
+    console.log(getAllDays())
+    getAllDays().forEach(day => setCompact(day))
   })
 
   document.querySelector('#rigid-mode').addEventListener('click', (event) => {
-    let days = Array.from(document.querySelector('.parent-container').children); // Do not include last element
-    days.forEach(day => setRigidity(day))
+    getAllDays().forEach(day => setRigidity(day))
   })
 }
