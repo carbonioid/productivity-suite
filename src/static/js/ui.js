@@ -178,7 +178,10 @@ function setRigidity(obj) {
 
   // Reload the chart to show/not show the rigid (white) data
   const chart = document.getElementById(`chart-${obj.id}`)
-  Chart.getChart(chart).destroy() // Destroy current chart instance
+  const chartJsObject = Chart.getChart(chart)
+  if (chartJsObject) {
+    chartJsObject.destroy() // Destroy current chart instance
+  }
 
   loadDayChart(chart, getEntriesFromDays(obj))
 }

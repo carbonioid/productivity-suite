@@ -211,10 +211,11 @@ function loadDay(name, entries) {
   // Create popup body
   let popup_body = `
   <p><b>${format_yyyymmdd(name)}</b></p>
-  <p>${dayName}</p><br>
-  <canvas id="chart-${name}" width="100" height="100"></canvas>`;
+  <p>${dayName}</p>`;
 
   if (entries.length > 0) {
+    popup_body += `<br><canvas id="chart-${name}" width="100" height="100"></canvas>`
+
     let wokeAt = entries[0]['start'];
     popup_body += `<br>Woke at <b>${wokeAt}</b><br>`
 
@@ -242,8 +243,9 @@ function loadDay(name, entries) {
   target_obj.outerHTML = initial_html;
   target_obj = document.getElementById(name) // Reselect to reflect changes - otherwise listeners aren't added properly
   registerContextMenu(target_obj.firstElementChild.querySelector('.menu-button'), target_obj.firstElementChild.querySelector('.context-menu'))
-
-  loadDayChart(document.getElementById(`chart-${name}`), entries)
+  if (entries.length > 0) {
+    loadDayChart(document.getElementById(`chart-${name}`), entries)
+  }
 }
 
 function loadWeekContainer(date, parent) {
