@@ -4,6 +4,7 @@ This file handles the main form of the page. Some functionality is exported to u
 
 import { addElement, editElement, deleteElement } from "./compile.js";
 import { displayError } from "./ui.js"
+import { parseElementApiInfo } from "./utils.js";
 export { addFormListeners, registerEditing }
 
 // "dictionary" of colors for different bits of text
@@ -68,20 +69,6 @@ function setFormContent(name, start, end, color) {
       }
     })
   }
-}
-
-function parseElementApiInfo(element) {
-  /*
-  Parse the `data-api-info` parameter of an HTML object into a computer-readable JSON format.
-  */
-  let id = element.id;
-  let data = element.getAttribute('data-api-info').split('\\');
-  let name = data[0];
-  let start = data[1];
-  let end = data[2];
-  let color = data[3];
-
-  return [id, name, start, end, color]
 }
 
 
@@ -153,7 +140,7 @@ function registerEditing(obj) {
     event.preventDefault();
 
     // Parse data-api-info atrribute to get appropriate data
-    let [id, name, start, end, color] = parseElementApiInfo(obj)
+    let [id, name, start, end, color] = Object.values(parseElementApiInfo(obj))
 
     // Populate the input section with the editing data with this info and save copies of it
     let form = document.querySelector('.form-body');

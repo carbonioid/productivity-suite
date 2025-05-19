@@ -2,9 +2,11 @@
 This file handles the main UI of the page, except the form. That is managed by form.js and some of its functionality is impoted here.
 */
 
-export { registerPopup, registerEditing, setCompact, setRigidity, showOthers, displayError, addCheckboxListeners, registerContextMenu, registerWeekCollapseIcon }
+export { registerPopup, registerEditing, setCompact, setRigidity, showOthers, displayError,
+   addCheckboxListeners, registerContextMenu, registerWeekCollapseIcon, getDisplayOptions }
 import { registerEditing } from "./form.js"
-import { getCookies } from "./utils.js"
+import { loadDayChart } from "./compile.js"
+import { getCookies, getEntriesFromDays } from "./utils.js"
 
 
 function getAllDays() {
@@ -133,15 +135,10 @@ checkboxes is taken into account on refresh. These functions are added as onclic
 to the checkboxes.
 */
 function showOthers() {
-  let hidden = document.querySelector('#show-others').checked;
+  const hidden = getDisplayOptions()['show-others']
   const parent = document.querySelector('.parent-container')
-  // let days = getAllDays().slice(1); // Do not include first element
-  // days.forEach(day => {
-  //   if (hidden) { day.classList.add("hidden"); }
-  //   else        { day.classList.remove("hidden"); }
-  // })
 
-  // First, hide all weeks.
+  // First, hide all week containers.
   let weeks = parent.children
   weeks = Array.from(weeks); // Do not include first element
   weeks.forEach(week => {
@@ -165,19 +162,33 @@ function showOthers() {
 }
 
 function setCompact(obj) {
-  let compact = document.querySelector('#compact-mode').checked
+  let compact = getDisplayOptions()['compact-mode']
   if (compact) { obj.classList.remove("padded-container"); }
   else             { obj.classList.add("padded-container"); }
 }
 
 function setRigidity(obj) {
-  let rigid = document.querySelector('#rigid-mode').checked
+  let rigid = getDisplayOptions()['rigid-mode']
   Array.from(obj.children).forEach(item => {
     if (item.classList.contains("pad-item")) { // We only do this for padding items
       if (rigid) { item.classList.remove("hidden"); }
       else { item.classList.add("hidden"); }
     }
   })
+
+  // Reload the chart to show/not show the rigid (white) data
+  const chart = document.getElementById(`chart-${obj.id}`)
+  Chart.getChart(chart).destroy() // Destroy current chart instance
+
+  loadDayChart(chart, getEntriesFromDays(obj))
+}
+
+function getDisplayOptions() {
+  return {
+    'show-others': document.querySelector('#show-others').checked,
+    'compact-mode': document.querySelector('#compact-mode').checked,
+    'rigid-mode': document.querySelector('#rigid-mode').checked
+  }
 }
 
 function addCheckboxListeners() {

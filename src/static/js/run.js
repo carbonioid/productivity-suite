@@ -1,5 +1,5 @@
 import { addFormListeners } from "./form.js";
-import { addCheckboxListeners } from "./ui.js";
+import { addCheckboxListeners, showOthers } from "./ui.js";
 import { load, initialiseContainers } from "./compile.js"
 
 /*
@@ -12,3 +12,4 @@ await load('*') // Scope: * (all)
 
 addCheckboxListeners()
 addFormListeners()
+showOthers()

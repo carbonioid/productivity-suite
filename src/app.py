@@ -114,8 +114,10 @@ app.run(port=8000, host="0.0.0.0")
 
 # TODO: refactor to have listener.js, compile/populate.js and fetching.js (and utils obviously)
 
-# only add pie chart if day has content & if rigid mode is disabled, untracked time isn't shown on pie charts.
+# only add pie chart if day has content
 # fix popups going off-screen
+# FT: toggle for week separators
+# IA: clean up html population - use templates etc
 # FT: up arrow to edit most recent item
 # FT: more diagnostics - change pie chart to bar chart / pie and bar charts for weeks / graph for weeks or months of overall activity (or rolling average)
 

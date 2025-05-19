@@ -3,10 +3,10 @@ This file handles taking input form the server and compiling it to HTML.
 It also handles adding, editing and deleting elements.
 */
 
-export { addElement, editElement, deleteElement, load, initialiseContainers };
+export { addElement, editElement, deleteElement, load, initialiseContainers, loadDayChart };
 import { registerEditing, registerPopup, setCompact, setRigidity, displayError, showOthers, 
-  registerContextMenu, registerWeekCollapseIcon } from "./ui.js";
-import { format_mins, format_yyyymmdd, string_to_mins, duration, dayOfWeek } from './utils.js'
+  registerContextMenu, registerWeekCollapseIcon, getDisplayOptions} from "./ui.js";
+import { format_mins, format_yyyymmdd, string_to_mins, duration, dayOfWeek, parseElementApiInfo } from './utils.js'
 
 function addEntryPadding(entries) {
   /*
@@ -107,7 +107,7 @@ function loadPadItem(start, end, container) {
   let duration = end_mins - start_mins;
 
   let html = `
-  <div class="pad-item hidden" style="--f:${duration};">
+  <div class="pad-item hidden" style="--f:${duration};" data-api-info="${start}\\${end}">
     <div class="mono popup">
       <p>${start} - ${end}</p>
       <p>${format_mins(duration)}</p>
@@ -130,6 +130,74 @@ function loadDayEntries(entries, container) {
     if (row['pad']) { loadPadItem(row['start'], row['end'], container); }
     else { loadItem(row['id'], row['name'], row['start'], row['end'], row['color'], container); }
   })
+}
+
+function loadDayChart(canvas, entries) {
+  if (entries.length > 0) {
+    // Now, the complex part: load the popup's pie chart (the canvas element)
+    // The data is just the amount of time each color took.
+    const dictionary = new Object();
+
+    if (getDisplayOptions()['rigid-mode']) {
+      entries = addEntryPadding(entries); // We want to count untracked/padded time as well if rigid mode is enabled
+    }
+
+    entries.forEach(row => {
+      let _duration = duration(row['start'], row['end'])
+      let color = row['pad'] ? '255, 255, 255' : row['color'] // Untracked/padded time is just white
+
+      // Then, add this duration to the appropriate place in the dictionary
+      if (dictionary[color] == null) { dictionary[color] = _duration }
+      else { dictionary[color] = dictionary[color] + _duration }
+    })
+
+    let data = Object.values(dictionary)
+    let colors = Object.keys(dictionary).map(color => {
+      return `rgb(${color})`
+    })
+
+    const dataTotal = data.reduce((a, b) => a + b); // sum values
+    
+    new Chart(canvas.getContext('2d'), {
+      type: 'pie',
+      data: {
+        labels: colors,
+        datasets: [{
+          label: `${name}`,
+          data: data,
+          backgroundColor: colors,
+          hoverOffset: 0
+        }]
+      },
+      options: {
+        responsive: false, // Ensure the size is fixed
+        maintainAspectRatio: false,
+        animation: true,
+        plugins: {
+          legend: {
+            display: false
+          },
+          tooltip: {
+            displayColors: false,
+            backgroundColor: "rgb(192, 192, 192)",
+            cornerRadius: 0,
+            borderColor: "#ccc",
+            borderWidth: 1,
+            bodyFont: {
+              family: `font-family: Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace`,
+            },
+            callbacks: {
+              label: function (context) {
+                // e.g. 1h1m (50%)
+                return `${format_mins(context.formattedValue)} (${(100 * Number(context.formattedValue) / dataTotal).toFixed(0)}%)`;
+              },
+              title: () => { return '' }
+            }
+          }
+        }
+      }
+    });
+  }
 }
 
 function loadDay(name, entries) {
@@ -175,68 +243,7 @@ function loadDay(name, entries) {
   target_obj = document.getElementById(name) // Reselect to reflect changes - otherwise listeners aren't added properly
   registerContextMenu(target_obj.firstElementChild.querySelector('.menu-button'), target_obj.firstElementChild.querySelector('.context-menu'))
 
-  if (entries.length > 0) {
-    // Now, the complex part: load the popup's pie chart (the canvas element)
-    // The data is just the amount of time each color took.
-    const dictionary = new Object();
-    let padded_entries = addEntryPadding(entries); // We want to count untracked/padded time as well
-    padded_entries.forEach(row => {
-      let _duration = duration(row['start'], row['end'])
-      let color = row['pad'] ? '255, 255, 255' : row['color'] // Untracked/padded time is just white
-
-      // Then, add this duration to the appropriate place in the dictionary
-      if (dictionary[color] == null) { dictionary[color] = _duration }
-      else { dictionary[color] = dictionary[color] + _duration }
-    })
-
-    let data = Object.values(dictionary)
-    let colors = Object.keys(dictionary)
-    let backgroundColor = []
-    colors.forEach(color => {
-      backgroundColor.push(`rgb(${color})`)
-    })
-    let dataTotal = data.reduce((a, b) => a + b); // sum values
-    const obj = document.getElementById(`chart-${name}`).getContext('2d');
-
-    new Chart(obj, {
-      type: 'pie',
-      data: {
-        labels: colors,
-        datasets: [{
-          label: `${name}`,
-          data: data,
-          backgroundColor: backgroundColor,
-          hoverOffset: 0
-        }]
-      },
-      options: {
-        responsive: false, // Ensure the size is fixed
-        maintainAspectRatio: false,
-        animation: true,
-        plugins: {
-          legend: {
-            display: false
-          },
-          tooltip: {
-            displayColors: false,
-            backgroundColor: "rgb(192, 192, 192)",
-            cornerRadius: 0,
-            borderColor: "#ccc",
-            borderWidth: 1,
-            bodyFont: {
-              family: `font-family: Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace`,
-            },
-            callbacks: {
-              label: function (context) {
-                return `${format_mins(context.formattedValue)} (${(100 * Number(context.formattedValue) / dataTotal).toFixed(0)}%)`;
-              },
-              title: function () { return '' }
-            }
-          }
-        }
-      }
-    });
-  }
+  loadDayChart(document.getElementById(`chart-${name}`), entries)
 }
 
 function loadWeekContainer(date, parent) {
@@ -275,7 +282,6 @@ async function load(scope) {
 
       // Then add all the day's elements (from the given entries) into the new flexbox.
       let container = document.getElementById(name);
-      console.log(container)
       loadDayEntries(entries, container)
 
       // These change the display of rigid items and the element's padding respectively, to reflect user choices
@@ -283,9 +289,6 @@ async function load(scope) {
       setCompact(container)
     })
   })
-
-  // Just to be safe, refresh the "show others" option in case we just added the new day - this was just cleaner
-  showOthers(document.querySelector(".parent-container"))
 }
 
 async function addElement(name, start, end, color, day=null) {
