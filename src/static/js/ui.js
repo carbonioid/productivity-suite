@@ -97,7 +97,6 @@ function registerContextMenu(button, popup) {
 
 function registerWeekCollapseIcon(parent, button) {
   const days = parent.querySelector('.days')
-  console.log(parent)
   button.addEventListener('click', (event) => {
     // Set the overflow to hidden while the animation rolls up
     if (!parent.classList.contains('collapsed')) {
@@ -133,13 +132,36 @@ of the days themselves. These are also used by run.js to make sure anything save
 checkboxes is taken into account on refresh. These functions are added as onclick listeners
 to the checkboxes.
 */
-function showOthers(obj) {
+function showOthers() {
   let hidden = document.querySelector('#show-others').checked;
-  let days = Array.from(obj.children).slice(1); // Do not include first element
-  days.forEach(day => {
-    if (hidden) { day.classList.add("hidden"); }
-    else        { day.classList.remove("hidden"); }
+  const parent = document.querySelector('.parent-container')
+  // let days = getAllDays().slice(1); // Do not include first element
+  // days.forEach(day => {
+  //   if (hidden) { day.classList.add("hidden"); }
+  //   else        { day.classList.remove("hidden"); }
+  // })
+
+  // First, hide all weeks.
+  let weeks = parent.children
+  weeks = Array.from(weeks); // Do not include first element
+  weeks.forEach(week => {
+    if (hidden) { week.classList.add("hidden"); }
+    else        { week.classList.remove("hidden"); }
   })
+
+  if (hidden) {
+      // Then, find the first day and move that to a different location where it can be seen
+    parent.appendChild(getAllDays()[0])
+  } else {
+    // If we are unhiding, there are two conditions:
+    // (1) either this is on load, and there is no element to move back,
+    // (2) or we are unchecking the hidden option, and we need to move an item back
+    let toMove = parent.lastElementChild;
+    let moveTo = parent.firstElementChild.querySelector('.days');
+    if (toMove.classList.contains('container')) { // If the first item is a day, we need to move it back
+      moveTo.prepend(toMove)
+    }
+  }
 }
 
 function setCompact(obj) {
@@ -159,10 +181,11 @@ function setRigidity(obj) {
 }
 
 function addCheckboxListeners() {
-  document.querySelector('#show-others').addEventListener('click', (event) => { showOthers(document.querySelector('.parent-container')); })
+  document.querySelector('#show-others').addEventListener('click', (event) => { 
+    showOthers(); 
+  })
 
   document.querySelector('#compact-mode').addEventListener('click', (event) => {
-    console.log(getAllDays())
     getAllDays().forEach(day => setCompact(day))
   })
 
