@@ -23,6 +23,18 @@ div.container {
     margin:1rem 0;
 }
 
+.padded-container:first-child {
+    margin-top:0;
+}
+
+.padded-container:last-child {
+    margin-bottom:0;
+}
+
+.container, .padded-container {
+    vertical-align: top;
+}
+
 @property --col {
   syntax: "<color>";
   inherits: true;
@@ -30,7 +42,6 @@ div.container {
 
 .hidden { display:none !important; }
 .soft-hidden { opacity:0 !important;}
-
 
 div.item {
     padding: 0.4rem;
@@ -269,12 +280,12 @@ div.tag-select {
 
 .collapsed .days {
     max-height:0;
+    overflow:hidden;
 }
 
 .days {
-    max-height:207.2px;
+    max-height:800px;
     transition: max-height 0.25s ease-in-out;
-    overflow:hidden;
 }
 
 .week-collapse-icon {
