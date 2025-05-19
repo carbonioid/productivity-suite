@@ -86,7 +86,14 @@ function registerContextMenu(button, popup) {
 }
 
 function registerWeekCollapseIcon(parent, button) {
+  const days = parent.querySelector('.days')
+  console.log(parent)
   button.addEventListener('click', (event) => {
+    // Set the overflow to hidden while the animation rolls up
+    if (!parent.classList.contains('collapsed')) {
+      parent.querySelector('.days').style.overflow = 'hidden'
+    }
+
     // Toggle rotation
     parent.classList.toggle("collapsed");
     button.classList.toggle("rotated");
@@ -94,6 +101,13 @@ function registerWeekCollapseIcon(parent, button) {
     // Save status in cookie
     const status = parent.classList.contains('collapsed') ? 'closed' : 'open'
     document.cookie = `${parent.id}=${status}`
+  })
+
+  // Remove this once the animation has rolled down so that popups are visible
+  days.addEventListener('transitionend', () => {
+    if (!parent.classList.contains('collapsed')) {
+      parent.querySelector('.days').style.overflow = ''
+    }
   })
 
   // Respect saved status (in cookie)

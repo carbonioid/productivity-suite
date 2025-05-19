@@ -137,9 +137,9 @@ function loadDay(name, entries, parent) {
     parent.insertAdjacentHTML("beforeend", initial_html);
     registerContextMenu(parent.lastElementChild.firstElementChild.querySelector('.menu-button'), parent.lastElementChild.firstElementChild.querySelector('.context-menu'))
   } else {
-    let target_obj = parent.querySelector(`[id=\"${name}\"]`);
+    let target_obj = document.getElementById(name);
     target_obj.outerHTML = initial_html;
-    target_obj = parent.querySelector(`[id=\"${name}\"]`); // Reselect to reflect changes - otherwise listeners aren't added properly
+    target_obj = document.getElementById(name) // Reselect to reflect changes - otherwise listeners aren't added properly
     registerContextMenu(target_obj.firstElementChild.querySelector('.menu-button'), target_obj.firstElementChild.querySelector('.context-menu'))
   }
 
@@ -208,8 +208,7 @@ function loadDay(name, entries, parent) {
 }
 
 function loadWeekContainer(date, parent) {
-  // Figure out when the week *started*
-  parent.insertAdjacentHTML("beforeend", `<div class="week-container" id="week-${date}"><div class="week-separator">Week ending ${format_yyyymmdd(date)}<img src="/static/img/arrow.png" width="12px" height="12px" class="week-collapse-icon"></div><div class="days"></div></div>`)
+  parent.insertAdjacentHTML("beforeend", `<div class="week-container" id="week-${date}"><div class="week-separator">Week ending ${format_yyyymmdd(date)}<img src="/static/img/arrow.png" width="12px" height="12px" class="week-collapse-icon rotated"></div><div class="days"></div></div>`)
   parent = document.querySelector('.parent-container'); // Reselect to reflect changes
 
   registerWeekCollapseIcon(parent.lastElementChild, parent.lastElementChild.querySelector('.week-collapse-icon'));
@@ -237,7 +236,7 @@ async function load(scope) {
     // Set week container
     let currentWeekContainer = null;
     if (dayOfWeek(days[0][0]) != 'Sunday') {
-      let currentWeekContainer = loadWeekContainer(days[0][0], parent)
+      currentWeekContainer = loadWeekContainer(days[0][0], parent)
     } // it will be set on the next iteration if the day is already sunday
 
     // This syntactic mess reverses the object
@@ -255,6 +254,7 @@ async function load(scope) {
 
       // Then add all the day's elements (from the given entries) into the new flexbox.
       let container = document.getElementById(name);
+      console.log(container)
       loadDayEntries(entries, container)
 
       // These change the display of rigid items and the element's padding respectively, to reflect user choices
@@ -273,7 +273,8 @@ async function addElement(name, start, end, color, day=null) {
   Returns True is succesful, the error message otherwise.
   */
 
-  if (day === null) {day = document.querySelector('.parent-container').firstElementChild.id}
+  if (day === null) {day = Array.from(document.querySelector('.parent-container').firstElementChild.children)[1].firstElementChild.id}
+
   // Prompt backend with new info using fetch()
   var data = JSON.stringify({
     "name": name,
