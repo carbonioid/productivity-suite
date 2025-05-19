@@ -8,7 +8,7 @@ def fetch_db_contents(scope: list):
 
     Takes scope as list of filenames (e.g. 2025-05-02.csv) and returns their contents in neatly formatted JSON to be passed to the frontend.
     Sorts them in order of start time.
-    Returns None if one of the files doesn't exist.
+    Returns None if one of the files in the scope doesn't exist.
     """
 
     final_json = {}
@@ -103,8 +103,9 @@ def delete_row(filename, id):
 
     return True
 
-def invalid(json, day):
+def invalid(json, day, ignore=None):
     """
+    the `ignore` parameter is a list of ids to ignore - used in overlap checking
     Takes a request JSON (from /edit or /add) and verifies it:
         (1) the new end time must be after the new start time (equal timestamps are valid)
         (2) checks there are no blank fields
@@ -113,6 +114,8 @@ def invalid(json, day):
 
     Returns the error message if invalid, None otherwise
     """
+
+    if ignore is None: ignore = []
 
     if hhmm_to_minutes(json['end']) < hhmm_to_minutes(json['start']): return "The times you inputted aren't valid." # (1)
 
@@ -124,9 +127,10 @@ def invalid(json, day):
 
     # Check no times overlap - (4)
     for row in data[day]:
-        row_start, row_end = hhmm_to_minutes(row['start']), hhmm_to_minutes(row['end'])
-        # Either: it starts before the new activity but ends after it starts OR it starts somewhere in this activity
-        if (row_start < start < row_end) or (start < row_start < end):
-            return f"The inputted activity overlaps another: {row['name']}"
+        if row['id'] not in ignore:
+            row_start, row_end = hhmm_to_minutes(row['start']), hhmm_to_minutes(row['end'])
+            # Either: it starts before the new activity but ends after it starts OR it starts somewhere in this activity
+            if (row_start < start < row_end) or (start < row_start < end):
+                return f"The inputted activity overlaps another: {row['name']}"
 
     return None # not invalid

@@ -67,7 +67,7 @@ def update_item():
     json = request.get_json()
     filename = request.headers['File']
 
-    valid = invalid(json, filename)
+    valid = invalid(json, filename, ignore=[json['id']])
     if type(valid) == str:
         return Response(response=valid, status=400)
 
@@ -110,19 +110,33 @@ def fetch_data():
     else:
         return Response('The Scope that you supplied was invalid.', status=400)
 
-app.run(port=8000)
+app.run(port=8000, host="0.0.0.0")
 
-# TODO: add more functionality to context menus
-# TODO: ability to collapse weeks
-# TODO: search function with filters
-# TODO: make some documentation
-# TODO: more input options - timer etc
-# TODO: ability to "select day" to add things to it
-# TODO: realtime visualistaion of what you're adding?
-# TODO: combination should work for editing too (maybe remove combination; its kinda dumb)
+# TODO: move day/week div making to new function and then load() only has to populate these divs
+# TODO: refactor the contextmenu api to move it out of scope so it's not cut off (an object could be passed and then the api populates it)
+# TODO: refactor to have listener.js, compile/populate.js and fetching.js (and utils obviously)
+
+# fix collapsing/rigid mode now that we have containers - make function to return all days as singe list, probably
+# popups can get cut off by week containers
+# only add pie chart if day has content
+# editing an activity can overlap itsef
+# fix popups going off-screen
+# FT: if rigid mode is disabled, untracked time isn't shown on pie charts.
+# FT: up arrow to edit most recent item
+# FT: more diagnostics - change pie chart to bar chart / pie and bar charts for weeks / graph for weeks or months of overall activity (or rolling average)
+
+# FT: search function with filters
+# IA: clean up styles.css
+# IA: make some documentation
+# FA: add more functionality to context menus - day selection and clear button (with confirm dialogue)
+# FT: more input options - timer etc
+# FT: combination should work for editing too (maybe remove combination; its kinda dumb)
+# FT: learns from which colors preinputted things are and tries to predict?
 
 # ----
 # LONG TERM ADDITIONS:
 # CGP-style goal tracker
 # To-do lists (separate ones for daily and overall; daily one could overflow into next day)
+# Calendar
+# Port timetabler as a day-to-day / week-to-week time planner
 # ----
