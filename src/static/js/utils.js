@@ -1,4 +1,4 @@
-export { format_mins, format_yyyymmdd, duration, string_to_mins, dayOfWeek, getCookies, parseElementApiInfo, getEntriesFromDays }
+export { format_mins, format_yyyymmdd, duration, string_to_mins, dayOfWeek, getCookies, parseElementApiInfo, getEntriesFromDays, getAllDays }
 
 function format_yyyymmdd(string) {
   let [year, month, day] = string.split('-');
@@ -67,6 +67,7 @@ function parseElementApiInfo(element) {
     let color = data[3];
 
     return {
+      "pad": false,
       "id": id,
       "name": name,
       "start": start,
@@ -86,6 +87,11 @@ function parseElementApiInfo(element) {
 }
 
 function getEntriesFromDays(parent) {
+  /* 
+  This convers the DOM of a day object to a JSON of
+  the rows items, as if it were returned by the /data url.
+  This is useful for refetching this data without querying the database again.
+  */
   let days = Array.from(parent.children).filter(child => {
     return child.classList.contains('item') || child.classList.contains('pad-item')
   })
@@ -98,4 +104,8 @@ function getEntriesFromDays(parent) {
   })
 
   return rows
+}
+
+function getAllDays() {
+  return Array.from(document.querySelectorAll('.container'))
 }

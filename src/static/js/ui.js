@@ -6,17 +6,7 @@ export { registerPopup, registerEditing, setCompact, setRigidity, showOthers, di
    addCheckboxListeners, registerContextMenu, registerWeekCollapseIcon, getDisplayOptions }
 import { registerEditing } from "./form.js"
 import { loadDayChart } from "./compile.js"
-import { getCookies, getEntriesFromDays } from "./utils.js"
-
-
-function getAllDays() {
-  let days = [];
-  Array.from(document.querySelector('.parent-container').children).forEach(week => {
-    days = [...days, ...Array.from(week.querySelector('.days').children)] // slice(1) so that we don't include the title
-  })
-
-  return days;
-}
+import { getCookies, getEntriesFromDays, getAllDays } from "./utils.js"
 
 /*
 Error displaying
@@ -175,15 +165,6 @@ function setRigidity(obj) {
       else { item.classList.add("hidden"); }
     }
   })
-
-  // Reload the chart to show/not show the rigid (white) data
-  const chart = document.getElementById(`chart-${obj.id}`)
-  const chartJsObject = Chart.getChart(chart)
-  if (chartJsObject) {
-    chartJsObject.destroy() // Destroy current chart instance
-  }
-
-  loadDayChart(chart, getEntriesFromDays(obj))
 }
 
 function getDisplayOptions() {
@@ -204,6 +185,13 @@ function addCheckboxListeners() {
   })
 
   document.querySelector('#rigid-mode').addEventListener('click', (event) => {
-    getAllDays().forEach(day => setRigidity(day))
+    getAllDays().forEach(day => {
+      setRigidity(day)
+
+      // Reload the chart to show/not show the rigid (white) data
+      const chart = document.getElementById(`chart-${day.id}`)
+
+      loadDayChart(chart, getEntriesFromDays(day))
+    })
   })
 }

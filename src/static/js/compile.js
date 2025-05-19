@@ -3,10 +3,10 @@ This file handles taking input form the server and compiling it to HTML.
 It also handles adding, editing and deleting elements.
 */
 
-export { addElement, editElement, deleteElement, load, initialiseContainers, loadDayChart };
-import { registerEditing, registerPopup, setCompact, setRigidity, displayError, showOthers, 
-  registerContextMenu, registerWeekCollapseIcon, getDisplayOptions} from "./ui.js";
-import { format_mins, format_yyyymmdd, string_to_mins, duration, dayOfWeek, parseElementApiInfo } from './utils.js'
+export {  addElement, editElement, deleteElement, load, initialiseContainers, loadDayChart };
+import {  format_mins, format_yyyymmdd, string_to_mins, duration, dayOfWeek, getEntriesFromDays } from './utils.js'
+import {  registerEditing, registerPopup, registerContextMenu, registerWeekCollapseIcon, 
+          setCompact, setRigidity, displayError} from "./ui.js";
 
 function addEntryPadding(entries) {
   /*
@@ -36,6 +36,17 @@ function addEntryPadding(entries) {
   }
 
   return new_entries
+}
+
+/* Load day containers */
+
+function loadWeekContainer(date, parent) {
+  parent.insertAdjacentHTML("beforeend", `<div class="week-container" id="week-${date}"><div class="week-separator">Week ending ${format_yyyymmdd(date)}<img src="/static/img/arrow.png" width="12px" height="12px" class="week-collapse-icon rotated"></div><div class="days"></div></div>`)
+  parent = document.querySelector('.parent-container'); // Reselect to reflect changes
+
+  registerWeekCollapseIcon(parent.lastElementChild, parent.lastElementChild.querySelector('.week-collapse-icon'));
+
+  return parent.lastElementChild.querySelector('.days'); // Return week container
 }
 
 async function initialiseContainers() {
@@ -74,6 +85,8 @@ async function initialiseContainers() {
     })
   })
 }
+
+/* Load day content */
 
 function loadItem(id, name, start, end, color, container) {
   /*
@@ -133,14 +146,13 @@ function loadDayEntries(entries, container) {
 }
 
 function loadDayChart(canvas, entries) {
+  if (Chart.getChart(canvas)) {
+    Chart.getChart(canvas).destroy()
+  }
   if (entries.length > 0) {
     // Now, the complex part: load the popup's pie chart (the canvas element)
     // The data is just the amount of time each color took.
     const dictionary = new Object();
-
-    if (getDisplayOptions()['rigid-mode']) {
-      entries = addEntryPadding(entries); // We want to count untracked/padded time as well if rigid mode is enabled
-    }
 
     entries.forEach(row => {
       let _duration = duration(row['start'], row['end'])
@@ -157,7 +169,7 @@ function loadDayChart(canvas, entries) {
     })
 
     const dataTotal = data.reduce((a, b) => a + b); // sum values
-    
+
     new Chart(canvas.getContext('2d'), {
       type: 'pie',
       data: {
@@ -205,6 +217,7 @@ function loadDay(name, entries) {
   This function loads the initial HTML (container, title, title popup) for any given day.
   The container is selected/made based on `name` (as the container's id)
   */
+  const container = document.getElementById(name)
   // Get day of the week
   let dayName = dayOfWeek(name);
 
@@ -243,18 +256,17 @@ function loadDay(name, entries) {
   target_obj.outerHTML = initial_html;
   target_obj = document.getElementById(name) // Reselect to reflect changes - otherwise listeners aren't added properly
   registerContextMenu(target_obj.firstElementChild.querySelector('.menu-button'), target_obj.firstElementChild.querySelector('.context-menu'))
+
+  // Load entries and apply display options to them
+  loadDayEntries(entries, document.getElementById(name))
+  setRigidity(document.getElementById(name))
+  setCompact(document.getElementById(name))
+
   if (entries.length > 0) {
-    loadDayChart(document.getElementById(`chart-${name}`), entries)
+    // Here, we use getEntriesFromDays to reflect whether or not the chart is rigid (if it, we should show untracked time in pie chart.)
+    // This means we can have a consistent way of doing this across the file, and avoids extra logic
+    loadDayChart(document.getElementById(`chart-${name}`), getEntriesFromDays(document.getElementById(name)))
   }
-}
-
-function loadWeekContainer(date, parent) {
-  parent.insertAdjacentHTML("beforeend", `<div class="week-container" id="week-${date}"><div class="week-separator">Week ending ${format_yyyymmdd(date)}<img src="/static/img/arrow.png" width="12px" height="12px" class="week-collapse-icon rotated"></div><div class="days"></div></div>`)
-  parent = document.querySelector('.parent-container'); // Reselect to reflect changes
-
-  registerWeekCollapseIcon(parent.lastElementChild, parent.lastElementChild.querySelector('.week-collapse-icon'));
-
-  return parent.lastElementChild.querySelector('.days'); // Return week container
 }
 
 async function load(scope) {
@@ -281,17 +293,11 @@ async function load(scope) {
 
       // Add a new container to the parent container for this day, as well as the title and its popup
       loadDay(name, entries);
-
-      // Then add all the day's elements (from the given entries) into the new flexbox.
-      let container = document.getElementById(name);
-      loadDayEntries(entries, container)
-
-      // These change the display of rigid items and the element's padding respectively, to reflect user choices
-      setRigidity(container)
-      setCompact(container)
     })
   })
 }
+
+/* Query API and reload days */
 
 async function addElement(name, start, end, color, day=null) {
   /*
