@@ -1,4 +1,4 @@
-export { format_mins, format_yyyymmdd, duration, string_to_mins, dayOfWeek, getCookies, parseElementApiInfo, getEntriesFromDays, getAllDays }
+export { format_mins, format_yyyymmdd, duration, string_to_mins, dayOfWeek, getCookies, parseElementApiInfo, getAllDays }
 
 function format_yyyymmdd(string) {
   let [year, month, day] = string.split('-');
@@ -58,52 +58,21 @@ function parseElementApiInfo(element) {
   /*
   Parse the `data-api-info` parameter of an HTML object into a computer-readable JSON format.
   */
-  if (element.classList.contains('item')) {
-    let id = element.id;
-    let data = element.getAttribute('data-api-info').split('\\');
-    let name = data[0];
-    let start = data[1];
-    let end = data[2];
-    let color = data[3];
+  let id = element.id;
+  let data = element.getAttribute('data-api-info').split('\\');
+  let name = data[0];
+  let start = data[1];
+  let end = data[2];
+  let color = data[3];
 
-    return {
-      "pad": false,
-      "id": id,
-      "name": name,
-      "start": start,
-      "end": end,
-      "color": color
-    }
-  } else {
-    let data = element.getAttribute('data-api-info').split('\\');;
-    let [start, end] = data;
-
-    return {
-      "pad": true,
-      "start": start, 
-      "end": end
-    }
+  return {
+    "pad": false,
+    "id": id,
+    "name": name,
+    "start": start,
+    "end": end,
+    "color": color
   }
-}
-
-function getEntriesFromDays(parent) {
-  /* 
-  This convers the DOM of a day object to a JSON of
-  the rows items, as if it were returned by the /data url.
-  This is useful for refetching this data without querying the database again.
-  */
-  let days = Array.from(parent.children).filter(child => {
-    return child.classList.contains('item') || child.classList.contains('pad-item')
-  })
-  let rows = []
-
-  days.forEach(child => {
-    if (!child.classList.contains('hidden')) { // Do not return hidden elements
-      rows.push(parseElementApiInfo(child))
-    }
-  })
-
-  return rows
 }
 
 function getAllDays() {

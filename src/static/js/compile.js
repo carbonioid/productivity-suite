@@ -3,10 +3,10 @@ This file handles taking input form the server and compiling it to HTML.
 It also handles adding, editing and deleting elements.
 */
 
-export {  addElement, editElement, deleteElement, reload, initialiseContainers, loadDayChart };
-import {  format_mins, format_yyyymmdd, string_to_mins, duration, dayOfWeek, getEntriesFromDays } from './utils.js'
+export {  addElement, editElement, deleteElement, load, initialiseContainers };
+import {  format_mins, format_yyyymmdd, string_to_mins, duration, dayOfWeek } from './utils.js'
 import {  registerEditing, registerPopup, registerContextMenu, registerWeekCollapseIcon, 
-          setCompact, setRigidity, displayError} from "./ui.js";
+          setCompact, displayError, getDisplayOptions} from "./ui.js";
 import { fetchDay, getDay } from "./cache.js"
 
 function addEntryPadding(entries) {
@@ -50,40 +50,28 @@ function loadWeekContainer(date, parent) {
   return parent.lastElementChild.querySelector('.days'); // Return week container
 }
 
-async function initialiseContainers() {
-  await fetch("/data", {
-    method: "GET",
-    headers: {
-      'Content-Type': 'application/json',
-      'Scope': '*'
+async function initialiseContainers(names) {
+  names = names.reverse()
+
+  const parent = document.querySelector('.parent-container');
+
+  // Set week container
+  let currentWeekContainer = null;
+  if (dayOfWeek(names[0]) != 'Sunday') {
+    currentWeekContainer = loadWeekContainer(names[0], parent)
+  } // it will be set on the next iteration if the day is already sunday
+
+  // This syntactic mess reverses the object
+  names.forEach(name => {
+    // Update week separator if relevant
+    if (dayOfWeek(name) == 'Sunday') {
+      currentWeekContainer = loadWeekContainer(name, parent)
     }
-  }).then(response => {
-    return response.json()
-  }).then(data => {
-    let days = [...Object.entries(data)].reverse();
 
-    const parent = document.querySelector('.parent-container');
+    const dayObject = document.createElement('div')
+    dayObject.id = name;
 
-    // Set week container
-    let currentWeekContainer = null;
-    if (dayOfWeek(days[0][0]) != 'Sunday') {
-      currentWeekContainer = loadWeekContainer(days[0][0], parent)
-    } // it will be set on the next iteration if the day is already sunday
-
-    // This syntactic mess reverses the object
-    days.forEach(day => {
-      let name = day[0];
-
-      // Update week separator if relevant
-      if (dayOfWeek(name) == 'Sunday') {
-        currentWeekContainer = loadWeekContainer(name, parent)
-      }
-
-      const dayObject = document.createElement('div')
-      dayObject.id = name;
-
-      currentWeekContainer.appendChild(dayObject)
-    })
+    currentWeekContainer.appendChild(dayObject)
   })
 }
 
@@ -121,7 +109,7 @@ function loadPadItem(start, end, container) {
   let duration = end_mins - start_mins;
 
   let html = `
-  <div class="pad-item hidden" style="--f:${duration};" data-api-info="${start}\\${end}">
+  <div class="pad-item" style="--f:${duration};" data-api-info="${start}\\${end}">
     <div class="mono popup">
       <p>${start} - ${end}</p>
       <p>${format_mins(duration)}</p>
@@ -135,18 +123,20 @@ function loadPadItem(start, end, container) {
 }
 
 function loadDayEntries(entries, container) {
+  console.log(`Loading entries for ${container.id}`)
   /*
   Load all the entries as formatted HTML into the given container,
   creating the entires based on the given `entries` JSON.
   */
-  let padded_entries = addEntryPadding(entries)
-  padded_entries.forEach(row => {
-    if (row['pad']) { loadPadItem(row['start'], row['end'], container); }
+  entries.forEach(row => {
+    if (row['pad']) { 
+      loadPadItem(row['start'], row['end'], container); }
     else { loadItem(row['id'], row['name'], row['start'], row['end'], row['color'], container); }
   })
 }
 
 function loadDayChart(canvas, entries) {
+  console.log(`Loading ${canvas.id}`)
   if (Chart.getChart(canvas)) {
     Chart.getChart(canvas).destroy()
   }
@@ -214,6 +204,7 @@ function loadDayChart(canvas, entries) {
 }
 
 function loadDay(name, entries) {
+  console.log(`Populating ${name}`)
   /*
   This function loads the initial HTML (container, title, title popup) for any given day.
   The container is selected/made based on `name` (as the container's id)
@@ -258,23 +249,25 @@ function loadDay(name, entries) {
   target_obj = document.getElementById(name) // Reselect to reflect changes - otherwise listeners aren't added properly
   registerContextMenu(target_obj.firstElementChild.querySelector('.menu-button'), target_obj.firstElementChild.querySelector('.context-menu'))
 
+  // Load bar chart
+  if (entries.length > 0) {
+    loadDayChart(document.getElementById(`chart-${name}`), entries)
+  }
+
   // Load entries and apply display options to them
   loadDayEntries(entries, document.getElementById(name))
-  setRigidity(document.getElementById(name))
-  setCompact(document.getElementById(name))
-
-  if (entries.length > 0) {
-    // Here, we use getEntriesFromDays to reflect whether or not the chart is rigid (if it, we should show untracked time in pie chart.)
-    // This means we can have a consistent way of doing this across the file, and avoids extra logic
-    loadDayChart(document.getElementById(`chart-${name}`), getEntriesFromDays(document.getElementById(name)))
-  }
 }
 
-async function reload(name) {
+async function load(name, reloadCache) {
   /*
-  Refresh the cache of the day described by `name` and then reload its html in the page.
+  Load the day with id `name` with or without refreshing the cache, depending on `reloadCache`
   */
-  loadDay(name, await fetchDay(name))
+  let entries = reloadCache ? await fetchDay(name) : getDay(name)
+  entries = getDisplayOptions()['rigid-mode'] ? addEntryPadding(entries) : entries
+
+  loadDay(name, entries)
+
+  setCompact(document.getElementById(name))
 }
 
 /* Query API and reload days */
@@ -282,7 +275,7 @@ async function reload(name) {
 async function addElement(name, start, end, color, day=null) {
   /*
   More general add-element which takes care of the entire process.
-  Returns True is succesful, the error message otherwise.
+  Returns True if succesful, the error message otherwise.
   */
 
   if (day === null) {day = Array.from(document.querySelector('.parent-container').firstElementChild.children)[1].firstElementChild.id}
@@ -305,8 +298,8 @@ async function addElement(name, start, end, color, day=null) {
   })
 
   if (response.status == 201) {
-    // Update this change by re-loading the day we just added to
-    reload(day)
+    // Update this change by re-loading the day we just added to 
+    await load(day, true)
 
     return true
   } else {
@@ -333,7 +326,7 @@ async function editElement(id, name, start, end, color, day) {
   .then(async function(response) {
     if (response.status == 201) {
       // Update this change by re-loading the day we just edited
-      reload(day)
+      await load(day, true)
     } else {
       displayError(await response.text());
     }
@@ -355,8 +348,8 @@ async function deleteElement(id, day) {
   .then(async function(response) {
     if (response.status == 201) {
       // Update this change by re-loading the day we just edited
-      reload(day)
-    } else {
+      await load(day, true)
+  } else {
       displayError(await response.text());
     }
   })

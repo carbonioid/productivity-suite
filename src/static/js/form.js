@@ -71,6 +71,7 @@ function setFormContent(name, start, end, color) {
   }
 }
 
+
 async function submitForm() {
   /*
   This function handles form submission and has two modes:
