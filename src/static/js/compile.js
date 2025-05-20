@@ -3,10 +3,11 @@ This file handles taking input form the server and compiling it to HTML.
 It also handles adding, editing and deleting elements.
 */
 
-export {  addElement, editElement, deleteElement, load, initialiseContainers, loadDayChart };
+export {  addElement, editElement, deleteElement, reload, initialiseContainers, loadDayChart };
 import {  format_mins, format_yyyymmdd, string_to_mins, duration, dayOfWeek, getEntriesFromDays } from './utils.js'
 import {  registerEditing, registerPopup, registerContextMenu, registerWeekCollapseIcon, 
           setCompact, setRigidity, displayError} from "./ui.js";
+import { fetchDay, getDay } from "./cache.js"
 
 function addEntryPadding(entries) {
   /*
@@ -269,32 +270,11 @@ function loadDay(name, entries) {
   }
 }
 
-async function load(scope) {
+async function reload(name) {
   /*
-  Populate parts of the page from the given scope.
+  Refresh the cache of the day described by `name` and then reload its html in the page.
   */
-  await fetch("/data", {
-    method: "GET",
-    headers: {
-      'Content-Type': 'application/json',
-      'Scope': scope
-    }
-  }).then(response => {
-    return response.json()
-  }).then(data => {
-    let days = [...Object.entries(data)].reverse();
-
-    const parent = document.querySelector('.parent-container');
-
-    // This syntactic mess reverses the object
-    days.forEach(day => {
-      let name = day[0];
-      let entries = day[1];
-
-      // Add a new container to the parent container for this day, as well as the title and its popup
-      loadDay(name, entries);
-    })
-  })
+  loadDay(name, await fetchDay(name))
 }
 
 /* Query API and reload days */
@@ -326,11 +306,11 @@ async function addElement(name, start, end, color, day=null) {
 
   if (response.status == 201) {
     // Update this change by re-loading the day we just added to
-    load(day)
+    reload(day)
 
     return true
   } else {
-    return (await response.text()) // return the erro so form.js can deal with it.
+    return (await response.text()) // return the error so form.js can deal with it.
   }
 }
 
@@ -353,7 +333,7 @@ async function editElement(id, name, start, end, color, day) {
   .then(async function(response) {
     if (response.status == 201) {
       // Update this change by re-loading the day we just edited
-      load(day)
+      reload(day)
     } else {
       displayError(await response.text());
     }
@@ -375,7 +355,7 @@ async function deleteElement(id, day) {
   .then(async function(response) {
     if (response.status == 201) {
       // Update this change by re-loading the day we just edited
-      load(day)
+      reload(day)
     } else {
       displayError(await response.text());
     }

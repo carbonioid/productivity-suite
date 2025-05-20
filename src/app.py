@@ -111,28 +111,3 @@ def fetch_data():
         return Response('The Scope that you supplied was invalid.', status=400)
 
 app.run(port=8000, host="0.0.0.0")
-
-# TODO: refactor to have listener.js, compile/populate.js and fetching.js (and utils obviously)
-
-# only add pie chart if day has content
-# fix popups going off-screen
-# FT: toggle for week separators
-# IA: clean up html population - use templates etc
-# FT: up arrow to edit most recent item
-# FT: more diagnostics - change pie chart to bar chart / pie and bar charts for weeks / graph for weeks or months of overall activity (or rolling average)
-
-# FT: search function with filters
-# IA: clean up styles.css
-# IA: make some documentation
-# FA: add more functionality to context menus - day selection and clear button (with confirm dialogue)
-# FT: more input options - timer etc
-# FT: combination should work for editing too (maybe remove combination; its kinda dumb)
-# FT: learns from which colors preinputted things are and tries to predict?
-
-# ----
-# LONG TERM ADDITIONS:
-# CGP-style goal tracker
-# To-do lists (separate ones for daily and overall; daily one could overflow into next day)
-# Calendar
-# Port timetabler as a day-to-day / week-to-week time planner
-# ----
