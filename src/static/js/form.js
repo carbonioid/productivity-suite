@@ -71,6 +71,7 @@ function setFormContent(name, start, end, color) {
   }
 }
 
+
 async function submitForm() {
   /*
   This function handles form submission and has two modes:
@@ -139,7 +140,7 @@ function registerEditing(obj) {
     event.preventDefault();
 
     // Parse data-api-info atrribute to get appropriate data
-    let [id, name, start, end, color] = Object.values(parseElementApiInfo(obj))
+    let [_, id, name, start, end, color] = Object.values(parseElementApiInfo(obj))
 
     // Populate the input section with the editing data with this info and save copies of it
     let form = document.querySelector('.form-body');

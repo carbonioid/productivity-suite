@@ -2,11 +2,11 @@
 This file handles the main UI of the page, except the form. That is managed by form.js and some of its functionality is impoted here.
 */
 
-export { registerPopup, registerEditing, setCompact, setRigidity, showOthers, displayError,
+export { registerPopup, registerEditing, setCompact, showOthers, displayError,
    addCheckboxListeners, registerContextMenu, registerWeekCollapseIcon, getDisplayOptions }
 import { registerEditing } from "./form.js"
-import { loadDayChart } from "./compile.js"
-import { getCookies, getEntriesFromDays, getAllDays } from "./utils.js"
+import { load } from "./compile.js"
+import { getCookies, getAllDays } from "./utils.js"
 
 /*
 Error displaying
@@ -157,16 +157,6 @@ function setCompact(obj) {
   else             { obj.classList.add("padded-container"); }
 }
 
-function setRigidity(obj) {
-  let rigid = getDisplayOptions()['rigid-mode']
-  Array.from(obj.children).forEach(item => {
-    if (item.classList.contains("pad-item")) { // We only do this for padding items
-      if (rigid) { item.classList.remove("hidden"); }
-      else { item.classList.add("hidden"); }
-    }
-  })
-}
-
 function getDisplayOptions() {
   return {
     'show-others': document.querySelector('#show-others').checked,
@@ -177,7 +167,7 @@ function getDisplayOptions() {
 
 function addCheckboxListeners() {
   document.querySelector('#show-others').addEventListener('click', (event) => { 
-    showOthers(); 
+    showOthers();
   })
 
   document.querySelector('#compact-mode').addEventListener('click', (event) => {
@@ -186,12 +176,7 @@ function addCheckboxListeners() {
 
   document.querySelector('#rigid-mode').addEventListener('click', (event) => {
     getAllDays().forEach(day => {
-      setRigidity(day)
-
-      // Reload the chart to show/not show the rigid (white) data
-      const chart = document.getElementById(`chart-${day.id}`)
-
-      loadDayChart(chart, getEntriesFromDays(day))
+      load(day.id, false) // Load the day without clearing the cache so that the rigidity is changed
     })
   })
 }
