@@ -5,16 +5,64 @@
     <link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- for pie charts -->
 
-    <script src="{{ url_for('static', filename='js/compile.js') }}" type="module"></script>
-    <script src="{{ url_for('static', filename='js/form.js') }}" type="module"></script>
-    <script src="{{ url_for('static', filename='js/utils.js') }}" type="module"></script>
-    <script src="{{ url_for('static', filename='js/ui.js') }}" type="module"></script>
     <script src="{{ url_for('static', filename='js/run.js') }}" type="module"></script>
 
+    <template id="week-container-template">
+        <div class="week-container">
+            <div class="week-separator">
+                Week ending <span data-bind="formatted-date"></span>
+                <img src="/static/img/arrow.png" width="12px" height="12px" class="week-collapse-icon rotated">
+            </div>
+            <div class="days"></div>
+        </div>
+    </template>
+
+    <template id="item-template">
+        <div class="item">
+            <p class="heading"> <span data-bind="name"></span> </p>
+            <div class="mono popup">
+                <p><b> <span data-bind="name"></span> </b></p>
+                <p><span data-bind="start"></span> - <span data-bind="end"></span></p>
+                <p><span data-bind="duration"></span></p>
+            </div>
+        </div>
+    </template>
+
+    <template id="pad-item-template">
+        <div class="pad-item">
+            <div class="mono popup">
+                <p><span data-bind="start"></span> - <span data-bind="end"></span></p>
+                <p><span data-bind="duration"></span></p>
+            </div>
+        </div>
+    </template>
+
+    <template id="day-title-template">
+        <div class="day-title">
+            <img src="/static/img/menu.png" width="12px" height="12px" class="menu-button">
+            <p class="title"><span data-bind="formatted-day"></span></b></p>
+            <div class="mono context-menu hidden soft-hidden">
+            </div>
+        </div>
+    </template>
+
+    <template id="day-title-menu-title-template">
+        <div>
+        <p><b><span data-bind="formatted-day"></span></b></p>
+        <p><span data-bind="day-of-week"></span></p>
+        </div>
+    </template>
+
+    <template id="day-title-menu-body-template">
+        <div>
+        <br><canvas width="100" height="100"></canvas>
+        <br>Woke at <b><span data-bind="woke"></span></b><br>
+        Slept at <b><span data-bind="slept"></span></b>
+        </div>
+    </template>
 </head>
 <html>
     <body>
-        <!-- <img src="{{ url_for('static', filename='img/menu.png') }}" width="16px" class="menu"> -->
         <p class="editing-indicator soft-hidden">editing - <a class="editing-exit-button">exit</a></p>
         <form class="form-body" action="#" data-mode="add">
             <input type="submit" class="mono add-btn" value="+">

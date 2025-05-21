@@ -8,6 +8,7 @@ import {  format_mins, format_yyyymmdd, string_to_mins, duration, dayOfWeek } fr
 import {  registerEditing, registerPopup, registerContextMenu, registerWeekCollapseIcon, 
           setCompact, displayError, getDisplayOptions} from "./ui.js";
 import { fetchDay, getDay } from "./cache.js"
+import { loadTemplate } from './template.js';
 
 function addEntryPadding(entries) {
   /*
@@ -42,12 +43,19 @@ function addEntryPadding(entries) {
 /* Load day containers */
 
 function loadWeekContainer(date, parent) {
-  parent.insertAdjacentHTML("beforeend", `<div class="week-container" id="week-${date}"><div class="week-separator">Week ending ${format_yyyymmdd(date)}<img src="/static/img/arrow.png" width="12px" height="12px" class="week-collapse-icon rotated"></div><div class="days"></div></div>`)
-  parent = document.querySelector('.parent-container'); // Reselect to reflect changes
+  // Load this object from its template
+  let template = Object.assign(
+    loadTemplate('week-container-template', {
+      "formatted-date": format_yyyymmdd(date)
+    }),
+    {id: `week-${date}`} // Set the object's id
+  )
 
-  registerWeekCollapseIcon(parent.lastElementChild, parent.lastElementChild.querySelector('.week-collapse-icon'));
+  registerWeekCollapseIcon(template, template.querySelector('.week-collapse-icon'))
 
-  return parent.lastElementChild.querySelector('.days'); // Return week container
+  parent.appendChild(template)
+  
+  return template.querySelector('.days')
 }
 
 async function initialiseContainers(names) {
@@ -70,6 +78,7 @@ async function initialiseContainers(names) {
 
     const dayObject = document.createElement('div')
     dayObject.id = name;
+    dayObject.classList.add('container')
 
     currentWeekContainer.appendChild(dayObject)
   })
@@ -83,47 +92,51 @@ function loadItem(id, name, start, end, color, container) {
   */
   let _duration = duration(start, end);
 
-  let html = `
-  <div class="item" style="--col:${color}; --f:${_duration};" data-api-info="${name}\\${start}\\${end}\\${color}" id="${id}">
-    <p class="heading">${name}</p>
-    <div class="mono popup hover-popup">
-      <p><b>${name}</b></p>
-      <p>${start} - ${end}</p>
-      <p>${format_mins(_duration)}</p>
-    </div>
-  </div>`;
+  let template = loadTemplate('item-template', {
+    "name": name,
+    "start": start,
+    "end": end,
+    "duration": format_mins(_duration)
+  })
 
-  container.insertAdjacentHTML('beforeend', html);
+  // Add properties
+  template = Object.assign(template, 
+    {
+      id: id,
+      style: `--col:${color}; --f:${_duration};`,
+    }
+  )
+  template.setAttribute("data-api-info", `${name}\\${start}\\${end}\\${color}`)
 
-  let new_elem = container.lastElementChild;
-  registerEditing(new_elem);
-  registerPopup(new_elem, new_elem.querySelector('.popup'));
+  // Register listeners
+  registerEditing(template);
+  registerPopup(template, template.querySelector('.popup'))
+
+  container.appendChild(template);
 }
 
 function loadPadItem(start, end, container) {
   /*
   Add a padding item to the specified table
   */
-  let start_mins = string_to_mins(start);
-  let end_mins = string_to_mins(end);
-  let duration = end_mins - start_mins;
+  let _duration = duration(start, end)
 
-  let html = `
-  <div class="pad-item" style="--f:${duration};" data-api-info="${start}\\${end}">
-    <div class="mono popup">
-      <p>${start} - ${end}</p>
-      <p>${format_mins(duration)}</p>
-    </div>
-  </div>`;
+  // Load object from template
+  let template = loadTemplate('pad-item-template', {
+    "start": start, 
+    "end": end,
+    "duration": _duration
+  })
 
-  container.insertAdjacentHTML('beforeend', html);
+  // Set properites
+  template.setAttribute("style", `--f:${_duration};`)
+  template.setAttribute("data-api-info", `${start}\\${end}`)
 
-  let new_elem = container.lastElementChild;
-  registerPopup(new_elem, new_elem.querySelector('.popup'));
+  registerPopup(template)
+  container.appendChild(template)
 }
 
-function loadDayEntries(entries, container) {
-  console.log(`Loading entries for ${container.id}`)
+function loadDayEntries(container, entries) {
   /*
   Load all the entries as formatted HTML into the given container,
   creating the entires based on the given `entries` JSON.
@@ -136,7 +149,6 @@ function loadDayEntries(entries, container) {
 }
 
 function loadDayChart(canvas, entries) {
-  console.log(`Loading ${canvas.id}`)
   if (Chart.getChart(canvas)) {
     Chart.getChart(canvas).destroy()
   }
@@ -203,71 +215,66 @@ function loadDayChart(canvas, entries) {
   }
 }
 
-function loadDay(name, entries) {
-  console.log(`Populating ${name}`)
+function loadDayTitle(container, name, entries) {
+  // Get day of the week
+  let dayName = dayOfWeek(name);
+  let formattedDay = format_yyyymmdd(name)
+
+  let title = loadTemplate('day-title-template', {
+    "formatted-day": formattedDay
+  })
+  title.id = name
+
+  // Create context menu
+  const menu = title.querySelector('.context-menu')
+  menu.appendChild(loadTemplate('day-title-menu-title-template', {
+    "formatted-day": formattedDay,
+    "day-of-week": dayName
+  }))
+
+  // Add main part of popup (only if there is data)
+  if (entries.length > 0) {
+    let body = loadTemplate('day-title-menu-body-template', {
+      "woke": entries[0]['start'],
+      "slept": entries[entries.length - 1]['end']
+    })
+    
+    // Manage chart
+    const chart = body.querySelector('canvas')
+    chart.id = `chart-${name}`
+    loadDayChart(chart, entries)
+
+    menu.appendChild(body)
+  }
+
+  // Register listeners and load
+  registerContextMenu(title.querySelector('.menu-button'), title.querySelector('.context-menu'))
+
+  container.appendChild(title)
+}
+
+function loadDay(container, name, entries) {
   /*
   This function loads the initial HTML (container, title, title popup) for any given day.
   The container is selected/made based on `name` (as the container's id)
-  */
-  const container = document.getElementById(name)
-  // Get day of the week
-  let dayName = dayOfWeek(name);
-
-  // Create popup body
-  let popup_body = `
-  <p><b>${format_yyyymmdd(name)}</b></p>
-  <p>${dayName}</p>`;
-
-  if (entries.length > 0) {
-    popup_body += `<br><canvas id="chart-${name}" width="100" height="100"></canvas>`
-
-    let wokeAt = entries[0]['start'];
-    popup_body += `<br>Woke at <b>${wokeAt}</b><br>`
-
-    let sleptAt = entries[entries.length - 1]['end'];
-    popup_body += `Slept at <b>${sleptAt}</b><br>`
-  }
-
-  // Create classes
-  let classes = "container";
-  if (!document.querySelector('#compact-mode').checked) {classes += " padded-container"}
-
-  // Create HTML
-  let initial_html = `<div class="${classes}" id="${name}">
-    <div class="day-title">
-    <img src="/static/img/menu.png" width="12px" height="12px" class="menu-button">
-    <p class="title">${format_yyyymmdd(name)}</p>
-    <div class="mono context-menu hidden soft-hidden">
-      ${popup_body}
-    </div>
-    </div>
-  </div>`;
-
-  // Add initial HTML (This code assumes the container already exists)
-  let target_obj = document.getElementById(name);
-  target_obj.outerHTML = initial_html;
-  target_obj = document.getElementById(name) // Reselect to reflect changes - otherwise listeners aren't added properly
-  registerContextMenu(target_obj.firstElementChild.querySelector('.menu-button'), target_obj.firstElementChild.querySelector('.context-menu'))
-
-  // Load bar chart
-  if (entries.length > 0) {
-    loadDayChart(document.getElementById(`chart-${name}`), entries)
-  }
-
-  // Load entries and apply display options to them
-  loadDayEntries(entries, document.getElementById(name))
+  */  
+  loadDayTitle(container, name, entries)
+  loadDayEntries(container, entries)
 }
 
 async function load(name, reloadCache) {
   /*
   Load the day with id `name` with or without refreshing the cache, depending on `reloadCache`
   */
-  let entries = reloadCache ? await fetchDay(name) : getDay(name)
-  entries = getDisplayOptions()['rigid-mode'] ? addEntryPadding(entries) : entries
+  const container = document.getElementById(name)
 
-  loadDay(name, entries)
+  let entries = reloadCache ? await fetchDay(name) : getDay(name) // fetchDay() clears the cache and getDay doesn't
+  entries = getDisplayOptions()['rigid-mode'] ? addEntryPadding(entries) : entries // show or don't show untracked time depending on rigid mode
 
-  setCompact(document.getElementById(name))
+  container.innerHTML = ''; // Clear previous content because we are replacing it
+  loadDay(container, name, entries)
+
+  setCompact(document.getElementById(name)) // Set compactness
 }
 
 /* Query API and reload days */
