@@ -31,17 +31,43 @@ button:hover {
 }
 
 .week-container {
-    padding-bottom:0.5rem;
-    padding-top:0.5rem;
+    /* padding-bottom:0.5rem;
+    padding-top:0.5rem; */
 
     display:flex;
     flex-direction: row;
     width:100%;
+    white-space: nowrap;
+}
+
+.vertical-line {
+    border-radius:2px;
+    width:0;
+    border:0.5px solid rgb(175, 175, 175);
+    flex:1;
+}
+
+.date {
+    border-radius:2px;
+    padding:1px;
+    padding:3px;
+    margin:1px;
+
+    transition: background-color 0.15s ease-out;
+    cursor:pointer;
+    width:4rem;
+    text-align:center;
+}
+
+.date:hover {
+    background-color:rgb(245, 245, 245);
 }
 
 .days {
+    padding-top:22.5px;
     max-height:800px;
     transition: max-height 0.25s ease-in-out;
+    width:100%;
 }
 
 div.container {
@@ -53,7 +79,7 @@ div.container {
 }
 
 .padded-container {
-    margin:1rem 0;
+    margin:22.5px 0;
 }
 
 .padded-container:first-child {
@@ -315,23 +341,22 @@ input.tag:checked {
 } */
 
 .week-separator {
+    color:rgb(175, 175, 175);
     width:min-content;
     margin-right:0.5rem;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
 }
 
-.week-collapse-icon {
+/* .week-collapse-icon {
     font-size:2rem;
     display: inline-block;
     cursor:pointer;
     transition: transform 0.25s ease-in-out;
     user-select: none;
     width:1rem;
-}
-
-/* for .week-collapse-icon */
-.rotated {
-    transform:rotate(90deg);
-}
+} */
 
 .display-form {
     position:absolute;

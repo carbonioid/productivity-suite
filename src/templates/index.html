@@ -10,7 +10,9 @@
     <template id="week-container-template">
         <div class="week-container">
             <div class="week-separator">
-                <span class="material-symbols-outlined week-collapse-icon rotated menu-button" style="font-size:16px;">chevron_right</span>
+                <p class="date week-collapse-icon"><span data-bind="formatted-date"></span></p>
+                <div class="vertical-line"></div>
+                <!-- <span class="material-symbols-outlined week-collapse-icon rotated menu-button" style="font-size:16px; display:none;">chevron_right</span> -->
             </div>
             <!-- <div class="week-separator">
                 Week ending <span data-bind="formatted-date"></span>

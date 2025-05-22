@@ -54,7 +54,6 @@ function loadWeekContainer(date, parent) {
   registerWeekCollapseIcon(template, template.querySelector('.week-collapse-icon'))
 
   parent.appendChild(template)
-  parent.appendChild(document.createElement('hr'))
   
   return template.querySelector('.days')
 }

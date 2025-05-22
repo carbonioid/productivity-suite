@@ -95,9 +95,10 @@ function registerWeekCollapseIcon(parent, button) {
       parent.querySelector('.days').style.overflow = 'hidden'
     }
 
+    parent.querySelector('.vertical-line').style.display = ''
+
     // Toggle rotation
     parent.classList.toggle("collapsed");
-    button.classList.toggle("rotated");
 
     // Save status in cookie
     const status = parent.classList.contains('collapsed') ? 'closed' : 'open'
@@ -108,6 +109,10 @@ function registerWeekCollapseIcon(parent, button) {
   days.addEventListener('transitionend', () => {
     if (!parent.classList.contains('collapsed')) {
       parent.querySelector('.days').style.overflow = ''
+    }
+
+    if (parent.classList.contains('collapsed')) {
+      parent.querySelector('.vertical-line').style.display = 'none'
     }
   })
 
