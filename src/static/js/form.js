@@ -5,7 +5,7 @@ This file handles the main form of the page. Some functionality is exported to u
 import { addElement, editElement, deleteElement } from "./compile.js";
 import { displayError } from "./ui.js"
 import { parseElementApiInfo } from "./utils.js";
-export { addFormListeners, registerEditing }
+export { addFormListeners, registerEditing, addDisplayFormListeners }
 
 // "dictionary" of colors for different bits of text
 let colors = [
@@ -212,4 +212,13 @@ function addFormListeners() {
 
   // Editing indicator Listener
   document.querySelector('.editing-exit-button').addEventListener('click', exitEditMode)
+}
+
+function addDisplayFormListeners() {
+  let icons = document.querySelectorAll('.switch')
+  Array.from(icons).forEach(icon => {
+    icon.addEventListener('click', () => {
+      icon.classList.toggle('switched')
+    })
+  })
 }

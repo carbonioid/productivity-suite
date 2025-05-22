@@ -159,14 +159,15 @@ function setCompact(obj) {
 
 function getDisplayOptions() {
   return {
-    'show-others': document.querySelector('#show-others').checked,
-    'compact-mode': document.querySelector('#compact-mode').checked,
-    'rigid-mode': document.querySelector('#rigid-mode').checked
+    'show-others': document.querySelector('#show-others').classList.contains('switched'),
+    'compact-mode': document.querySelector('#compact-mode').classList.contains('switched'),
+    'rigid-mode': document.querySelector('#rigid-mode').classList.contains('switched')
   }
 }
 
 function addCheckboxListeners() {
-  document.querySelector('#show-others').addEventListener('click', (event) => { 
+  document.querySelector('#show-others').addEventListener('click', (event) => {
+    console.log(getDisplayOptions())
     showOthers();
   })
 

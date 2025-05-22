@@ -1,4 +1,4 @@
-import { addFormListeners } from "./form.js";
+import { addFormListeners, addDisplayFormListeners } from "./form.js";
 import { addCheckboxListeners, showOthers } from "./ui.js";
 import { load, initialiseContainers } from "./compile.js"
 import { populateCache } from "./cache.js";
@@ -14,6 +14,7 @@ let names = await populateCache() // Populate cache and get names of all element
 await initialiseContainers(names) // Create containers
 names.forEach(name => { load(name, false) }) // Create elements themselves, but do not reload cache
 
-addCheckboxListeners()
 addFormListeners()
+addDisplayFormListeners()
+addCheckboxListeners()
 showOthers()

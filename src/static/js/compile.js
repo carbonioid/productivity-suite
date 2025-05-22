@@ -4,7 +4,7 @@ It also handles adding, editing and deleting elements.
 */
 
 export {  addElement, editElement, deleteElement, load, initialiseContainers };
-import {  format_mins, format_yyyymmdd, string_to_mins, duration, dayOfWeek } from './utils.js'
+import {  format_mins, format_yyyymmdd, duration, dayOfWeek, getAllDays } from './utils.js'
 import {  registerEditing, registerPopup, registerContextMenu, registerWeekCollapseIcon, 
           setCompact, displayError, getDisplayOptions} from "./ui.js";
 import { fetchDay, getDay } from "./cache.js"
@@ -54,6 +54,7 @@ function loadWeekContainer(date, parent) {
   registerWeekCollapseIcon(template, template.querySelector('.week-collapse-icon'))
 
   parent.appendChild(template)
+  parent.appendChild(document.createElement('hr'))
   
   return template.querySelector('.days')
 }
@@ -279,13 +280,14 @@ async function load(name, reloadCache) {
 
 /* Query API and reload days */
 
-async function addElement(name, start, end, color, day=null) {
+async function addElement(name, start, end, color, day) {
   /*
   More general add-element which takes care of the entire process.
   Returns True if succesful, the error message otherwise.
   */
 
-  if (day === null) {day = Array.from(document.querySelector('.parent-container').firstElementChild.children)[1].firstElementChild.id}
+  console.log(day)
+  if (day == undefined) {day = getAllDays()[0].id}
 
   // Prompt backend with new info using fetch()
   var data = JSON.stringify({
