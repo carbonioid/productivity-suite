@@ -1,0 +1,72 @@
+
+.mono {
+    border: 1px solid #ccc;
+    background-color: #f0f0f0;
+}
+
+.errorbox {
+    font-family: Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    border: 1px solid #eb3915;
+    background-color: rgb(244, 206, 196);
+    position: absolute;
+    width:15rem;
+    padding: 10px;
+    right:1rem;
+    top:1rem;
+    z-index: 10; /* ensure above other elements */
+}
+
+/*
+Context menus
+*/
+
+div.context-menu {
+    width:fit-content;
+    padding: 10px;
+    z-index: 11; /* ensure above other elements */
+    font-size: 0.75rem;
+    line-height: 1rem;
+
+    position:absolute;
+    transition: opacity 0.1s ease-in-out; /* for animations */
+}
+
+.day-title .context-menu {
+    text-align:center;
+    font-weight:normal;
+
+    left:20px;
+    top:5px;
+}
+
+.day-title img.menu-button {
+    margin-right:0.1rem;
+    position:relative;
+    float:left;
+}
+
+.menu-button {
+    padding:0.1rem;
+    border-radius: 50%;
+    overflow: hidden;
+    object-fit: cover;
+}
+
+.menu-button:hover {
+    background:rgba(120, 120, 120, 0.3);
+}
+
+/*
+Hover popups
+*/
+
+div.popup {
+    font-family:Verdana, Geneva, Tahoma, sans-serif;
+    display: none; /* initially hidden */
+    position:fixed;
+    width:fit-content;
+    padding: 10px;
+    z-index: 9; /* ensure above other elements */
+    font-size: 0.75rem;
+    line-height: 1rem;
+}
