@@ -1,17 +1,24 @@
 <!DOCTYPE html>
 <head>
     <title>Squee</title>
-    <link href="{{ url_for('static', filename='styles.css') }}" rel="stylesheet">
-    <link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- for pie charts -->
-
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="{{ url_for('static', filename='js/run.js') }}" type="module"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+    <link href="{{ url_for('static', filename='img/favicon.ico') }}" rel="shortcut icon" />
+
+    <link href="{{ url_for('static', filename='css/general.css') }}" rel="stylesheet" />
+    <link href="{{ url_for('static', filename='css/form.css') }}" rel="stylesheet" />
+    <link href="{{ url_for('static', filename='css/popups.css') }}" rel="stylesheet" />
+    <link href="{{ url_for('static', filename='css/days.css') }}" rel="stylesheet" />
 
     <template id="week-container-template">
         <div class="week-container">
             <div class="week-separator">
-                Week ending <span data-bind="formatted-date"></span>
-                <img src="/static/img/arrow.png" width="12px" height="12px" class="week-collapse-icon rotated">
+                <div class="date week-collapse-icon">
+                    <p class="date-text">
+                        <span data-bind="formatted-date"></span>
+                    </p>
+                </div>
             </div>
             <div class="days"></div>
         </div>
@@ -39,10 +46,12 @@
 
     <template id="day-title-template">
         <div class="day-title">
-            <img src="/static/img/menu.png" width="12px" height="12px" class="menu-button">
-            <p class="title"><span data-bind="formatted-day"></span></b></p>
-            <div class="mono context-menu hidden soft-hidden">
+            <div class="date">
+                <p class="date-text menu-button">
+                    <span data-bind="formatted-date"></span>
+                </p>
             </div>
+            <div class="mono context-menu hidden soft-hidden">
         </div>
     </template>
 
@@ -65,12 +74,17 @@
     <body>
         <p class="editing-indicator soft-hidden">editing - <a class="editing-exit-button">exit</a></p>
         <form class="form-body" action="#" data-mode="add">
-            <input type="submit" class="mono add-btn" value="+">
+            <button class="add-btn" value="">
+                <span class="material-symbols-outlined" style="color:#1f1f1f; font-size:16px;">add_circle</span>
+            </button>
+
             <input class="mono" type="text" placeholder="Activity name" style="width:15rem;" id="name">
-            <p>from</p>
+
+            <div class="vertical-line"></div>
             <input class="mono" type="time" style="width:3rem;" id="start" required>
             <p>to</p>
             <input class="mono" type="time" style="width:3rem;" id="end" required>
+            <div class="vertical-line"></div>
             <div class="tag-select">
                 <input type="radio" name="tag" class="tag" style="--col:220, 220, 220" checked id="default-tag">
                 <input type="radio" name="tag" class="tag" style="--col:241, 154, 200"  title="Project">
@@ -87,14 +101,18 @@
         </form>
 
         <div class="display-form">
-            <input type="checkbox" id="show-others">
-            <label for="show-others" title="Hide all but the current day">Hide other days</label>
-            <br>
-            <input type="checkbox" id="compact-mode" title>
-            <label for="compact" title="Remove padding between days">Compact mode</label>
-            <br>
-            <input type="checkbox" id="rigid-mode" checked>
-            <label for="compact" title="Untracked time is shown as an empty white area">Rigid mode</label>
+            <div class="switch" id="rigid-mode">
+                <span class="material-symbols-outlined first" style="color:#1f1f1f;">timer_off</span>
+                <span class="material-symbols-outlined second" style="color:#1f1f1f;">timer</span>
+            </div>
+            <div class="switch" id="compact-mode">
+                <span class="material-symbols-outlined first" style="color:#1f1f1f;">expand</span>
+                <span class="material-symbols-outlined second" style="color:#1f1f1f;">compress</span>
+            </div>
+            <div class="switch" id="show-others">
+                <span class="material-symbols-outlined first" style="color:#1f1f1f;">visibility</span>
+                <span class="material-symbols-outlined second" style="color:#1f1f1f;">visibility_off</span>
+            </div>
         </div>
 
         <div class="parent-container"></div>

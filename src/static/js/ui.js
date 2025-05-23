@@ -2,7 +2,7 @@
 This file handles the main UI of the page, except the form. That is managed by form.js and some of its functionality is impoted here.
 */
 
-export { registerPopup, registerEditing, setCompact, showOthers, displayError,
+export { registerPopup, registerEditing, showOthers, displayError, setCompact, setDisplayOptionsFromCookie,
    addCheckboxListeners, registerContextMenu, registerWeekCollapseIcon, getDisplayOptions }
 import { registerEditing } from "./form.js"
 import { load } from "./compile.js"
@@ -97,7 +97,6 @@ function registerWeekCollapseIcon(parent, button) {
 
     // Toggle rotation
     parent.classList.toggle("collapsed");
-    button.classList.toggle("rotated");
 
     // Save status in cookie
     const status = parent.classList.contains('collapsed') ? 'closed' : 'open'
@@ -151,32 +150,54 @@ function showOthers() {
   }
 }
 
-function setCompact(obj) {
+function setCompact() {
   let compact = getDisplayOptions()['compact-mode']
-  if (compact) { obj.classList.remove("padded-container"); }
-  else             { obj.classList.add("padded-container"); }
+  document.documentElement.style.setProperty('--padding', compact ? '1rem' : '0rem')
 }
 
 function getDisplayOptions() {
   return {
-    'show-others': document.querySelector('#show-others').checked,
-    'compact-mode': document.querySelector('#compact-mode').checked,
-    'rigid-mode': document.querySelector('#rigid-mode').checked
+    'show-others': document.querySelector('#show-others').classList.contains('switched'),
+    'compact-mode': document.querySelector('#compact-mode').classList.contains('switched'),
+    'rigid-mode': document.querySelector('#rigid-mode').classList.contains('switched')
   }
 }
 
+function setDisplayOptionsFromCookie() {
+  const cookies = getCookies()
+  Object.entries(cookies).forEach(pair => {
+    let name = pair[0]
+    if (name.startsWith('display')) {
+      console.log(name)
+      const referencedItem = document.getElementById(name.split('display-')[1])
+      console.log(pair[1])
+      if (referencedItem && (pair[1] == 'true')) {
+        console.log('wtf')
+        console.log(`Setting ${name} to switched due to saved cookie`)
+        referencedItem.classList.add('switched')
+      }
+    }
+  })
+}
+
 function addCheckboxListeners() {
-  document.querySelector('#show-others').addEventListener('click', (event) => { 
+  document.querySelector('#show-others').addEventListener('click', (event) => {
+    const hidden = getDisplayOptions()['show-others']
     showOthers();
+    document.cookie = `display-show-others=${hidden}`
   })
 
   document.querySelector('#compact-mode').addEventListener('click', (event) => {
-    getAllDays().forEach(day => setCompact(day))
+    const compact = getDisplayOptions()['compact-mode']
+    setCompact();
+    document.cookie = `display-compact-mode=${compact}`
   })
 
   document.querySelector('#rigid-mode').addEventListener('click', (event) => {
+    const rigid = getDisplayOptions()['rigid-mode']
     getAllDays().forEach(day => {
       load(day.id, false) // Load the day without clearing the cache so that the rigidity is changed
     })
+    document.cookie = `display-rigid-mode=${rigid}`
   })
 }

@@ -1,5 +1,5 @@
-import { addFormListeners } from "./form.js";
-import { addCheckboxListeners, showOthers } from "./ui.js";
+import { addFormListeners, addDisplayFormListeners } from "./form.js";
+import { addCheckboxListeners, showOthers, setCompact, setDisplayOptionsFromCookie } from "./ui.js";
 import { load, initialiseContainers } from "./compile.js"
 import { populateCache } from "./cache.js";
 
@@ -8,12 +8,15 @@ This file co-ordinates any functions that need to be run (boileplate or otherwis
 when the file is loaded, to avoid any loading order conflicts.
 */
 
+setDisplayOptionsFromCookie()
 
 let names = await populateCache() // Populate cache and get names of all elements
 
 await initialiseContainers(names) // Create containers
 names.forEach(name => { load(name, false) }) // Create elements themselves, but do not reload cache
 
-addCheckboxListeners()
 addFormListeners()
+addDisplayFormListeners()
+addCheckboxListeners()
 showOthers()
+setCompact()
