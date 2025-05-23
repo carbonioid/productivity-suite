@@ -2,7 +2,7 @@
 This file handles the main UI of the page, except the form. That is managed by form.js and some of its functionality is impoted here.
 */
 
-export { registerPopup, registerEditing, showOthers, displayError, setCompact,
+export { registerPopup, registerEditing, showOthers, displayError, setCompact, setDisplayOptionsFromCookie,
    addCheckboxListeners, registerContextMenu, registerWeekCollapseIcon, getDisplayOptions }
 import { registerEditing } from "./form.js"
 import { load } from "./compile.js"
@@ -163,19 +163,41 @@ function getDisplayOptions() {
   }
 }
 
+function setDisplayOptionsFromCookie() {
+  const cookies = getCookies()
+  Object.entries(cookies).forEach(pair => {
+    let name = pair[0]
+    if (name.startsWith('display')) {
+      console.log(name)
+      const referencedItem = document.getElementById(name.split('display-')[1])
+      console.log(pair[1])
+      if (referencedItem && (pair[1] == 'true')) {
+        console.log('wtf')
+        console.log(`Setting ${name} to switched due to saved cookie`)
+        referencedItem.classList.add('switched')
+      }
+    }
+  })
+}
+
 function addCheckboxListeners() {
   document.querySelector('#show-others').addEventListener('click', (event) => {
-    console.log(getDisplayOptions())
+    const hidden = getDisplayOptions()['show-others']
     showOthers();
+    document.cookie = `display-show-others=${hidden}`
   })
 
   document.querySelector('#compact-mode').addEventListener('click', (event) => {
+    const compact = getDisplayOptions()['compact-mode']
     setCompact();
+    document.cookie = `display-compact-mode=${compact}`
   })
 
   document.querySelector('#rigid-mode').addEventListener('click', (event) => {
+    const rigid = getDisplayOptions()['rigid-mode']
     getAllDays().forEach(day => {
       load(day.id, false) // Load the day without clearing the cache so that the rigidity is changed
     })
+    document.cookie = `display-rigid-mode=${rigid}`
   })
 }
