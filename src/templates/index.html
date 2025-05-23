@@ -5,24 +5,21 @@
     <script src="{{ url_for('static', filename='js/run.js') }}" type="module"></script>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
     <link href="{{ url_for('static', filename='img/favicon.ico') }}" rel="shortcut icon" />
-    
+
     <link href="{{ url_for('static', filename='css/general.css') }}" rel="stylesheet" />
     <link href="{{ url_for('static', filename='css/form.css') }}" rel="stylesheet" />
     <link href="{{ url_for('static', filename='css/popups.css') }}" rel="stylesheet" />
     <link href="{{ url_for('static', filename='css/days.css') }}" rel="stylesheet" />
 
-
-
     <template id="week-container-template">
         <div class="week-container">
             <div class="week-separator">
-                <p class="date week-collapse-icon"><span data-bind="formatted-date"></span></p>
-                <div class="vertical-line"></div>
-                <!-- <span class="material-symbols-outlined week-collapse-icon rotated menu-button" style="font-size:16px; display:none;">chevron_right</span> -->
+                <div class="date week-collapse-icon">
+                    <p class="date-text">
+                        <span data-bind="formatted-date"></span>
+                    </p>
+                </div>
             </div>
-            <!-- <div class="week-separator">
-                Week ending <span data-bind="formatted-date"></span>
-            </div> -->
             <div class="days"></div>
         </div>
     </template>
@@ -49,10 +46,12 @@
 
     <template id="day-title-template">
         <div class="day-title">
-            <img src="/static/img/menu.png" width="12px" height="12px" class="menu-button">
-            <p class="title"><span data-bind="formatted-day"></span></b></p>
-            <div class="mono context-menu hidden soft-hidden">
+            <div class="date">
+                <p class="date-text menu-button">
+                    <span data-bind="formatted-date"></span>
+                </p>
             </div>
+            <div class="mono context-menu hidden soft-hidden">
         </div>
     </template>
 
