@@ -2,7 +2,7 @@
 This file handles the main UI of the page, except the form. That is managed by form.js and some of its functionality is impoted here.
 */
 
-export { registerPopup, registerEditing, setCompact, showOthers, displayError,
+export { registerPopup, registerEditing, showOthers, displayError, setCompact,
    addCheckboxListeners, registerContextMenu, registerWeekCollapseIcon, getDisplayOptions }
 import { registerEditing } from "./form.js"
 import { load } from "./compile.js"
@@ -95,8 +95,6 @@ function registerWeekCollapseIcon(parent, button) {
       parent.querySelector('.days').style.overflow = 'hidden'
     }
 
-    parent.querySelector('.vertical-line').style.display = ''
-
     // Toggle rotation
     parent.classList.toggle("collapsed");
 
@@ -109,10 +107,6 @@ function registerWeekCollapseIcon(parent, button) {
   days.addEventListener('transitionend', () => {
     if (!parent.classList.contains('collapsed')) {
       parent.querySelector('.days').style.overflow = ''
-    }
-
-    if (parent.classList.contains('collapsed')) {
-      parent.querySelector('.vertical-line').style.display = 'none'
     }
   })
 
@@ -156,10 +150,9 @@ function showOthers() {
   }
 }
 
-function setCompact(obj) {
+function setCompact() {
   let compact = getDisplayOptions()['compact-mode']
-  if (compact) { obj.classList.remove("padded-container"); }
-  else             { obj.classList.add("padded-container"); }
+  document.documentElement.style.setProperty('--padding', compact ? '1rem' : '0rem')
 }
 
 function getDisplayOptions() {
@@ -177,7 +170,7 @@ function addCheckboxListeners() {
   })
 
   document.querySelector('#compact-mode').addEventListener('click', (event) => {
-    getAllDays().forEach(day => setCompact(day))
+    setCompact();
   })
 
   document.querySelector('#rigid-mode').addEventListener('click', (event) => {

@@ -6,7 +6,7 @@ It also handles adding, editing and deleting elements.
 export {  addElement, editElement, deleteElement, load, initialiseContainers };
 import {  format_mins, format_yyyymmdd, duration, dayOfWeek, getAllDays } from './utils.js'
 import {  registerEditing, registerPopup, registerContextMenu, registerWeekCollapseIcon, 
-          setCompact, displayError, getDisplayOptions} from "./ui.js";
+          displayError, getDisplayOptions} from "./ui.js";
 import { fetchDay, getDay } from "./cache.js"
 import { loadTemplate } from './template.js';
 
@@ -221,7 +221,7 @@ function loadDayTitle(container, name, entries) {
   let formattedDay = format_yyyymmdd(name)
 
   let title = loadTemplate('day-title-template', {
-    "formatted-day": formattedDay
+    "formatted-date": formattedDay.split(' ')[0]
   })
   title.id = name
 
@@ -273,8 +273,6 @@ async function load(name, reloadCache) {
 
   container.innerHTML = ''; // Clear previous content because we are replacing it
   loadDay(container, name, entries)
-
-  setCompact(document.getElementById(name)) // Set compactness
 }
 
 /* Query API and reload days */

@@ -35,25 +35,8 @@ div.context-menu {
     text-align:center;
     font-weight:normal;
 
-    left:20px;
-    top:5px;
-}
-
-.day-title img.menu-button {
-    margin-right:0.1rem;
-    position:relative;
-    float:left;
-}
-
-.menu-button {
-    padding:0.1rem;
-    border-radius: 50%;
-    overflow: hidden;
-    object-fit: cover;
-}
-
-.menu-button:hover {
-    background:rgba(120, 120, 120, 0.3);
+    left:4rem;
+    top:0;
 }
 
 /*
@@ -69,4 +52,5 @@ div.popup {
     z-index: 9; /* ensure above other elements */
     font-size: 0.75rem;
     line-height: 1rem;
+    white-space:nowrap;
 }

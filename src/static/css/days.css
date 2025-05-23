@@ -1,46 +1,46 @@
+:root {
+    --padding:1rem;
+    --container-height:2rem;
+}
+
 /*
 Week container
 */
 .week-separator {
-    color:rgb(175, 175, 175);
     width:min-content;
-    margin-right:0.5rem;
     display:flex;
     flex-direction:column;
     align-items:center;
+    justify-content: center;
+    height:var(--container-height);
 }
 
 .week-container {
-    display:flex;
-    flex-direction: row;
     width:100%;
     white-space: nowrap;
 }
 
-.collapsed .days {
-    max-height:0;
-}
-
-.vertical-line {
-    border-radius:2px;
-    width:0;
-    border:0.5px solid rgb(175, 175, 175);
-    flex:1;
-}
-
 .date {
+    width:4rem;
+    display:flex;
+    justify-content: center;
+    align-items:center;
+    position:relative;
+    user-select: none;
+}
+
+.date-text {
+    width:min-content;
+    color:rgb(175, 175, 175);
     border-radius:2px;
     padding:1px;
     padding:3px;
     margin:1px;
-
     transition: background-color 0.15s ease-out;
     cursor:pointer;
-    width:4rem;
-    text-align:center;
 }
 
-.date:hover {
+.date-text:hover {
     background-color:rgb(245, 245, 245);
 }
 
@@ -49,32 +49,31 @@ Individual days
 */
 
 .days {
-    padding-top:22.5px;
     max-height:800px;
     transition: max-height 0.25s ease-in-out;
     width:100%;
 }
 
-div.container {
+.collapsed .days {
+    max-height:0;
+}
+
+.container {
+    vertical-align: top;
     min-width: 0;
     display: flex;
     white-space:wrap;
+    align-items:center;
+    height:var(--container-height);
+    margin:var(--padding) 0;
 }
 
-.container, .padded-container {
-    vertical-align: top;
+.container:first-child {
+    margin-top:calc(var(--padding)/2);
 }
 
-.padded-container {
-    margin:22.5px 0;
-}
-
-.padded-container:first-child {
-    margin-top:0;
-}
-
-.padded-container:last-child {
-    margin-bottom:0;
+.container:last-child {
+    margin-bottom:calc(var(--padding)/2);
 }
 
 /*
@@ -93,6 +92,11 @@ div.item {
     width:fit-content;
     min-width:0.1rem;
     user-select: none;
+    height:100%;
+
+    /* Center text */
+    display:flex;
+    align-items: center;
 }
 
 div.pad-item {
@@ -119,20 +123,13 @@ Day titles (title popups are in popups.css)
 */
 
 .day-title {
-    width:4.5rem;
+    width:4rem;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    font-size:0.75rem;
-    font-weight:bold;
-
-    padding: 0.4rem;
-
-    background-color:rgba(240,240,240, 0.5);
 
     position:relative;
-
-    overflow:visible;
+    overflow: visible;
 }
 
 .day-title .title {

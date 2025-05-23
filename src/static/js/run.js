@@ -1,5 +1,5 @@
 import { addFormListeners, addDisplayFormListeners } from "./form.js";
-import { addCheckboxListeners, showOthers } from "./ui.js";
+import { addCheckboxListeners, showOthers, setCompact } from "./ui.js";
 import { load, initialiseContainers } from "./compile.js"
 import { populateCache } from "./cache.js";
 
@@ -18,3 +18,4 @@ addFormListeners()
 addDisplayFormListeners()
 addCheckboxListeners()
 showOthers()
+setCompact()
