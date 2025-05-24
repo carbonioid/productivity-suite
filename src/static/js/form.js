@@ -4,7 +4,7 @@ This file handles the main form of the page. Some functionality is exported to u
 
 import { addElement, editElement, deleteElement } from "./compile.js";
 import { displayError } from "./ui.js"
-import { parseElementApiInfo } from "./utils.js";
+import { getAllDays, parseElementApiInfo } from "./utils.js";
 export { addFormListeners, registerEditing, addDisplayFormListeners }
 
 // "dictionary" of colors for different bits of text
@@ -130,44 +130,46 @@ function exitEditMode() {
   form.setAttribute('data-mode', `add`);
 }
 
+function enterEditMode(itemObject) {
+  // Parse data-api-info atrribute to get appropriate data
+  let [_, id, name, start, end, color] = Object.values(parseElementApiInfo(itemObject))
+
+  // Populate the input section with the editing data with this info and save copies of it
+  let form = document.querySelector('.form-body');
+
+  // Explanation for this:
+  // If we are already editing the form, we do not want to go back to that content. If we were to do so,
+  // consider the case where we are editing an element and switch to another:
+  // once we finish editing that, the data that that is restored is is the
+  // info of the FIRST element we were editing.
+  // Therefore, if we are already in edit mode, we should not change the prev; property in data-mode
+  // this saves the content before *any* editing not just the most recent one.
+  let [tmpName, tmpStart, tmpEnd, tmpColor] = [null, null, null, null];
+  if (form.getAttribute('data-mode').startsWith('add')) {
+    [tmpName, tmpStart, tmpEnd, tmpColor] = getFormContent();
+  } else {
+    let prevContent = form.getAttribute('data-mode').split(';')[3].split('\\');
+
+    [tmpName, tmpStart, tmpEnd, tmpColor] = prevContent;
+  }
+  setFormContent(name, start, end, color);
+
+  // Set the appropriate mode, which saves the info about which item we are editing and the previous form content (so we can set it back)
+  let day_name = itemObject.parentNode.id;
+  form.setAttribute('data-mode', `edit;${day_name}\\${id};prev;${tmpName}\\${tmpStart}\\${tmpEnd}\\${tmpColor}`);
+
+  // Activate the editing indicator
+  document.querySelector('.editing-indicator').classList.remove("soft-hidden")
+}
+
 function registerEditing(obj) {
   // Register the editing mode (in the form; this doesn't actually do the editing) -
   // what this does is set the input area to the values of this object
-  // and set some parameters in the input area to let the rest of the world
-  // know we are editing.
-  // (It's here because it has event listeners)
+  // and set some parameters in the input area to let the form know we are editing
+  // So that when the form is submitted, we know what to edit.
   obj.addEventListener('dblclick', (event) => {
     event.preventDefault();
-
-    // Parse data-api-info atrribute to get appropriate data
-    let [_, id, name, start, end, color] = Object.values(parseElementApiInfo(obj))
-
-    // Populate the input section with the editing data with this info and save copies of it
-    let form = document.querySelector('.form-body');
-
-    // Explanation for this:
-    // If we are already editing the form, we do not want to go back to that content. If we were to do so,
-    // consider the case where we are editing an element and switch to another:
-    // once we finish editing that, the data that that is restored is is the
-    // info of the FIRST element we were editing.
-    // Therefore, if we are already in edit mode, we should not change the prev; property in data-mode
-    // this saves the content before *any* editing not just the most recent one.
-    let [tmpName, tmpStart, tmpEnd, tmpColor] = [null, null, null, null];
-    if (form.getAttribute('data-mode').startsWith('add')) {
-      [tmpName, tmpStart, tmpEnd, tmpColor] = getFormContent();
-    } else {
-      let prevContent = form.getAttribute('data-mode').split(';')[3].split('\\');
-
-      [tmpName, tmpStart, tmpEnd, tmpColor] = prevContent;
-    }
-    setFormContent(name, start, end, color);
-
-    // Set the appropriate mode, which saves the info about which item we are editing and the previous form content (so we can set it back)
-    let day_name = obj.parentNode.id;
-    form.setAttribute('data-mode', `edit;${day_name}\\${id};prev;${tmpName}\\${tmpStart}\\${tmpEnd}\\${tmpColor}`);
-
-    // Activate the editing indicator
-    document.querySelector('.editing-indicator').classList.remove("soft-hidden")
+    enterEditMode(obj)
   });
 }
 
@@ -190,15 +192,23 @@ function addFormListeners() {
         // Set it in the form.
         setFormContent(null, null, currentTime, null);
       }
-      else if (event.key === 'Escape') {
-        // Exit editing mode on escape key press
+      // Exit editing mode on escape key press, if the form is in edit mode.
+      else if (event.key === 'Escape' && document.querySelector(".form-body").dataset.mode.startsWith('edit')) {
         exitEditMode();
+      }
+
+      // Edit most recent item on up arrow press, if input form not selected
+      else if (event.key === 'ArrowUp' && !document.querySelector('#name').contains(document.activeElement)) {
+        // Enter editing mode for the most recent item
+        const lastItem = getAllDays()[0].lastElementChild
+        enterEditMode(lastItem)
       }
     })
 
   form.addEventListener("submit", async function (event) {
     event.preventDefault();
     await submitForm();
+    document.body.focus(); // Unfocus form element
   });
 
   // Listener that updates selected label based on currently inputted name.

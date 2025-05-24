@@ -283,7 +283,6 @@ async function addElement(name, start, end, color, day) {
   Returns True if succesful, the error message otherwise.
   */
 
-  console.log(day)
   if (day == undefined) {day = getAllDays()[0].id}
 
   // Prompt backend with new info using fetch()
