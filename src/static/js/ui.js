@@ -2,9 +2,8 @@
 This file handles the main UI of the page, except the form. That is managed by form.js and some of its functionality is impoted here.
 */
 
-export { registerPopup, registerEditing, showOthers, displayError, setCompact, setDisplayOptionsFromCookie,
+export { registerPopup, showOthers, displayError, setCompact, setDisplayOptionsFromCookie,
    addCheckboxListeners, registerContextMenu, registerWeekCollapseIcon, getDisplayOptions }
-import { registerEditing } from "./form.js"
 import { load } from "./compile.js"
 import { getCookies, getAllDays } from "./utils.js"
 

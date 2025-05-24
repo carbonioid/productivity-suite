@@ -47,8 +47,8 @@ def upload():
     if type(valid) == str:
         return Response(response=valid, status=400)
 
-    new_id = add_row(filename, *json.values())
-    return Response(response=str(new_id), status=201)
+    add_row(filename, *json.values())
+    return Response(status=201)
 
 @app.route("/edit", methods=["POST"])
 def update_item():

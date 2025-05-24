@@ -5,8 +5,8 @@ It also handles adding, editing and deleting elements.
 
 export {  addElement, editElement, deleteElement, load, initialiseContainers };
 import {  format_mins, format_yyyymmdd, duration, dayOfWeek, getAllDays } from './utils.js'
-import {  registerEditing, registerPopup, registerContextMenu, registerWeekCollapseIcon, 
-          displayError, getDisplayOptions} from "./ui.js";
+import {  registerPopup, registerContextMenu, registerWeekCollapseIcon, displayError, getDisplayOptions} from "./ui.js";
+import { registerEditing } from './form.js';
 import { fetchDay, getDay } from "./cache.js"
 import { loadTemplate } from './template.js';
 
@@ -283,7 +283,6 @@ async function addElement(name, start, end, color, day) {
   Returns True if succesful, the error message otherwise.
   */
 
-  console.log(day)
   if (day == undefined) {day = getAllDays()[0].id}
 
   // Prompt backend with new info using fetch()

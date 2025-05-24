@@ -12,7 +12,7 @@ def fetch_db_contents(scope: list):
     """
 
     final_json = {}
-    for filename in scope: # Iterate through each day
+    for filename in scope: # Iterate through each day        
         file_json = []
         if not os.path.exists(filename):
             print(f'{filename} was invalid ({scope=})')
@@ -45,22 +45,14 @@ def add_row(filename, name, start, end, color):
     """
     filepath = f'res/{filename}.csv'
 
-    data = fetch_db_contents([filepath])
-
-    # Check if the adjacent item has the same name - if so, merge and return its id
-    for row in data[filename]:
-        if row['end'] == start and row['name'] == name and row['color'] == color:
-            edit_row(filename, row['id'], name, row['start'], end, color)
-            return row['id']
-
     num_lines = len(list(csv.reader(open(filepath)))) # This is the row's id.
     with open(filepath, "a") as file:
         writer = csv.writer(file)
 
         values = [num_lines, name, start, end, color] # Add an ID to the new row
         writer.writerow(values)
-
-    return num_lines
+    
+    combination_check(filename)
 
 def edit_row(filename, id, new_name, new_start, new_end, new_color):
     filepath = f'res/{filename}.csv'
@@ -81,7 +73,7 @@ def edit_row(filename, id, new_name, new_start, new_end, new_color):
         writer = csv.writer(file)
         writer.writerows(new_file)
 
-    return True
+    combination_check(filename)
 
 def delete_row(filename, id):
     filepath = f'res/{filename}.csv'
@@ -102,6 +94,22 @@ def delete_row(filename, id):
         writer.writerows(new_file)
 
     return True
+
+def clean_file_ids(filepath):
+    """
+    Clean any ids that are not sequential in this life - e.g. 6 followed by 8 becomes 6 followed by 7
+    """
+    # Create list of correct ids
+    with open(filepath, 'r') as file:
+        reader = csv.reader(file)
+        new_rows = []
+        for i, row in enumerate(reader):
+            new_rows.append([i]+row[1:])
+    
+    # Write this list to the file
+    with open(filepath, 'w') as file:
+        writer = csv.writer(file)
+        writer.writerows(new_rows)
 
 def invalid(json, day, ignore=None):
     """
@@ -134,3 +142,26 @@ def invalid(json, day, ignore=None):
                 return f"The inputted activity overlaps another: {row['name']}"
 
     return None # not invalid
+
+def combination_check(filename):
+    """
+    Check if any parts of the databse need to be combined (items with same name & color that are adjacent and combine them.)
+    """
+    filepath = f'res/{filename}.csv'
+    data = fetch_db_contents([filepath])
+
+    # Check if the adjacent item has the same name - if so, merge
+    prev_item = {'name': None, 'start': None, 'end': None, 'color': None}
+    for row in data[filename]:
+        if row['start'] == prev_item['end'] and \
+            row['name'] == prev_item['name'] and \
+            row['color'] == prev_item['color']:
+            edit_row(filename, row['id'], row['name'], prev_item['start'], row['end'], row['color'])
+            delete_row(filename, prev_item['id'])
+
+            print(f"editing {row['name']} ({row['id']}) and deleting {prev_item['name']} ({prev_item['id']})")
+
+        prev_item = row
+    
+    # Some IDs are now not sequential, which will mess with the rest of the code - fix this.
+    clean_file_ids(filepath)
