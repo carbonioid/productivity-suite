@@ -32,15 +32,18 @@ Week container
 .date-text {
     width:min-content;
     color:rgb(175, 175, 175);
-    border-radius:2px;
     padding:1px;
     padding:3px;
     margin:1px;
+}
+
+.date-text.hoverable {
+    border-radius:2px;
     transition: background-color 0.15s ease-out;
     cursor:pointer;
 }
 
-.date-text:hover {
+.date-text.hoverable:hover {
     background-color:rgb(245, 245, 245);
 }
 
@@ -66,6 +69,9 @@ Individual days
     align-items:center;
     height:var(--container-height);
     margin:var(--padding) 0;
+    box-sizing:border-box;
+
+    border-left:1px solid rgb(175, 175, 175);
 }
 
 .container:first-child {
@@ -102,6 +108,7 @@ div.item {
 div.pad-item {
     flex: var(--f);
     user-select:none;
+    height:100%;
 }
 
 div.item p.heading {
