@@ -102,9 +102,9 @@ async function submitForm() {
     let id = editing_info[1];
 
     if (name !== "") {
-      editElement(id, name, start, end, color, day_name);
+      await editElement(id, name, start, end, color, day_name);
     } else { // Delete the element if "name" field is blank.
-      deleteElement(id, day_name);
+      await deleteElement(id, day_name);
     }
 
     exitEditMode();
@@ -128,7 +128,6 @@ function exitEditMode() {
   // the start time to that, not the past one for QoL.
   let start = null;
   if (document.querySelector('#start').dataset.auto === 'true') {
-    console.log('ooh')
     const dayName = form.getAttribute('data-mode').split(';')[1].split('\\')[0]
     const day = getDay(dayName)
     let lastItem = day[day.length - 1]
