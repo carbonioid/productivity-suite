@@ -208,6 +208,9 @@ function addFormListeners() {
 
         // Set it in the form.
         setFormContent(null, null, currentTime, null);
+
+        // Focus form for easy editing/submitting
+        form.querySelector(".add-btn").focus()
       }
       // Exit editing mode on escape key press, if the form is in edit mode.
       else if (event.key === 'Escape' && document.querySelector(".form-body").dataset.mode.startsWith('edit')) {
