@@ -99,12 +99,14 @@ def clean_file_ids(filepath):
     """
     Clean any ids that are not sequential in this life - e.g. 6 followed by 8 becomes 6 followed by 7
     """
+    # Create list of correct ids
     with open(filepath, 'r') as file:
         reader = csv.reader(file)
         new_rows = []
         for i, row in enumerate(reader):
             new_rows.append([i]+row[1:])
     
+    # Write this list to the file
     with open(filepath, 'w') as file:
         writer = csv.writer(file)
         writer.writerows(new_rows)
@@ -142,7 +144,6 @@ def invalid(json, day, ignore=None):
     return None # not invalid
 
 def combination_check(filename):
-    print('running')
     """
     Check if any parts of the databse need to be combined (items with same name & color that are adjacent and combine them.)
     """
@@ -155,10 +156,12 @@ def combination_check(filename):
         if row['start'] == prev_item['end'] and \
             row['name'] == prev_item['name'] and \
             row['color'] == prev_item['color']:
-            print(f"editing {row['name']} ({row['id']}) and deleting {prev_item['name']} ({prev_item['id']})")
             edit_row(filename, row['id'], row['name'], prev_item['start'], row['end'], row['color'])
             delete_row(filename, prev_item['id'])
 
+            print(f"editing {row['name']} ({row['id']}) and deleting {prev_item['name']} ({prev_item['id']})")
+
         prev_item = row
     
+    # Some IDs are now not sequential, which will mess with the rest of the code - fix this.
     clean_file_ids(filepath)

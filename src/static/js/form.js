@@ -4,6 +4,7 @@ This file handles the main form of the page. Some functionality is exported to u
 
 import { addElement, editElement, deleteElement } from "./compile.js";
 import { displayError } from "./ui.js"
+import { getDay } from "./cache.js"
 import { getAllDays, parseElementApiInfo } from "./utils.js";
 export { addFormListeners, registerEditing, addDisplayFormListeners }
 
@@ -71,7 +72,6 @@ function setFormContent(name, start, end, color) {
   }
 }
 
-
 async function submitForm() {
   /*
   This function handles form submission and has two modes:
@@ -82,15 +82,20 @@ async function submitForm() {
 
   let [name, start, end, color] = getFormContent(); // Get current form content
 
-  if (form.getAttribute('data-mode') == 'add') { // If add mode, simply add content
+  // If add mode, simply add content
+  if (form.getAttribute('data-mode') == 'add') { 
     let outcome = await addElement(name, start, end, color);
     if (outcome === true) {
       // Set the start value to the current value of end - QoL.
       setFormContent('', end, '', '220, 220, 220');
-    } else { // It was unsuccessful
+      document.querySelector('#start').dataset.auto = true; // The "auto" property trackers whether the info here has been automatically set
+    } else {
+      // It was unsuccessful, display error
       displayError(outcome);
     }
-  } else { // Otherwise (editing mode), get the editing info and edit the data on the serverside, then reset the previous content of the form from the data-mode attribute.
+  } 
+  // Otherwise (editing mode), get the editing info and edit the data on the serverside, then reset the previous content of the form from the data-mode attribute.
+  else {
     // Edit the element on the serverside - this section involves parsing the data-mode attribute.
     let editing_info = form.getAttribute('data-mode').split(';')[1].split('\\');
     let day_name = editing_info[0];
@@ -102,7 +107,6 @@ async function submitForm() {
       deleteElement(id, day_name);
     }
 
-    console.log(`Editing ${id} at ${day_name}`);
     exitEditMode();
   }
 }
@@ -117,16 +121,29 @@ function exitEditMode() {
   let prevContent = form.getAttribute('data-mode').split(';')[3].split('\\');
 
   let name = prevContent[0];
-  let start = prevContent[1];
   let end = prevContent[2];
   let color = prevContent[3];
+
+  // If the start property was set automatically (and we just edited the last item) we want to set
+  // the start time to that, not the past one for QoL.
+  let start = null;
+  if (document.querySelector('#start').dataset.auto === 'true') {
+    console.log('ooh')
+    const dayName = form.getAttribute('data-mode').split(';')[1].split('\\')[0]
+    const day = getDay(dayName)
+    let lastItem = day[day.length - 1]
+
+    start = lastItem.end
+  } else { // Otherwise (if the user inputted that start time manually) do it normally.
+    start = prevContent[1];
+  }
 
   setFormContent(name, start, end, color);
 
   // Hide the editing indicator
   document.querySelector('.editing-indicator').classList.add("soft-hidden")
 
-  // Exit edit mode in the form.
+  // Exit edit mode in the form attributes.
   form.setAttribute('data-mode', `add`);
 }
 
@@ -212,12 +229,16 @@ function addFormListeners() {
   });
 
   // Listener that updates selected label based on currently inputted name.
-  let name_input = document.querySelector('#name');
-  name_input.addEventListener("input", (event) => {
-    let col = detectColor(name_input.value);
+  const nameInput = document.querySelector('#name');
+  const startInput = document.querySelector('#start');
+  nameInput.addEventListener("input", (event) => {
+    let col = detectColor(nameInput.value);
 
     // Set appropriate radio button to selected
     setFormContent(null, null, null, col);
+  })
+  startInput.addEventListener("input", (event) => {
+    startInput.dataset.auto = false; // The "auto" property trackers whether the info here has been automatically set; if the user edits it, it has not.
   })
 
   // Editing indicator Listener
