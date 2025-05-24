@@ -76,6 +76,15 @@ function registerContextMenu(button, popup) {
     // Toggle whether hidden
     popup.classList.toggle("hidden");
     popup.classList.toggle("soft-hidden");
+
+    // If going off screen, flip direction
+    const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+    const rect = popup.getBoundingClientRect();
+
+    if (rect.top + popup.offsetHeight > viewportHeight) {
+      const value = `${viewportHeight-rect.top-popup.offsetHeight}px`
+      popup.style.setProperty('top', value)
+    }
   })
 
   document.addEventListener('click', (event) => {
@@ -168,12 +177,8 @@ function setDisplayOptionsFromCookie() {
   Object.entries(cookies).forEach(pair => {
     let name = pair[0]
     if (name.startsWith('display')) {
-      console.log(name)
       const referencedItem = document.getElementById(name.split('display-')[1])
-      console.log(pair[1])
       if (referencedItem && (pair[1] == 'true')) {
-        console.log('wtf')
-        console.log(`Setting ${name} to switched due to saved cookie`)
         referencedItem.classList.add('switched')
       }
     }
