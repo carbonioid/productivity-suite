@@ -132,7 +132,7 @@ function loadPadItem(start, end, container) {
   template.setAttribute("style", `--f:${_duration};`)
   template.setAttribute("data-api-info", `${start}\\${end}`)
 
-  registerPopup(template)
+  registerPopup(template, template.querySelector('.popup'))
   container.appendChild(template)
 }
 

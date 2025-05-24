@@ -3,6 +3,7 @@
     <title>Squee</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="{{ url_for('static', filename='js/run.js') }}" type="module"></script>
+    
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
     <link href="{{ url_for('static', filename='img/favicon.ico') }}" rel="shortcut icon" />
 
@@ -15,7 +16,7 @@
         <div class="week-container">
             <div class="week-separator">
                 <div class="date week-collapse-icon">
-                    <p class="date-text">
+                    <p class="date-text hoverable">
                         <span data-bind="formatted-date"></span>
                     </p>
                 </div>
@@ -47,9 +48,10 @@
     <template id="day-title-template">
         <div class="day-title">
             <div class="date">
-                <p class="date-text menu-button">
+                <p class="date-text">
                     <span data-bind="formatted-date"></span>
                 </p>
+                <span class="material-symbols-outlined menu-button" style="font-size:1rem;">more_vert</span>
             </div>
             <div class="mono context-menu hidden soft-hidden">
         </div>
