@@ -55,6 +55,7 @@ Individual days
     max-height:800px;
     transition: max-height 0.25s ease-in-out;
     width:100%;
+    border-left:1px solid rgb(175, 175, 175);
 }
 
 .collapsed .days {
@@ -70,8 +71,6 @@ Individual days
     height:var(--container-height);
     margin:var(--padding) 0;
     box-sizing:border-box;
-
-    border-left:1px solid rgb(175, 175, 175);
 }
 
 .container:first-child {
