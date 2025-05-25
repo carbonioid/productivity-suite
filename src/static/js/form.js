@@ -89,6 +89,9 @@ async function submitForm() {
       // Set the start value to the current value of end - QoL.
       setFormContent('', end, '', '220, 220, 220');
       document.querySelector('#start').dataset.auto = true; // The "auto" property trackers whether the info here has been automatically set
+
+      // Refocus form to add next thing
+      form.querySelector('#name').focus()
     } else {
       // It was unsuccessful, display error
       displayError(outcome);
@@ -176,6 +179,8 @@ function enterEditMode(itemObject) {
 
   // Activate the editing indicator
   document.querySelector('.editing-indicator').classList.remove("soft-hidden")
+
+  form.querySelector('#name').focus()
 }
 
 function registerEditing(obj) {
@@ -227,7 +232,6 @@ function addFormListeners() {
   form.addEventListener("submit", async function (event) {
     event.preventDefault();
     await submitForm();
-    document.body.focus(); // Unfocus form element
   });
 
   // Listener that updates selected label based on currently inputted name.
