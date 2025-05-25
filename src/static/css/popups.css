@@ -24,7 +24,7 @@ div.context-menu {
     width:fit-content;
     padding: 10px;
     z-index: 11; /* ensure above other elements */
-    font-size: 0.75rem;
+    font-size: var(--font-regular);
     line-height: 1rem;
 
     position:absolute;
@@ -70,7 +70,7 @@ div.popup {
     width:fit-content;
     padding: 10px;
     z-index: 9; /* ensure above other elements */
-    font-size: 0.75rem;
+    font-size: var(--font-regular);
     line-height: 1rem;
     white-space:nowrap;
 }

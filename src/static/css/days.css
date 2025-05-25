@@ -31,7 +31,7 @@ Week container
 
 .date-text {
     width:min-content;
-    color:rgb(175, 175, 175);
+    color:var(--regular);
     padding:1px;
     padding:3px;
     margin:1px;
@@ -44,7 +44,7 @@ Week container
 }
 
 .date-text.hoverable:hover {
-    background-color:rgb(245, 245, 245);
+    background-color:var(--off-white);
 }
 
 /*
@@ -55,7 +55,7 @@ Individual days
     max-height:800px;
     transition: max-height 0.25s ease-in-out;
     width:100%;
-    border-left:1px solid rgb(175, 175, 175);
+    border-left:1px solid var(--regular);
 }
 
 .collapsed .days {
@@ -119,7 +119,7 @@ div.item p.heading {
     word-break: break-all;
 
     font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-    font-size: 0.6rem;
+    font-size: var(--font-small);
     line-height: 0.8rem;
     font-weight: 500;
 }

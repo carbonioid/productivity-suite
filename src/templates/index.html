@@ -76,18 +76,20 @@
     <body>
         <p class="editing-indicator soft-hidden">editing - <a class="editing-exit-button">exit</a></p>
         <form class="form-body" action="#" data-mode="add">
-            <button class="add-btn" value="">
-                <span class="material-symbols-outlined" style="color:#1f1f1f; font-size:16px;">add_circle</span>
+            <button class="icon-button hoverable" value="" id="add">
+                <span class="material-symbols-outlined" style="color:#1f1f1f;">add_circle</span>
             </button>
 
-            <input class="mono" type="text" placeholder="Activity name" style="width:15rem;" id="name">
+            <input class="border" type="text" placeholder="Activity name" style="width:15rem;" id="name">
 
             <div class="vertical-line"></div>
-            <input class="mono" type="time" style="width:3rem;" id="start" required data-auto="false">
+
+            <input class="border" type="time" style="width:3rem;" id="start" required data-auto="false">
             <p>to</p>
-            <input class="mono" type="time" style="width:3rem;" id="end" required>
+            <input class="border" type="time" style="width:3rem;" id="end" required>
+
             <div class="vertical-line"></div>
-            <div class="tag-select">
+            <div class="tag-select border">
                 <input type="radio" name="tag" class="tag" style="--col:220, 220, 220" checked id="default-tag">
                 <input type="radio" name="tag" class="tag" style="--col:241, 154, 200"  title="Project">
                 <input type="radio" name="tag" class="tag" style="--col:219, 43, 78"    title="Physics">
@@ -102,16 +104,16 @@
             </div>
         </form>
 
-        <div class="display-form">
-            <div class="switch" id="rigid-mode">
+        <div class="display-form border">
+            <div class="switch hoverable icon-button" id="rigid-mode">
                 <span class="material-symbols-outlined first" style="color:#1f1f1f;">timer_off</span>
                 <span class="material-symbols-outlined second" style="color:#1f1f1f;">timer</span>
             </div>
-            <div class="switch" id="compact-mode">
+            <div class="switch hoverable icon-button" id="compact-mode">
                 <span class="material-symbols-outlined first" style="color:#1f1f1f;">expand</span>
                 <span class="material-symbols-outlined second" style="color:#1f1f1f;">compress</span>
             </div>
-            <div class="switch" id="show-others">
+            <div class="switch hoverable icon-button" id="show-others">
                 <span class="material-symbols-outlined first" style="color:#1f1f1f;">visibility</span>
                 <span class="material-symbols-outlined second" style="color:#1f1f1f;">visibility_off</span>
             </div>
