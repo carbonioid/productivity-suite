@@ -125,7 +125,7 @@ function loadPadItem(start, end, container) {
   let template = loadTemplate('pad-item-template', {
     "start": start, 
     "end": end,
-    "duration": _duration
+    "duration": format_mins(_duration)
   })
 
   // Set properites
