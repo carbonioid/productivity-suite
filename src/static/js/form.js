@@ -214,7 +214,7 @@ function addFormListeners() {
         setFormContent(null, null, currentTime, null);
 
         // Focus form for easy editing/submitting
-        form.querySelector(".add-btn").focus()
+        form.querySelector("#add").focus()
       }
       // Exit editing mode on escape key press, if the form is in edit mode.
       else if (event.key === 'Escape' && document.querySelector(".form-body").dataset.mode.startsWith('edit')) {
@@ -222,7 +222,10 @@ function addFormListeners() {
       }
 
       // Edit most recent item on up arrow press, if input form not selected
-      else if (event.key === 'ArrowUp' && !document.querySelector('#name').contains(document.activeElement)) {
+      else if (event.key === 'ArrowUp' && 
+        (!document.querySelector('#name').contains(document.activeElement) || // Either, the name field is not focused
+        document.querySelector('#name').value === "") // Or, the name field is blank (so something was probably just added)
+      ) {
         // Enter editing mode for the most recent item
         const lastItem = getAllDays()[0].lastElementChild
         enterEditMode(lastItem)
