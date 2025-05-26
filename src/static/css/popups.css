@@ -1,7 +1,9 @@
-
-.mono {
-    border: 1px solid #ccc;
-    background-color: #f0f0f0;
+hr.horizontal {
+    border:0.5px solid var(--light);
+    box-sizing: border-box;
+    width: calc(100% + 20px); 
+    transform:translate(-10px, 0);
+    margin:0.5rem 0;
 }
 
 .errorbox {
@@ -13,7 +15,7 @@
     padding: 10px;
     right:1rem;
     top:1rem;
-    z-index: 10; /* ensure above other elements */
+    z-index: 11; /* ensure above other elements */
 }
 
 /*
@@ -23,29 +25,46 @@ Context menus
 div.context-menu {
     width:fit-content;
     padding: 10px;
-    z-index: 11; /* ensure above other elements */
-    font-size: 0.75rem;
+    z-index: 10; /* ensure above other elements */
+    font-size: var(--font-regular);
     line-height: 1rem;
 
     position:absolute;
     transition: opacity 0.1s ease-in-out; /* for animations */
+
+    background-color:white;
+    border:1px solid var(--light);
+    border-radius:10px;
 }
+
+div.popup {
+    font-family:Verdana, Geneva, Tahoma, sans-serif;
+    position:fixed;
+    width:fit-content;
+    padding: 10px;
+    z-index: 9; /* ensure above other elements */
+    font-size: var(--font-regular);
+    line-height: 1rem;
+    white-space:nowrap;
+
+    background-color: white;
+}
+
 
 .day-title .context-menu {
     text-align:center;
     font-weight:normal;
 
-    left:4rem;
+    left:4.5rem;
     top:0;
 }
 
 .menu-button {
-    color:rgb(175, 175, 175);
+    color:var(--dark);
     position:absolute;
     right:0.5rem;
 
     border-radius:2px;
-    transition: background-color 0.15s ease-out;
     cursor:pointer;
 
     display:none; /* Initially hidden, shown on date hover */
@@ -55,22 +74,7 @@ div.context-menu {
     display:inline-block;
 }
 
-.menu-button:hover {
-    background-color:rgb(245, 245, 245);
-}
-
 /*
 Hover popups
 */
 
-div.popup {
-    font-family:Verdana, Geneva, Tahoma, sans-serif;
-    display: none; /* initially hidden */
-    position:fixed;
-    width:fit-content;
-    padding: 10px;
-    z-index: 9; /* ensure above other elements */
-    font-size: 0.75rem;
-    line-height: 1rem;
-    white-space:nowrap;
-}
