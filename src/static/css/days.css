@@ -31,7 +31,7 @@ Week container
 
 .date-text {
     width:min-content;
-    color:var(--regular);
+    color:var(--dark);
     padding:1px;
     padding:3px;
     margin:1px;
@@ -39,12 +39,7 @@ Week container
 
 .date-text.hoverable {
     border-radius:2px;
-    transition: background-color 0.15s ease-out;
     cursor:pointer;
-}
-
-.date-text.hoverable:hover {
-    background-color:var(--off-white);
 }
 
 /*
@@ -55,7 +50,6 @@ Individual days
     max-height:800px;
     transition: max-height 0.25s ease-in-out;
     width:100%;
-    border-left:1px solid var(--regular);
 }
 
 .collapsed .days {

@@ -54,11 +54,11 @@ function registerPopup(parent, popup) {
   Register the correct event listeners for this object's popup (with class .popup).
   */
   parent.addEventListener('mouseenter', () => {
-    popup.style.display = 'block';
+    popup.classList.remove('hidden')
   });
 
   parent.addEventListener('mouseleave', () => {
-    popup.style.display = 'none';
+    popup.classList.add('hidden')
   })
 
   parent.addEventListener('mousemove', (event) => {

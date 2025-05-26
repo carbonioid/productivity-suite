@@ -6,6 +6,8 @@ MAIN FORM
     align-items:center;
     vertical-align: top;
     margin-bottom:1.75rem;
+    width:100%;
+    position:relative;
 }
 
 .form-body p {
@@ -62,11 +64,13 @@ EDITING INDICATOR
 */
 
 .editing-indicator {
-    color:steelblue;
-    font-weight:100;
+    color:var(--blue);
+    font-weight:950;
     font-family: Helvetica, Arial, sans-serif;
     font-size:var(--font-regular);
-    text-transform:uppercase;
+
+    margin-left:2rem;
+    margin-bottom:0.3rem;
 }
 
 .editing-exit-button {
@@ -80,13 +84,12 @@ DISPLAY FORM
 */
 
 .display-form {
-    position:absolute;
-    top:1.75rem;
-    right:2rem;
-
-    display:flex;
+    display:inline-flex;
     gap:0.4rem;
     justify-content:center;
+
+    background-color: white;
+    margin-left: auto;
 }
 
 .switch.switched .first {
