@@ -1,26 +1,22 @@
 export { registerContextMenu, registerPopup }
-/*
-These are the options and functions that add event listeners
-*/
 
 function setPopupPosition(popup, mouseX, mouseY) {
-    // Adjust the popup position so it follows the cursor
-    // You might want to add some offset to prevent overlap
-    popup.style.left = mouseX + 1 + 'px'; // Add 10px offset to the right
-    popup.style.top = mouseY + 1 + 'px';  // Add 10px offset to the bottom
+    // adjust the popup position so it follows the cursor
+    popup.style.left = mouseX + 1 + 'px';
+    popup.style.top = mouseY + 1 + 'px';
   
-    // Keep the popup within the viewport
+    // keep the popup within the viewport
     const popupWidth = popup.offsetWidth;
     const popupHeight = popup.offsetHeight;
     const windowWidth = window.innerWidth;
     const windowHeight = window.innerHeight;
   
     if (mouseX + popupWidth > windowWidth) {
-      popup.style.left = mouseX - popupWidth - 1 + 'px'; // Move to the left
+      popup.style.left = mouseX - popupWidth - 1 + 'px';
     }
   
     if (mouseY + popupHeight > windowHeight) {
-      popup.style.top = mouseY - popupHeight - 1 + 'px';   // Move upwards
+      popup.style.top = mouseY - popupHeight - 1 + 'px';
     }
 }
 
@@ -67,7 +63,7 @@ function registerPopup(parent, popup) {
     })
 
     parent.addEventListener('mousemove', (event) => {
-        // Get the coordinates of the mouse relative to the viewport
+        // get the coordinates of the mouse relative to the viewport
         const mouseX = event.clientX;
         const mouseY = event.clientY;
 

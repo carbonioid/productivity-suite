@@ -25,7 +25,7 @@ function displayError(msg) {
 }
 
 /* 
-Registering functions
+These functions add event listeners
 */
 function registerWeekCollapseIcon(parent, button) {
   const days = parent.querySelector('.days')
