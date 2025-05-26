@@ -21,36 +21,6 @@ hr.horizontal {
 /*
 Context menus
 */
-
-div.context-menu {
-    width:fit-content;
-    padding: 10px;
-    z-index: 10; /* ensure above other elements */
-    font-size: var(--font-regular);
-    line-height: 1rem;
-
-    position:absolute;
-    transition: opacity 0.1s ease-in-out; /* for animations */
-
-    background-color:white;
-    border:1px solid var(--light);
-    border-radius:10px;
-}
-
-div.popup {
-    font-family:Verdana, Geneva, Tahoma, sans-serif;
-    position:fixed;
-    width:fit-content;
-    padding: 10px;
-    z-index: 9; /* ensure above other elements */
-    font-size: var(--font-regular);
-    line-height: 1rem;
-    white-space:nowrap;
-
-    background-color: white;
-}
-
-
 .day-title .context-menu {
     text-align:center;
     font-weight:normal;
@@ -78,3 +48,7 @@ div.popup {
 Hover popups
 */
 
+.popup {
+    font-family:Verdana, Geneva, Tahoma, sans-serif;
+    white-space:nowrap;
+}

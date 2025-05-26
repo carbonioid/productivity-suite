@@ -2,8 +2,8 @@
 This file handles the main UI of the page, except the form. That is managed by form.js and some of its functionality is impoted here.
 */
 
-export { registerPopup, showOthers, displayError, setCompact, setDisplayOptionsFromCookie,
-   addCheckboxListeners, registerContextMenu, registerWeekCollapseIcon, getDisplayOptions }
+export { showOthers, displayError, setCompact, setDisplayOptionsFromCookie,
+   addCheckboxListeners, registerWeekCollapseIcon, getDisplayOptions }
 import { load } from "./compile.js"
 import { getCookies, getAllDays } from "./utils.js"
 
@@ -24,77 +24,9 @@ function displayError(msg) {
   }, 4500)
 }
 
-/*
-These are the options and functions that add event listeners
+/* 
+These functions add event listeners
 */
-
-function setPopupPosition(popup, mouseX, mouseY) {
-  // Adjust the popup position so it follows the cursor
-  // You might want to add some offset to prevent overlap
-  popup.style.left = mouseX + 1 + 'px'; // Add 10px offset to the right
-  popup.style.top = mouseY + 1 + 'px';  // Add 10px offset to the bottom
-
-  // Keep the popup within the viewport
-  const popupWidth = popup.offsetWidth;
-  const popupHeight = popup.offsetHeight;
-  const windowWidth = window.innerWidth;
-  const windowHeight = window.innerHeight;
-
-  if (mouseX + popupWidth > windowWidth) {
-    popup.style.left = mouseX - popupWidth - 1 + 'px'; // Move to the left
-  }
-
-  if (mouseY + popupHeight > windowHeight) {
-    popup.style.top = mouseY - popupHeight - 1 + 'px';   // Move upwards
-  }
-}
-
-function registerPopup(parent, popup) {
-  /*
-  Register the correct event listeners for this object's popup (with class .popup).
-  */
-  parent.addEventListener('mouseenter', () => {
-    popup.classList.remove('hidden')
-  });
-
-  parent.addEventListener('mouseleave', () => {
-    popup.classList.add('hidden')
-  })
-
-  parent.addEventListener('mousemove', (event) => {
-    // Get the coordinates of the mouse relative to the viewport
-    const mouseX = event.clientX;
-    const mouseY = event.clientY;
-
-    setPopupPosition(popup, mouseX, mouseY);
-  })
-}
-
-function registerContextMenu(button, popup) {
-  button.addEventListener('click', (event) => {
-    // Toggle whether hidden
-    popup.classList.toggle("hidden");
-    popup.classList.toggle("soft-hidden");
-
-    // If going off screen, flip direction
-    const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
-    const rect = popup.getBoundingClientRect();
-
-    if (rect.top + popup.offsetHeight > viewportHeight) {
-      const value = `${viewportHeight-rect.top-popup.offsetHeight}px`
-      popup.style.setProperty('top', value)
-    }
-  })
-
-  document.addEventListener('click', (event) => {
-    // Check if the target is `button` or a child of `button`. If not, make this popup disappear.
-    if (!button.contains(event.target) && !popup.contains(event.target)) {
-      popup.classList.add("soft-hidden");
-      popup.classList.add("hidden");
-    }
-  })
-}
-
 function registerWeekCollapseIcon(parent, button) {
   const days = parent.querySelector('.days')
   button.addEventListener('click', (event) => {
