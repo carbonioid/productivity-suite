@@ -5,7 +5,8 @@ It also handles adding, editing and deleting elements.
 
 export {  addElement, editElement, deleteElement, load, initialiseContainers };
 import {  format_mins, format_yyyymmdd, duration, dayOfWeek, getAllDays } from './utils.js'
-import {  registerPopup, registerContextMenu, registerWeekCollapseIcon, displayError, getDisplayOptions} from "./ui.js";
+import {  registerWeekCollapseIcon, displayError, getDisplayOptions} from "./ui.js";
+import { registerPopup, registerContextMenu } from "./popup.js"
 import { registerEditing } from './form.js';
 import { fetchDay, getDay } from "./cache.js"
 import { loadTemplate } from './template.js';
