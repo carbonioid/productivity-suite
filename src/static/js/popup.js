@@ -41,10 +41,7 @@ function toggleContextMenu(popup, show) {
     if (show) {
         popup.classList.remove('hidden')
     } else {
-        animation.onfinish = () => { 
-        console.log('finished')
-        popup.classList.add('hidden') 
-        }
+        animation.onfinish = () => { popup.classList.add('hidden') }
     }
 
     animation.play()
@@ -81,17 +78,17 @@ function registerContextMenu(button, popup) {
         const rect = popup.getBoundingClientRect();
 
         if (rect.top + popup.offsetHeight > viewportHeight) {
-        const value = `${viewportHeight-rect.top-popup.offsetHeight}px`
-        popup.style.setProperty('top', value)
+            const value = `${viewportHeight-rect.top-popup.offsetHeight}px`
+            popup.style.setProperty('top', value)
         }
     })
 
     document.addEventListener('click', (event) => {
         // Check if the target is a child of `button` or a child of `popup`. If not, make this popup disappear.
         if (!button.contains(event.target) && !popup.contains(event.target)) {
-        if (!popup.classList.contains('hidden')) {
-            toggleContextMenu(popup, false) // "false" means to hide the popup
-        }
+            if (!popup.classList.contains('hidden')) {
+                toggleContextMenu(popup, false) // "false" means to hide the popup
+            }
         }
     })
 }
