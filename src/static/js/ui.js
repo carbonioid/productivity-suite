@@ -51,7 +51,7 @@ function setPopupPosition(popup, mouseX, mouseY) {
 
 function registerPopup(parent, popup) {
   /*
-  Register the correct event listeners for this object's popup (with class .popup).
+  Register the correct event listeners for this object's popup
   */
   parent.addEventListener('mouseenter', () => {
     popup.classList.remove('hidden')
@@ -70,11 +70,40 @@ function registerPopup(parent, popup) {
   })
 }
 
+function toggleContextMenu(popup, show) {
+  /*
+  Show an animation to show or hide this popup depending on the value of `show`
+  */
+  const keyframes = [
+    { transform: 'scale(0.9) translate(-5px, -5px)', opacity: 0},
+    { transform: 'scale(1)', opacity: 1}
+  ];
+
+  const options = {
+    duration: 100,
+    easing: 'ease-out',
+    fill: 'forwards',
+    direction: show ? 'normal' : 'reverse'
+  };
+
+  const animation = popup.animate(keyframes, options)
+
+  if (show) {
+    popup.classList.remove('hidden')
+  } else {
+    animation.onfinish = () => { 
+      console.log('finished')
+      popup.classList.add('hidden') 
+    }
+  }
+
+  animation.play()
+}
+
 function registerContextMenu(button, popup) {
   button.addEventListener('click', (event) => {
     // Toggle whether hidden
-    popup.classList.toggle("hidden");
-    popup.classList.toggle("soft-hidden");
+    toggleContextMenu(popup, popup.classList.contains('hidden'))
 
     // If going off screen, flip direction
     const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
@@ -87,10 +116,11 @@ function registerContextMenu(button, popup) {
   })
 
   document.addEventListener('click', (event) => {
-    // Check if the target is `button` or a child of `button`. If not, make this popup disappear.
+    // Check if the target is a child of `button` or a child of `popup`. If not, make this popup disappear.
     if (!button.contains(event.target) && !popup.contains(event.target)) {
-      popup.classList.add("soft-hidden");
-      popup.classList.add("hidden");
+      if (!popup.classList.contains('hidden')) {
+        toggleContextMenu(popup, false) // "false" means to hide the popup
+      }
     }
   })
 }
