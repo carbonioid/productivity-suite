@@ -3,7 +3,7 @@ export { fetchDay, getDay, populateCache }
 let cache = new Map();
 
 async function fetchDay(name) {
-    const data = await fetch("/data", {
+    const data = await fetch("/timetracker/data", {
         method: "GET",
         headers: {
           'Content-Type': 'application/json',
@@ -27,7 +27,7 @@ async function populateCache() {
     */
     const names = []
    
-    await fetch("/data", {
+    await fetch("/timetracker/data", {
         method: "GET",
         headers: {
           'Content-Type': 'application/json',

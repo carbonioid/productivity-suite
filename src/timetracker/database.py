@@ -1,5 +1,5 @@
 import csv, os
-from utils import hhmm_to_minutes
+from timetracker.utils import hhmm_to_minutes
 
 def fetch_db_contents(scope: list):
     """

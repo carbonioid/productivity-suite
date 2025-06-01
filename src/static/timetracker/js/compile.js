@@ -6,10 +6,10 @@ It also handles adding, editing and deleting elements.
 export {  addElement, editElement, deleteElement, load, initialiseContainers };
 import {  format_mins, format_yyyymmdd, duration, dayOfWeek, getAllDays } from './utils.js'
 import {  registerWeekCollapseIcon, displayError, getDisplayOptions} from "./ui.js";
-import { registerPopup, registerContextMenu } from "./popup.js"
+import { registerPopup, registerContextMenu } from "../../general/js/popup.js"
 import { registerEditing } from './form.js';
 import { fetchDay, getDay } from "./cache.js"
-import { loadTemplate } from './template.js';
+import { loadTemplate } from '../../general/js/template.js';
 
 function addEntryPadding(entries) {
   /*
@@ -294,7 +294,7 @@ async function addElement(name, start, end, color, day) {
     "color": color
   });
 
-  const response = await fetch("/add",  {
+  const response = await fetch("/timetracker/add",  {
     method: "POST",
     headers: {
       'Content-Type': 'application/json',
@@ -321,7 +321,7 @@ async function editElement(id, name, start, end, color, day) {
     "end": end,
     "color": color
   });
-  await fetch("/edit",  {
+  await fetch("/timetracker/edit",  {
     method: "POST",
     headers: {
       'Content-Type': 'application/json',
@@ -343,7 +343,7 @@ async function deleteElement(id, day) {
   var data = JSON.stringify({
     "id": id,
   });
-  await fetch("/delete",  {
+  await fetch("/timetracker/delete",  {
     method: "POST",
     headers: {
       'Content-Type': 'application/json',

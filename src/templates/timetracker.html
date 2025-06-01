@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <head>
-    <title>Squee</title>
+    <title>Timetracker</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="{{ url_for('static', filename='js/run.js') }}" type="module"></script>
+    <script src="{{ url_for('static', filename='timetracker/js/run.js') }}" type="module"></script>
     
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
-    <link href="{{ url_for('static', filename='img/favicon.ico') }}" rel="shortcut icon" />
+    <link href="{{ url_for('static', filename='timetracker/favicon.ico') }}" rel="shortcut icon" />
 
-    <link href="{{ url_for('static', filename='css/general.css') }}" rel="stylesheet" />
-    <link href="{{ url_for('static', filename='css/form.css') }}" rel="stylesheet" />
-    <link href="{{ url_for('static', filename='css/popups.css') }}" rel="stylesheet" />
-    <link href="{{ url_for('static', filename='css/days.css') }}" rel="stylesheet" />
+    <link href="{{ url_for('static', filename='general/css/general.css') }}" rel="stylesheet" />
+    <link href="{{ url_for('static', filename='timetracker/css/form.css') }}" rel="stylesheet" />
+    <link href="{{ url_for('static', filename='timetracker/css/popups.css') }}" rel="stylesheet" />
+    <link href="{{ url_for('static', filename='timetracker/css/days.css') }}" rel="stylesheet" />
 
     <template id="week-container-template">
         <div class="week-container">
