@@ -1,0 +1,118 @@
+.day {
+    display:flex;
+    gap:0.4rem; 
+    width:60%;
+}
+
+.chart {
+    height:4rem;
+    min-width:4rem;
+    transform: rotate(-90deg)
+}
+
+.chart circle  {
+    cx:100px;
+    cy:100px;
+    r:var(--r);
+    fill: transparent;
+    stroke-width:18px;
+}
+
+.chart circle:not(.bg) {
+    --circumference: calc(2 * 3.1415926535 * var(--r));
+    stroke-dasharray: var(--circumference);
+    stroke-dashoffset: calc(var(--circumference) * (1 - var(--d)));
+    stroke-linecap:round;
+    z-index:500;
+    stroke:var(--c);
+}
+
+.chart circle.bg {
+    stroke:color-mix(in srgb, var(--c) 50%, white);
+}
+
+.chart .circle-1 {
+    --r:80px;
+    --c:#E63946;
+}
+
+.chart .circle-2 {
+    --r:60px;
+    --c:#00C49A;
+}
+
+.chart .circle-3 {
+    --r:40px;
+    --c:#6fbceb;
+}
+
+.day-name {
+    display:flex;
+    align-items:center;
+    gap:0.2rem;
+}
+
+.day-name > * {
+    align-self: flex-start;
+}
+
+.content {
+    flex-grow:1;
+    padding:0.4rem;
+}
+
+.day-name {
+    color:var(--regular);
+    margin-bottom:0.4rem;
+    text-transform: uppercase;
+    font-size:var(--font-small);
+    font-weight:950;
+}
+
+.entry {
+    overflow:hidden;
+    position:relative;
+
+    /* Wrap lines iwth ellipsis */
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    white-space: normal; 
+
+    -webkit-line-clamp: 2; 
+    height:max-content;
+    
+    transition:height 5s ease-out;
+}
+
+.entry .entry-content {
+    display:block;
+    width:calc(100% - 4rem);
+}
+
+.expanded-entry {
+    -webkit-line-clamp:100;
+}
+
+.see-more-button {
+    position:absolute;
+    bottom:0;
+    right:0;
+    background-color:white;
+    font-weight:950;
+    color:var(--blue);
+    cursor:pointer;
+    width:4rem;
+}
+
+.menu-button {
+    color:var(--regular);
+    right:0.5rem;
+
+    border-radius:2px;
+    cursor:pointer;
+}
+
+.date:hover .menu-button {
+    display:inline-block;
+}

@@ -1,9 +1,11 @@
 import traceback
 from flask import Flask, Response
-from timetracker.timetracker import timetracker_bp
+from timetracker.app import timetracker_bp
+from diary.app import diary_bp
 
 app = Flask(__name__)
 app.register_blueprint(timetracker_bp, url_prefix='/timetracker')
+app.register_blueprint(diary_bp, url_prefix='/diary')
 
 @app.errorhandler(Exception)
 def handle(e):

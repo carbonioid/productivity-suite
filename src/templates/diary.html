@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Testing</title>
+    <script src="{{ url_for('static', filename='diary/script.js') }}" type="module"></script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+    <link href="{{ url_for('static', filename='diary/styles.css') }}" rel="stylesheet" />
+    <link href="{{ url_for('static', filename='general/css/general.css') }}" rel="stylesheet" />
+</head>
+<body>
+    <div class="day">
+        <svg viewBox="0 0 200 200" class="chart">
+            <circle class="circle-1 bg"></circle>
+            <circle class="circle-2 bg"></circle>
+            <circle class="circle-3 bg"></circle>
+            <circle class="circle-1" style="--d:0.5;"></circle>
+            <circle class="circle-2" style="--d:0.5;"></circle>
+            <circle class="circle-3" style="--d:0.2;"></circle>
+        </svg>
+        <div class="content border">
+            <p class="day-name">
+                27 May 2025
+                <span class="material-symbols-outlined menu-button hoverable" style="font-size:0.7rem;">more_vert</span>
+            </p>
+            <div class="entry">
+                <span class="entry-content">
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec eleifend varius lorem et pulvinar. Nulla ipsum ipsum, sollicitudin non euismod sed, mattis eget tellus. Proin id ligula sit amet felis vestibulum accumsan eget eget lacus. Duis dolor dolor, venenatis ac porta id, facilisis id mi. In hac habitasse platea dictumst. Donec vitae malesuada lacus. Aenean pharetra pharetra ligula sit amet tristique. Morbi nec vulputate massa. Integer malesuada lorem turpis, non efficitur ante pharetra et. Nunc at sem semper, facilisis nisl sed, scelerisque sem. 
+                </span>
+                <p class="see-more-button">See more</p>        
+            </div>
+        </div>
+    </div>
+</body>
+</html>
