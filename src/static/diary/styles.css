@@ -4,46 +4,35 @@
     width:60%;
 }
 
-.chart {
+.data-container {
     height:4rem;
     min-width:4rem;
-    transform: rotate(-90deg)
+
+    display:flex;
+    flex-direction: column;
+    gap:0.1rem;
+    margin:0.2rem;
 }
 
-.chart circle  {
-    cx:100px;
-    cy:100px;
-    r:var(--r);
-    fill: transparent;
-    stroke-width:18px;
+.data-rect {
+    color:var(--off-black);
+    text-transform: uppercase;
+    font-size:var(--font-small);
+    font-weight:950;
+    
+    flex-grow:1;
+    width:100%;
 }
 
-.chart circle:not(.bg) {
-    --circumference: calc(2 * 3.1415926535 * var(--r));
-    stroke-dasharray: var(--circumference);
-    stroke-dashoffset: calc(var(--circumference) * (1 - var(--d)));
-    stroke-linecap:round;
-    z-index:500;
-    stroke:var(--c);
-}
-
-.chart circle.bg {
-    stroke:color-mix(in srgb, var(--c) 50%, white);
-}
-
-.chart .circle-1 {
-    --r:80px;
-    --c:#E63946;
-}
-
-.chart .circle-2 {
-    --r:60px;
-    --c:#00C49A;
-}
-
-.chart .circle-3 {
-    --r:40px;
-    --c:#6fbceb;
+.data-rect .background {
+    width:calc(calc(var(--p)) * calc(100% - 0.2rem));
+    height:100%;
+    overflow:visible;
+    background-color:var(--c);
+    border-radius:3px;
+    display:flex;
+    align-items: center;
+    padding-left:0.2rem;
 }
 
 .day-name {
@@ -63,10 +52,11 @@
 
 .day-name {
     color:var(--regular);
-    margin-bottom:0.4rem;
     text-transform: uppercase;
     font-size:var(--font-small);
     font-weight:950;
+
+    margin-bottom:0.4rem;
 }
 
 .entry {
