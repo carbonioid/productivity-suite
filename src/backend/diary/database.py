@@ -1,5 +1,4 @@
 import csv, json
-from datetime import date
 
 DATABASE_PATH = 'src/backend/diary/entries.csv'
 
@@ -7,7 +6,7 @@ def fetch_db_contents(scope: list):
     """Take scope as list of YYYY-MM-DD dates and return the full data for these dates in formatted JSON
 
     Args:
-        scope (list): list of YYYY-MM-DD dates
+        scope (list): list of YYYY-MM-DD dates (or "*" if all dates are to be fetched)
     """
 
     entries = []
@@ -15,7 +14,7 @@ def fetch_db_contents(scope: list):
         reader = csv.reader(file)
         for line in reader:
             date = line[0] 
-            if date in scope:
+            if date in scope or scope == '*':
                 entries.append({
                     'date': line[0],
                     'entry': line[1],
@@ -24,14 +23,20 @@ def fetch_db_contents(scope: list):
 
     return entries
 
-def add_row(entry, values):
-    current_date = date.today().isoformat()
-    with open(DATABASE_PATH, 'a') as file:
-        writer = csv.writer(file)
-        writer.writerow((current_date, entry, values))
+def add_entry(date, entry, values):
+    # Check that there isn't already an entry for this day
+    current_date_entry = fetch_db_contents([date])
 
-def edit_row(date, new_entry, new_values):
-    # Get current values
+    if current_date_entry:
+        raise ValueError('An entry for this date already exists')
+    else:
+        with open(DATABASE_PATH, 'a') as file:
+            writer = csv.writer(file)
+            writer.writerow((date, entry, json.dumps(values)))
+
+def edit_entry(date, new_entry, new_values):
+    # TODO: validate values
+    # Get current rows
     with open(DATABASE_PATH, 'r') as file:
         reader = csv.reader(file)
         rows = list(reader)
@@ -44,7 +49,6 @@ def edit_row(date, new_entry, new_values):
         else:
             new_rows.append(row)
     
-    print(new_rows)
     # Rewrite to file
     with open(DATABASE_PATH, 'w') as file:
         writer = csv.writer(file)
