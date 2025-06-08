@@ -50,3 +50,27 @@ def add_entry_route():
         return str(e), 400
 
     return '', 200
+
+@diary_bp.route("/edit", methods=["POST"])
+def edit_entry_route():
+    """Edit row in entries.csv
+
+    Request body: JSON (application/json)
+    {
+        "date": text,
+        "entry": text,
+        "values": JSON
+    }
+    """
+
+    try:
+        body = request.get_json()
+    except werkzeug.exceptions.BadRequest:
+        return Response(response='The supplied body was not valid JSON', status=400)
+    
+    try:
+        edit_entry(body['date'], body['entry'], body['values'])
+    except Exception as e:
+        return str(e), 400
+
+    return '', 200

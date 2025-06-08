@@ -43,11 +43,16 @@ def edit_entry(date, new_entry, new_values):
 
     # Modify them in memory
     new_rows = []
+    found_row = False
     for row in rows:
         if row[0] == date:
+            found_row = True
             new_rows.append([date, new_entry, json.dumps(new_values)])
         else:
             new_rows.append(row)
+    
+    if not found_row:
+        raise ValueError('An entry for that date does not exist')
     
     # Rewrite to file
     with open(DATABASE_PATH, 'w') as file:
