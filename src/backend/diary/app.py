@@ -49,7 +49,7 @@ def add_entry_route():
     except Exception as e:
         return str(e), 400
 
-    return '', 200
+    return '', 201
 
 @diary_bp.route("/edit", methods=["POST"])
 def edit_entry_route():
@@ -73,4 +73,4 @@ def edit_entry_route():
     except Exception as e:
         return str(e), 400
 
-    return '', 200
+    return '', 201
