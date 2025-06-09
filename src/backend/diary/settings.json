@@ -1,8 +1,8 @@
 {
     "values": [
-        {"name": "Read", "min": 0, "max": 1},
-        {"name": "Good", "min": 1, "max": 6},
-        {"name": "Sleep", "min":1, "max": 5},
-        {"name": "Achieve", "min":1, "max": 5}
+        {"name": "Read",    "color": "#fcba03", "min": 0, "max": 1},
+        {"name": "Good",    "color": "#00C49A", "min": 1, "max": 6},
+        {"name": "Sleep",   "color": "#6fbceb", "min":1, "max": 5},
+        {"name": "Achieve", "color": "#E63946", "min":1, "max": 5}
     ]
 }
