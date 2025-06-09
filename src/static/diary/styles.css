@@ -2,6 +2,7 @@
     display:flex;
     gap:0.4rem; 
     width:60%;
+    padding-bottom:1rem;
 }
 
 .data-container {
@@ -12,6 +13,8 @@
     flex-direction: column;
     gap:0.1rem;
     margin:0.2rem;
+
+    transform:rotate(-90deg);
 }
 
 .data-rect {
@@ -22,6 +25,7 @@
     
     flex-grow:1;
     width:100%;
+    max-height:50%;
 }
 
 .data-rect .background {
@@ -33,6 +37,9 @@
     display:flex;
     align-items: center;
     padding-left:0.2rem;
+    user-select: none;
+
+    color:color-mix(in srgb, var(--c) 50%, white);
 }
 
 .day-name {
