@@ -5,32 +5,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Diary</title>
     <link href="{{ url_for('static', filename='diary/favicon.ico') }}" rel="shortcut icon" />
-    <script src="{{ url_for('static', filename='diary/script.js') }}" type="module"></script>
+    <script src="{{ url_for('static', filename='diary/js/run.js') }}" type="module"></script>
     
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
     <link href="{{ url_for('static', filename='diary/styles.css') }}" rel="stylesheet" />
     <link href="{{ url_for('static', filename='general/css/general.css') }}" rel="stylesheet" />
-</head>
-<body>
-    <div class="day">
-        <div class="data-container">
-            <div class="data-rect"><span class="background" style="--c:#fcba03; --p:1.0;">Read</span></div>
-            <div class="data-rect"><span class="background" style="--c:#00C49A; --p:0.2;">Good</span></div>
-            <div class="data-rect"><span class="background" style="--c:#6fbceb; --p:0.8;">Sleep</span></div>
-            <div class="data-rect"><span class="background" style="--c:#E63946; --p:1.0;">Achieve</span></div>
-        </div>
-        <div class="content border">
-            <p class="day-name">
-                27 May 2025
-                <span class="material-symbols-outlined menu-button hoverable" style="font-size:0.7rem;">more_vert</span>
-            </p>
-            <div class="entry">
-                <span class="entry-content">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec eleifend varius lorem et pulvinar. Nulla ipsum ipsum, sollicitudin non euismod sed, mattis eget tellus. Proin id ligula sit amet felis vestibulum accumsan eget eget lacus. Duis dolor dolor, venenatis ac porta id, facilisis id mi. In hac habitasse platea dictumst. Donec vitae malesuada lacus. Aenean pharetra pharetra ligula sit amet tristique. Morbi nec vulputate massa. Integer malesuada lorem turpis, non efficitur ante pharetra et. Nunc at sem semper, facilisis nisl sed, scelerisque sem. 
-                </span>
-                <p class="see-more-button">See more</p>        
+
+    <template id="data-rect-template">
+        <div class="data-rect"><span class="background"><span data-bind="name"></span></span></div>
+    </template>
+
+    <template id="entry-container-template">
+        <div class="entry-container">
+            <div class="data-container">
+                <!-- populate using data-rect-template here -->
+            </div>
+            <div class="content border">
+                <p class="day-name">
+                    <span data-bind="date"></span>
+                    <span class="material-symbols-outlined menu-button hoverable" style="font-size:0.7rem;">more_vert</span>
+                </p>
+                <div class="entry">
+                    <span class="entry-content">
+                        <span data-bind="entry"></span>
+                    </span>
+                    <p class="see-more-button">See more</p>
+                </div>
             </div>
         </div>
-    </div>
+    </template>
+</head>
+<body>
+
 </body>
 </html>
