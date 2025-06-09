@@ -53,7 +53,5 @@ async function populateCache() {
         })
     })
 
-    console.log(cache)
     return names
-
 }
