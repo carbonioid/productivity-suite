@@ -46,7 +46,7 @@ function addEntryPadding(entries) {
 function loadWeekContainer(date, parent) {
   // Load this object from its template
   let template = Object.assign(
-    loadTemplate('week-container-template', {
+    loadTemplate(document, 'week-container-template', {
       "formatted-date": format_yyyymmdd(date)
     }),
     {id: `week-${date}`} // Set the object's id
@@ -93,7 +93,7 @@ function loadItem(id, name, start, end, color, container) {
   */
   let _duration = duration(start, end);
 
-  let template = loadTemplate('item-template', {
+  let template = loadTemplate(document, 'item-template', {
     "name": name,
     "start": start,
     "end": end,
@@ -123,7 +123,7 @@ function loadPadItem(start, end, container) {
   let _duration = duration(start, end)
 
   // Load object from template
-  let template = loadTemplate('pad-item-template', {
+  let template = loadTemplate(document, 'pad-item-template', {
     "start": start, 
     "end": end,
     "duration": format_mins(_duration)
@@ -221,21 +221,21 @@ function loadDayTitle(container, name, entries) {
   let dayName = dayOfWeek(name);
   let formattedDay = format_yyyymmdd(name)
 
-  let title = loadTemplate('day-title-template', {
+  let title = loadTemplate(document, 'day-title-template', {
     "formatted-date": formattedDay.split(' ')[0]
   })
   title.id = name
 
   // Create context menu
   const menu = title.querySelector('.context-menu')
-  menu.appendChild(loadTemplate('day-title-menu-title-template', {
+  menu.appendChild(loadTemplate(document, 'day-title-menu-title-template', {
     "formatted-day": formattedDay,
     "day-of-week": dayName
   }))
 
   // Add main part of popup (only if there is data)
   if (entries.length > 0) {
-    let body = loadTemplate('day-title-menu-body-template', {
+    let body = loadTemplate(document, 'day-title-menu-body-template', {
       "woke": entries[0]['start'],
       "slept": entries[entries.length - 1]['end']
     })
