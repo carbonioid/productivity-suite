@@ -1,4 +1,4 @@
-import werkzeug
+import werkzeug, json
 from datetime import date
 from flask import render_template, request, Blueprint, Response, jsonify
 from backend.diary.database import fetch_db_contents, add_entry, edit_entry
@@ -12,15 +12,18 @@ def main_route():
 @diary_bp.route("/data", methods=["GET"])
 def query_db_route():
     """Get data from entries.csv based on a specified list of dates, or all (*)
+
     Request body: * or JSON list of dates (as text)
-    e.g. "*" or ["2025-05-05", "2025-05"-06"]
+    *
+    OR
+    ["2025-05-05", "2025-05"-06"]
     """
-    if request.data == b'*':
+    if request.headers['Scope'] == '*':
         scope = '*'
     else:
-        try: 
-            scope = request.get_json(force=True)
-        except werkzeug.exceptions.BadRequest: # If JSON loading fails
+        try:
+            scope = json.loads(request.headers['Scope'])
+        except json.decoder.JSONDecodeError: # If JSON loading fails
             return Response(response='The supplied scope was not valid JSON', status=400)
     
     queried_entries = fetch_db_contents(scope)
