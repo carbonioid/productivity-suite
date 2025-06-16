@@ -26,11 +26,10 @@ async function loadEntry(date, refresh) {
 
     values.forEach(value => {
         let valueObject = loadTemplate(document, "data-rect-template", value)
-        const backgroundObject = valueObject.querySelector(".background")
 
         // Calculate progress based on min, max and value
         const progress = (value['value']-value['min'])/(value['max']-value['min'])
-        backgroundObject.setAttribute("style", `--c:${value['color']}; --p:${progress};`)
+        valueObject.setAttribute("style", `--c:${value['color']}; --p:${progress};`)
 
         valuesContainer.appendChild(valueObject)
     })

@@ -12,7 +12,10 @@
     <link href="{{ url_for('static', filename='general/css/general.css') }}" rel="stylesheet" />
 
     <template id="data-rect-template">
-        <div class="data-rect"><span class="background"><span data-bind="name"></span></span></div>
+        <div class="data-rect">
+            <div class="circle"></div>
+            <div class="text"><span data-bind="value"></span></div>
+        </div>
     </template>
 
     <template id="entry-container-template">
