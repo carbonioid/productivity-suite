@@ -1,8 +1,30 @@
+body {
+    /* filter: invert(1);
+    background-color:black; */
+}
+
+.entry-parent {
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(400px,1fr));
+    gap:0.5rem;
+    width:100%;
+}
+/* 
+@media screen and (max-width: 1050px) {
+    .entry-parent {
+        width:100%;
+    }
+} */
+
+.entry-container:nth-child(n) {
+    background-color: rgb(250, 250, 250);
+}
+
 .entry-container {
     display:flex;
     gap:0.4rem; 
-    width:60%;
-    padding-bottom:1rem;
+    padding:0.2rem;
+    border-radius:5px;
 }
 
 .data-container {
@@ -69,24 +91,42 @@
 }
 
 .content {
-    flex-grow:1;
     padding:0.4rem;
 }
 
 .day-name {
-    color:var(--regular);
-    text-transform: uppercase;
+    flex-grow:1;
     font-size:var(--font-small);
-    font-weight:950;
+    font-weight:750;
 
     margin-bottom:0.4rem;
 }
 
+.menu-button {
+    color:black;
+    right:0.5rem;
+
+    border-radius:2px;
+    cursor:pointer;
+    margin-left:auto;
+    padding:0.2rem;
+}
+
+.date:hover .menu-button {
+    display:inline-block;
+}
+
 .entry {
+    display:flex;
+}
+
+.entry-content {
+    flex-grow:1;
     overflow:hidden;
+    width:100%;
     position:relative;
 
-    /* Wrap lines iwth ellipsis */
+    /* Wrap lines with ellipsis */
     text-overflow: ellipsis;
     display: -webkit-box;
     -webkit-box-orient: vertical;
@@ -94,38 +134,24 @@
 
     -webkit-line-clamp: 2; 
     height:max-content;
+
+    text-align:justify;
     
     transition:height 5s ease-out;
-}
-
-.entry .entry-content {
-    display:block;
-    width:calc(100% - 4rem);
 }
 
 .expanded-entry {
     -webkit-line-clamp:100;
 }
 
-.see-more-button {
-    position:absolute;
-    bottom:0;
-    right:0;
+.entry .see-more-button {
     background-color:white;
     font-weight:950;
     color:var(--blue);
     cursor:pointer;
-    width:4rem;
-}
+    position:relative;
+    bottom:0;
+    align-self:flex-end;
 
-.menu-button {
-    color:var(--regular);
-    right:0.5rem;
-
-    border-radius:2px;
-    cursor:pointer;
-}
-
-.date:hover .menu-button {
-    display:inline-block;
+    height:min-content;
 }

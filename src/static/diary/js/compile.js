@@ -33,5 +33,5 @@ async function loadEntry(date, refresh) {
 
         valuesContainer.appendChild(valueObject)
     })
-    document.querySelector('.entries-parent').appendChild(entryObject)
+    document.querySelector('.entry-parent').appendChild(entryObject)
 }
