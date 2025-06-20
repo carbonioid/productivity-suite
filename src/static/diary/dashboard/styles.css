@@ -5,15 +5,12 @@
     width:100%;
 }
 
-.entry-container:nth-child(n) {
-    background-color: rgb(250, 250, 250);
-}
-
 .entry-container {
     display:flex;
     gap:0.4rem; 
     padding:0.2rem;
     border-radius:5px;
+    background-color: rgb(250, 250, 250);
 }
 
 .data-container {
