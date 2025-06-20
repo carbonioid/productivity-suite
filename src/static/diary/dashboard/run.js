@@ -1,4 +1,4 @@
-import { populateCache } from "./cache.js"
+import { populateCache } from "../js/cache.js"
 import { loadEntry } from "./compile.js"
 
 // Populate cache and get dates of all entries

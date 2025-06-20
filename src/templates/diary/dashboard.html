@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Diary</title>
     <link href="{{ url_for('static', filename='diary/favicon.ico') }}" rel="shortcut icon" />
-    <script src="{{ url_for('static', filename='diary/js/run.js') }}" type="module"></script>
+    <script src="{{ url_for('static', filename='diary/dashboard/run.js') }}" type="module"></script>
     
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
-    <link href="{{ url_for('static', filename='diary/styles.css') }}" rel="stylesheet" />
+    <link href="{{ url_for('static', filename='diary/dashboard/styles.css') }}" rel="stylesheet" />
     <link href="{{ url_for('static', filename='general/css/general.css') }}" rel="stylesheet" />
 
     <template id="data-rect-template">
@@ -38,8 +38,12 @@
     </template>
 </head>
 <body>
-    <div class="entry-parent">
+    <nav>
+        <button class="impact-button" style="--color:#42ab57;"><span class="material-symbols-outlined">add_box</span> Add entry</button>
+    </nav>
+    <div class="hoz-line"></div>
+    <main class="entry-parent">
     <!-- To be populated by JavaScript -->
-    </div>
+    </main>
 </body>
 </html>

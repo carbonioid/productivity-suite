@@ -7,7 +7,7 @@ diary_bp = Blueprint('diary', __name__)
 
 @diary_bp.route("/", methods=["GET"])
 def main_route():
-    return render_template('diary.html')
+    return render_template('diary/dashboard.html')
 
 @diary_bp.route("/data", methods=["GET"])
 def query_db_route():

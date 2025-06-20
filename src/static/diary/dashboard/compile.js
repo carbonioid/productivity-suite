@@ -2,9 +2,9 @@
 This file uses templates to load entries and other HTML components into the page itself.
 */
 export { loadEntry }
-import { getEntry, fetchEntry } from "./cache.js"
+import { getEntry, fetchEntry } from "../js/cache.js"
 import { loadTemplate } from "../../general/js/template.js"
-import { format_yyyymmdd } from "./utils.js"
+import { format_yyyymmdd } from "../js/utils.js"
 
 async function loadEntry(date, refresh, container) {
     /*
