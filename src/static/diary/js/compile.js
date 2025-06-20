@@ -6,12 +6,16 @@ import { getEntry, fetchEntry } from "./cache.js"
 import { loadTemplate } from "../../general/js/template.js"
 import { format_yyyymmdd } from "./utils.js"
 
-async function loadEntry(date, refresh) {
+async function loadEntry(date, refresh, container) {
     /*
     Takes entry date and loads the entry of this name.
     If `refresh` is true, it refreshes the entry in the cache (uses fetchEntry()).
     Otherwise, it does not (uses getEntry())
     */
+
+    if (container == null) {
+        container = document.querySelector('.entry-parent')
+    }
 
     const entryData = refresh ? await fetchEntry(date) : getEntry(date)
     
@@ -33,5 +37,6 @@ async function loadEntry(date, refresh) {
 
         valuesContainer.appendChild(valueObject)
     })
-    document.querySelector('.entry-parent').appendChild(entryObject)
+
+    container.appendChild(entryObject)
 }
