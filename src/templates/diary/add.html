@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diary</title>
+    <script src="{{ url_for('static', filename='diary/add/script.js') }}" type="module"></script>
+
+    <link href="{{ url_for('static', filename='diary/favicon.ico') }}" rel="shortcut icon" />
+
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+    <link href="{{ url_for('static', filename='general/css/general.css') }}" rel="stylesheet" />
+    <link href="{{ url_for('static', filename='diary/add/styles.css') }}" rel="stylesheet" />
+</head>
+<body>
+    <div class="page-container">
+        <div class="left-sidebar">
+            <div class="rating-container border">
+                <div class="slider-container" style="--c:#fcba03;" >
+                    <input type="range" class="slider" min="0" max="1" step="1" />
+                    <span class="slider-value">1</span>
+                </div>
+                <div class="slider-container"  style="--c:#00C49A;" >
+                    <input type="range" class="slider" min="1" max="6" step="1" />
+                    <span class="slider-value">1</span>
+                </div>
+                <div class="slider-container" style="--c:#6fbceb;" >
+                    <input type="range" class="slider" min="1" max="5" step="1" />
+                    <span class="slider-value">1</span>
+                </div>
+                <div class="slider-container" style="--c:#E63946;" >
+                    <input type="range" class="slider" min="1" max="3" step="1" />
+                    <span class="slider-value">1</span>
+                </div>
+            </div>
+            <div class="tag-container border">
+                <div class="tag border">
+                    <span class="material-symbols-outlined">close_small</span> tagname
+                </div>
+                <div class="tag border">
+                    <span class="material-symbols-outlined">close_small</span> tagname
+                </div>
+                <div class="tag border">
+                    <span class="material-symbols-outlined">close_small</span> tagname
+                </div>
+                <div class="tag add-tag border">
+                    <span class="material-symbols-outlined">add</span>
+                </div>
+            </div>
+        </div>
+        <main class="entry-container">
+            <div contenteditable class="entry-input border">Write here...</div>
+            <br>
+            <button class="impact-button" style="--color:#42ab57;">
+                <span class="material-symbols-outlined">task_alt</span> Save entry
+            </button>
+        </main>
+        <div class="right-sidebar">
+            <div class="collapse-button switch">
+                <span class="material-symbols-outlined first">arrow_menu_open</span>
+                <span class="material-symbols-outlined second">arrow_menu_close</span>
+            </div>
+            <div class="memory-container border">
+                <p class="title">
+                    A year ago
+                    <span class="material-symbols-outlined icon-button hoverable" style="font-size:0.7rem;">open_in_new</span>
+                </p>
+
+                <p class="content">
+                    content
+                </p>
+            </div>
+        </div>
+    </div>
+</body>

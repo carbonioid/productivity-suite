@@ -9,6 +9,10 @@ diary_bp = Blueprint('diary', __name__)
 def main_route():
     return render_template('diary/dashboard.html')
 
+@diary_bp.route("/add", methods=["GET"])
+def add_route():
+    return render_template('diary/add.html')
+
 @diary_bp.route("/data", methods=["GET"])
 def query_db_route():
     """Get data from entries.csv based on a specified list of dates, or all (*)
