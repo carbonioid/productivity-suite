@@ -108,8 +108,18 @@ button.impact-button:hover {
     background-color:color-mix(in srgb, var(--color) 90%, white);
 }
 
+/* Switches */
+
 button.impact-button:active {
     transform:scale(0.97);
+}
+
+.switch.switched .first {
+    display:none;
+}
+
+.switch:not(.switched) .second {
+    display:none;
 }
 
 /* 
