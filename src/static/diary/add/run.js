@@ -1,7 +1,8 @@
-import { initCollapseButtonListeners, initSliderListeners } from "./listeners.js";
+import { initCollapseButtonListeners, initSliderListeners, initMemorySelectListener } from "./listeners.js";
 import { loadSliders } from "./compile.js";
 
-await loadSliders();
-
 initCollapseButtonListeners();
+initMemorySelectListener();
+
+await loadSliders();
 initSliderListeners();
