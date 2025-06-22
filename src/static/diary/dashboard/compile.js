@@ -2,7 +2,7 @@
 This file uses templates to load entries and other HTML components into the page itself.
 */
 export { loadEntry }
-import { getEntry, fetchEntry } from "../js/cache.js"
+import { getEntry } from "../js/cache.js"
 import { loadTemplate } from "../../general/js/template.js"
 import { format_yyyymmdd } from "../js/utils.js"
 
@@ -17,7 +17,7 @@ async function loadEntry(date, refresh, container) {
         container = document.querySelector('.entry-parent')
     }
 
-    const entryData = refresh ? await fetchEntry(date) : getEntry(date)
+    const entryData = await getEntry(date, refresh)
     
     const entryObject = loadTemplate(document, "entry-container-template", {
         'date': format_yyyymmdd(entryData['date']),
