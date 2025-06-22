@@ -8,6 +8,6 @@ function format_yyyymmdd(string, includeYear) {
       "July", "Aug", "Sept", "Oct", "Nov", "Dec"
     ];
     month = months[Number(month)-1]
-    return includeYear ? `${Number(day)} ${month}` : `${Number(day)} ${month} ${year}`;
+    return includeYear ? `${Number(day)} ${month} ${year}` : `${Number(day)} ${month}`
 }
   
