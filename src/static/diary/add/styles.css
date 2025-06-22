@@ -12,13 +12,39 @@ MAIN PAGE LAYOUT
     display:grid;
     column-gap:1rem;
     grid-template-columns: 1fr 6fr 3fr;
-    height:100%;
     width:100%;
 }
 
 .memory-container, .rating-container, .tag-container {
     background-color: var(--off-white);
     border-color:var(--off-white);
+}
+
+/***************
+HEADER STYLES
+***************/
+.header {
+    display:flex;
+    align-items:center;
+    justify-content: center;
+    gap:1rem;
+
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+.header h1 {
+    font-size:var(--font-large);
+    margin:0.3rem 0;
+}
+
+.header.hoverable {
+    display: inline-block;
+    margin-left:0;
+}
+
+.header .hoverable:hover {
+    background-color: var(--light);
 }
 
 /***************
@@ -172,17 +198,35 @@ MEMORY STYLES / RIGHT SIDEBAR
 }
 
 .memory-container .title {
-    font-weight:750;
-    margin-bottom:0.3rem;
-    font-size:0.9rem;
-    display:inline-block;
+    display:inline-flex;
+    width: 100%;
+}
+
+.open-in-new-button {
+    margin-left:auto;
+}
+
+.open-in-new-button:hover {
+    background-color:var(--light);
 }
 
 .memory-container .content {
-  overflow: hidden; /* Hides content that overflows the box */
-  display: -webkit-box; /* Required for -webkit-box-orient */
-  -webkit-box-orient: vertical; /* Required for vertical clamping */
-  text-overflow: ellipsis; /* Puts the "..." at the end */
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
   -webkit-line-clamp:10;
   line-height:1.1rem;
+}
+
+.delay-select {
+    font-weight:750;
+    margin-bottom:0.3rem;
+    font-size:0.9rem;
+
+    background: none;
+
+    background: linear-gradient(to right, transparent 85%, var(--light) 85%); /* add bg to arrow area */
+    padding: 0.2rem 0.4rem;
+    cursor:pointer;
 }

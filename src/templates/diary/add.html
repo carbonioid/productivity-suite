@@ -13,7 +13,12 @@
     <link href="{{ url_for('static', filename='diary/add/styles.css') }}" rel="stylesheet" />
 </head>
 <body>
-    <div class="page-container">
+    <header class="header">
+        <h1 class="title">Entry for 27 Mar</h1>
+        <span class="material-symbols-outlined icon-button hoverable" style="font-size:0.7rem;">open_in_new</span>
+    </header>
+    <div class="hoz-line"></div>
+    <main class="page-container">
         <div class="left-sidebar">
             <div class="rating-container border">
                 <div class="slider-container" style="--c:#fcba03;" >
@@ -57,13 +62,19 @@
         </main>
         <div class="right-sidebar">
             <div class="collapse-button switch">
-                <span class="material-symbols-outlined first">arrow_menu_open</span>
-                <span class="material-symbols-outlined second">arrow_menu_close</span>
+                <span class="material-symbols-outlined hoverable icon-button first">arrow_menu_open</span>
+                <span class="material-symbols-outlined hoverable icon-button second">arrow_menu_close</span>
             </div>
             <div class="memory-container border">
                 <p class="title">
-                    A year ago
-                    <span class="material-symbols-outlined icon-button hoverable" style="font-size:0.7rem;">open_in_new</span>
+                    <select class="delay-select border">
+                        <option value="365">A year ago</option>
+                        <option value="180">6 months ago</option>
+                        <option value="30">A month ago</option>
+                        <option value="7">A week ago</option>
+                        <option value="1">A day ago</option>
+                    </select>
+                    <span class="material-symbols-outlined icon-button hoverable open-in-new-button" style="font-size:0.7rem;">open_in_new</span>
                 </p>
 
                 <p class="content">
@@ -71,5 +82,5 @@
                 </p>
             </div>
         </div>
-    </div>
+    </main>
 </body>
