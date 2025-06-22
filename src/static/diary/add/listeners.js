@@ -1,4 +1,5 @@
 export { initCollapseButtonListeners, initSliderListeners, initMemorySelectListener }
+import { format_yyyymmdd } from "../../general/js/utils.js"
 import { getEntry } from "../js/cache.js"
 import { getDateMinusDays } from "./utils.js"
 
@@ -41,7 +42,11 @@ function initMemorySelectListener() {
         
         // Update the memory container with the entry
         const content = memorySelect.parentElement.parentElement.querySelector('.content')
-        content.innerHTML = entry ? entry.entry : "No entry for this date."
+        const entrySpan = content.querySelector('.entry-value')
+        const dateSpan = content.querySelector('.date-value')
+
+        entrySpan.innerHTML = entry ? entry.entry : "No entry for this date."
+        dateSpan.innerHTML = format_yyyymmdd(selectedDate, true)
     })
 
     memorySelect.dispatchEvent(new Event('change')) // Trigger change to load initial value

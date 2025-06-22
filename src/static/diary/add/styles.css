@@ -183,18 +183,29 @@ MEMORY STYLES / RIGHT SIDEBAR
     gap:0.5rem;
 }
 
+.memory-container {
+    overflow: hidden;
+    padding:0.5rem 1rem;
+    flex:1;
+}
+
+.title {
+    display:flex;
+    align-items:center;
+    margin-bottom:0.3rem;
+}
+
+.date-value {
+    font-size:var(--font-small);
+    color:var(--dark);
+}
+
 .collapse-button span {
     font-size:1rem;
     cursor:pointer;
     margin-left:-0.5rem;
     margin-top:0.5rem;
     user-select: none;
-}
-
-.memory-container {
-    overflow: hidden;
-    padding:0.5rem 1rem;
-    flex:1;
 }
 
 .memory-container .title {
@@ -221,7 +232,6 @@ MEMORY STYLES / RIGHT SIDEBAR
 
 .delay-select {
     font-weight:750;
-    margin-bottom:0.3rem;
     font-size:0.9rem;
 
     background: none;
