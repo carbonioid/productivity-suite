@@ -81,3 +81,16 @@ def edit_entry_route():
         return str(e), 400
 
     return '', 201
+
+@diary_bp.route("/settings", methods=["GET"])
+def get_settings_route():
+    """Return settings from settings.json"""
+    try:
+        with open('src/backend/diary/settings.json', 'r') as file:
+            settings = json.load(file)
+    except FileNotFoundError:
+        return Response(response='Settings file not found', status=404)
+    except json.JSONDecodeError:
+        return Response(response='Settings file is not valid JSON', status=400)
+
+    return jsonify(settings), 200
