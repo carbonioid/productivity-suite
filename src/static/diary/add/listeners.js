@@ -7,8 +7,6 @@ function initSliderListeners() {
         const slider = container.querySelector('.slider')
         const sliderValue = container.querySelector('.slider-value')
 
-        console.log(slider.value)
-
         sliderValue.textContent = slider.value
         slider.addEventListener('input', () => {
             sliderValue.textContent = slider.value
