@@ -9,7 +9,7 @@ function getFormData() {
     const ratings = Array.from(ratingContainer.querySelectorAll('.slider')).map(slider => {
         return {
             name: slider.title,
-            color: slider.style.getPropertyValue('--c'),
+            color: window.getComputedStyle(slider.parentElement).getPropertyValue('--c'),
             value: parseFloat(slider.value),
             min: slider.min, 
             max: slider.max
@@ -21,7 +21,7 @@ function getFormData() {
     const tags = Array.from(tagContainer.querySelectorAll('div.tag')).map(tag => {
         return tag.querySelector('.tag-name').textContent.trim()
     })
-    
+
     // Get actual entry
     const entryInput = document.querySelector('.entry-input');
     const entry = entryInput.textContent.trim();
