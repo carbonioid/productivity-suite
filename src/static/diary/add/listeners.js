@@ -79,9 +79,17 @@ function initTagListeners() {
             tagInput.value = ""; 
             tagInput.classList.add('hidden');
 
-            // Create tag
-            const container = document.querySelector('.tag-container');
-            loadTag(container, tagName)
+            if (tagName) {
+                // Create tag if name not empty
+                const container = document.querySelector('.tag-container');
+                loadTag(container, tagName)
+            }
+        }
+        
+        if (event.key === 'Escape') {
+            // Hide input if Escape is pressed
+            tagInput.classList.add('hidden');
+            tagInput.value = ""; // Clear input
         }
     });
 }
