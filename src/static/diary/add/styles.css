@@ -213,6 +213,12 @@ MEMORY STYLES / RIGHT SIDEBAR
     margin-left:-0.5rem;
     margin-top:0.5rem;
     user-select: none;
+
+    color:var(--dark);
+}
+
+.collapse-button.switched {
+    margin-left:auto;
 }
 
 .memory-container .title {
