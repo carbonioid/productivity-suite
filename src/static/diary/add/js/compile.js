@@ -24,6 +24,7 @@ async function loadSliders() {
                 // Set attributes for the slider
                 sliderObj.min = slider.min;
                 sliderObj.max = slider.max;
+                sliderObj.title = slider.name;
                 sliderTemplate.style.setProperty('--c', slider.color);
 
                 // Append to container
