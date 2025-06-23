@@ -54,7 +54,10 @@ def add_entry_route():
     try:
         add_entry(current_date, body["entry"], body["values"])
     except Exception as e:
-        return str(e), 400
+        if (type(e) is ValueError and str(e) == 'An entry for this date already exists'):
+            return Response(response='An entry for today already exists', status=409)
+        else:
+            return str(e), 400
 
     return '', 201
 
