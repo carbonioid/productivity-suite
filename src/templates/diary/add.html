@@ -21,7 +21,7 @@
 
     <template id="tag-template">
         <div class="tag border">
-            <span class="material-symbols-outlined close-button">close_small</span> <span data-bind="name"></span>
+            <span class="material-symbols-outlined close-button">close_small</span> <p class="tag-name"><span data-bind="name"></span></p>
         </div>
     </template>
 </head>
@@ -47,7 +47,7 @@
             <div contenteditable class="entry-input border" placeholder="Write here...">
             </div>
             <br>
-            <button class="impact-button" style="--color:#42ab57;">
+            <button class="impact-button submit-button" style="--color:#42ab57;">
                 <span class="material-symbols-outlined">task_alt</span> Save entry
             </button>
         </main>
