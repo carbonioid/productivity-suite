@@ -1,21 +1,17 @@
-export { initCollapseButtonListeners, initSliderListeners, initMemorySelectListener, 
+export { initCollapseButtonListeners, addSliderListeners, initMemorySelectListener, 
     initTagListeners, initEntryInputListeners    }
 import { format_yyyymmdd } from "../../../general/js/utils.js"
 import { getEntry } from "../../js/cache.js"
 import { getDateMinusDays } from "./utils.js"
 import { loadTag } from "./compile.js"
 
-function initSliderListeners() {
-    const containers = document.querySelectorAll('.slider-container')
+function addSliderListeners(container) {
+    const slider = container.querySelector('.slider')
+    const sliderValue = container.querySelector('.slider-value')
 
-    containers.forEach(container => {
-        const slider = container.querySelector('.slider')
-        const sliderValue = container.querySelector('.slider-value')
-
+    sliderValue.textContent = slider.value
+    slider.addEventListener('input', () => {
         sliderValue.textContent = slider.value
-        slider.addEventListener('input', () => {
-            sliderValue.textContent = slider.value
-        })
     })
 }
 

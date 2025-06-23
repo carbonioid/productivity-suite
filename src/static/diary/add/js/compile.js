@@ -3,6 +3,7 @@ This file uses templates and compiles HTML to the page itself.
 */
 
 import { loadTemplate } from "../../../general/js/template.js";
+import { addSliderListeners } from "./listeners.js";
 export { loadSliders, loadTag }
 
 async function loadSliders() {
@@ -27,6 +28,7 @@ async function loadSliders() {
                 sliderObj.title = slider.name;
                 sliderTemplate.style.setProperty('--c', slider.color);
 
+                addSliderListeners(sliderTemplate);
                 // Append to container
                 container.appendChild(sliderTemplate);
             });
