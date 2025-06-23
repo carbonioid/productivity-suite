@@ -2,7 +2,7 @@
 This file uses templates and compiles HTML to the page itself.
 */
 
-import { loadTemplate } from "../../general/js/template.js";
+import { loadTemplate } from "../../../general/js/template.js";
 export { loadSliders, loadTag }
 
 async function loadSliders() {

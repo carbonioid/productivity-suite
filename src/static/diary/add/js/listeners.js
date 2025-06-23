@@ -1,6 +1,6 @@
 export { initCollapseButtonListeners, initSliderListeners, initMemorySelectListener, initTagListeners }
-import { format_yyyymmdd } from "../../general/js/utils.js"
-import { getEntry } from "../js/cache.js"
+import { format_yyyymmdd } from "../../../general/js/utils.js"
+import { getEntry } from "../../js/cache.js"
 import { getDateMinusDays } from "./utils.js"
 import { loadTag } from "./compile.js"
 
