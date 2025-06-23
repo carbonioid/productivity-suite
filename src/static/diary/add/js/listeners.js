@@ -1,9 +1,11 @@
 export { initCollapseButtonListeners, addSliderListeners, initMemorySelectListener, 
-    initTagListeners, initEntryInputListeners    }
+    initTagListeners, initEntryInputListeners, initSubmitButtonListeners}
 import { format_yyyymmdd } from "../../../general/js/utils.js"
 import { getEntry } from "../../js/cache.js"
 import { getDateMinusDays } from "./utils.js"
 import { loadTag } from "./compile.js"
+import { getFormData } from "./form.js"
+import { addEntry } from "../../js/api.js"
 
 function addSliderListeners(container) {
     /*
@@ -111,4 +113,15 @@ function initEntryInputListeners() {
     })
 
    entryInput.innerHTML = '' // Trigger ::before psuedo-element on load
+}
+
+function initSubmitButtonListeners() {
+    const submitButton = document.querySelector('.submit-button');
+    submitButton.addEventListener('click', async (event) => {
+        const data = getFormData()
+        const response = await addEntry(...data)
+        if (response.status == 409) {
+            alert("An entry for this date already exists.") // TODO: edit exisiting entry instead
+        }
+    })
 }
