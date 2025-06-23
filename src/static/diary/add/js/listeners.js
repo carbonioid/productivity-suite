@@ -6,6 +6,10 @@ import { getDateMinusDays } from "./utils.js"
 import { loadTag } from "./compile.js"
 
 function addSliderListeners(container) {
+    /*
+    Add listeners to the slider in the container. The listener updates the text content of the label
+    when the slider is moved.
+    */
     const slider = container.querySelector('.slider')
     const sliderValue = container.querySelector('.slider-value')
 
@@ -16,6 +20,10 @@ function addSliderListeners(container) {
 }
 
 function initCollapseButtonListeners() {
+    /*
+    Initialize the collapse button listeners. This toggles the visibility of the memory container
+    when the collapseButton is pressed.
+    */
     const collapseButton = document.querySelector('.collapse-button')
     const memoryContainer = document.querySelector('.memory-container')
 
@@ -103,6 +111,4 @@ function initEntryInputListeners() {
     })
 
    entryInput.innerHTML = '' // Trigger ::before psuedo-element on load
-
 }
-
