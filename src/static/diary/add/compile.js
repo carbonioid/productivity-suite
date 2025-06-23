@@ -3,7 +3,7 @@ This file uses templates and compiles HTML to the page itself.
 */
 
 import { loadTemplate } from "../../general/js/template.js";
-export { loadSliders}
+export { loadSliders, loadTag }
 
 async function loadSliders() {
     // Fetch settings from settings.json
@@ -30,4 +30,20 @@ async function loadSliders() {
                 container.appendChild(sliderTemplate);
             });
         })
+}
+
+function loadTag(container, name) {
+    /*
+    Load tag into `container` with name `name`.
+    */
+    const template = loadTemplate(document, "tag-template", {
+        name: name
+    });
+
+    template.querySelector('.close-button').addEventListener('click', () => {
+        template.remove();
+    })
+
+    // Insert before last child so that it's not after the add button
+    container.insertBefore(template, container.lastElementChild);
 }

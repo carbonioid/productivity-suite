@@ -18,6 +18,12 @@
             <span class="slider-value"></span>
         </div>
     </template>
+
+    <template id="tag-template">
+        <div class="tag border">
+            <span class="material-symbols-outlined close-button">close_small</span> <span data-bind="name"></span>
+        </div>
+    </template>
 </head>
 <body>
     <header class="header">
@@ -31,18 +37,10 @@
 
             </div>
             <div class="tag-container border">
-                <div class="tag border">
-                    <span class="material-symbols-outlined">close_small</span> tagname
-                </div>
-                <div class="tag border">
-                    <span class="material-symbols-outlined">close_small</span> tagname
-                </div>
-                <div class="tag border">
-                    <span class="material-symbols-outlined">close_small</span> tagname
-                </div>
-                <div class="tag add-tag border">
+                <form class="tag add-tag border" action="">
                     <span class="material-symbols-outlined">add</span>
-                </div>
+                    <input type="text" class="tag-input hidden" placeholder="Tag name..." name="tag-input">
+                </form>
             </div>
         </div>
         <main class="entry-container">

@@ -136,7 +136,7 @@ TAG STYLES
 }
 
 .tag {
-    margin-top:0;
+    margin-left:0.2rem;
     display: inline-flex;
     align-items: center;
     padding:0.2rem 0.4rem;
@@ -157,7 +157,7 @@ TAG STYLES
     margin-left:-0.2rem;
 }
 
-.tag:not(.add-tag) span:hover {
+.tag:not(.add-tag):hover span {
     opacity:1;
 }
 
@@ -170,6 +170,13 @@ TAG STYLES
 
 .add-tag {
     padding-right:0.2rem;
+}
+
+.tag-input {
+    width:auto;
+    background-color:transparent;
+    border:none;
+    width:90%;
 }
 
 /*****
