@@ -18,12 +18,13 @@ def fetch_db_contents(scope: list):
                 entries.append({
                     'date': line[0],
                     'entry': line[1],
-                    'values': json.loads(line[2])
+                    'ratings': json.loads(line[2]),
+                    'tags': json.loads(line[3])
                 })
 
     return entries
 
-def add_entry(date, entry, values):
+def add_entry(date, entry, ratings, tags):
     # Check that there isn't already an entry for this day
     current_date_entry = fetch_db_contents([date])
 
@@ -32,9 +33,9 @@ def add_entry(date, entry, values):
     else:
         with open(DATABASE_PATH, 'a') as file:
             writer = csv.writer(file)
-            writer.writerow((date, entry, json.dumps(values)))
+            writer.writerow((date, entry, json.dumps(ratings), json.dumps(tags)))
 
-def edit_entry(date, new_entry, new_values):
+def edit_entry(date, new_entry, new_ratings, new_tags):
     # TODO: validate values
     # Get current rows
     with open(DATABASE_PATH, 'r') as file:
@@ -47,7 +48,7 @@ def edit_entry(date, new_entry, new_values):
     for row in rows:
         if row[0] == date:
             found_row = True
-            new_rows.append([date, new_entry, json.dumps(new_values)])
+            new_rows.append([date, new_entry, json.dumps(new_ratings), json.dumps(new_tags)])
         else:
             new_rows.append(row)
     

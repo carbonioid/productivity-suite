@@ -15,7 +15,7 @@ async function getEntry(date, forceReload) {
         /*
         Refect entry from backend, add it to cache and return it.
         */
-        const data = await fetch("/diary/data", {
+        const data = await fetch("/diary/api/data", {
             method: "GET",
             headers: {
                 'Scope': JSON.stringify([date])
@@ -42,7 +42,7 @@ async function populateCache() {
     }
     const names = []
    
-    await fetch("/diary/data", {
+    await fetch("/diary/api/data", {
         method: "GET",
         headers: {
             'Scope': '*'

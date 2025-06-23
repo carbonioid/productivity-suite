@@ -13,7 +13,7 @@ def main_route():
 def add_route():
     return render_template('diary/add.html')
 
-@diary_bp.route("/data", methods=["GET"])
+@diary_bp.route("/api/data", methods=["GET"])
 def query_db_route():
     """Get data from entries.csv based on a specified list of dates, or all (*)
 
@@ -33,14 +33,15 @@ def query_db_route():
     queried_entries = fetch_db_contents(scope)
     return jsonify(queried_entries), 200
 
-@diary_bp.route("/add", methods=["POST"])
+@diary_bp.route("/api/add", methods=["POST"])
 def add_entry_route():
     """Add row to entries.csv
 
     Request body: JSON (application/json)
     {
         "entry": text,
-        "values": JSON
+        "ratings": JSON,
+        "tags": JSON (list)
     }
     """
 
@@ -52,7 +53,7 @@ def add_entry_route():
     current_date = date.today().isoformat()
 
     try:
-        add_entry(current_date, body["entry"], body["values"])
+        add_entry(current_date, body["entry"], body["ratings"], body["tags"])
     except Exception as e:
         if (type(e) is ValueError and str(e) == 'An entry for this date already exists'):
             return Response(response='An entry for today already exists', status=409)
@@ -61,7 +62,7 @@ def add_entry_route():
 
     return '', 201
 
-@diary_bp.route("/edit", methods=["POST"])
+@diary_bp.route("/api/edit", methods=["POST"])
 def edit_entry_route():
     """Edit row in entries.csv
 
@@ -69,7 +70,8 @@ def edit_entry_route():
     {
         "date": text,
         "entry": text,
-        "values": JSON
+        "ratings": JSON,
+        "tags": JSON (list)
     }
     """
 
@@ -79,13 +81,13 @@ def edit_entry_route():
         return Response(response='The supplied body was not valid JSON', status=400)
     
     try:
-        edit_entry(body['date'], body['entry'], body['values'])
+        edit_entry(body['date'], body['entry'], body['ratings'], body['tags'])
     except Exception as e:
         return str(e), 400
 
     return '', 201
 
-@diary_bp.route("/settings", methods=["GET"])
+@diary_bp.route("/api/settings", methods=["GET"])
 def get_settings_route():
     """Return settings from settings.json"""
     try:

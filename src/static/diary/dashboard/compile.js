@@ -25,17 +25,17 @@ async function loadEntry(date, refresh, container) {
     })
 
     // Load data-container entires
-    const values = entryData.values
-    const valuesContainer = entryObject.querySelector(".data-container")
+    const ratings = entryData.ratings
+    const ratingsContainer = entryObject.querySelector(".data-container")
 
-    values.forEach(value => {
-        let valueObject = loadTemplate(document, "data-rect-template", value)
+    ratings.forEach(rating => {
+        let ratingObject = loadTemplate(document, "data-rect-template", rating)
 
         // Calculate progress based on min, max and value
-        const progress = (value['value']-value['min'])/(value['max']-value['min'])
-        valueObject.setAttribute("style", `--c:${value['color']}; --p:${progress};`)
+        const progress = (rating['value']-rating['min'])/(rating['max']-rating['min'])
+        ratingObject.setAttribute("style", `--c:${rating['color']}; --p:${progress};`)
 
-        valuesContainer.appendChild(valueObject)
+        ratingsContainer.appendChild(ratingObject)
     })
 
     container.appendChild(entryObject)
