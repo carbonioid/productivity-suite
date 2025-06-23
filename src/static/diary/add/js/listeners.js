@@ -1,4 +1,5 @@
-export { initCollapseButtonListeners, initSliderListeners, initMemorySelectListener, initTagListeners }
+export { initCollapseButtonListeners, initSliderListeners, initMemorySelectListener, 
+    initTagListeners, initEntryInputListeners    }
 import { format_yyyymmdd } from "../../../general/js/utils.js"
 import { getEntry } from "../../js/cache.js"
 import { getDateMinusDays } from "./utils.js"
@@ -92,5 +93,20 @@ function initTagListeners() {
             tagInput.value = ""; // Clear input
         }
     });
+}
+
+function initEntryInputListeners() {
+    /*
+    Initialise listeners for the entry input, which create and remove a placeholder
+    */
+    const entryInput = document.querySelector('.entry-input');
+    entryInput.addEventListener('focusout', () => {
+        if (!entryInput.textContent.length) {
+            entryInput.innerHTML = '' // Empty text so placeholder exists again
+        }
+    })
+
+   entryInput.innerHTML = '' // Trigger ::before psuedo-element on load
+
 }
 

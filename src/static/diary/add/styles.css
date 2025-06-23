@@ -68,6 +68,15 @@ ENTRY & ENTRY CONTAINER
     overflow:scroll;
 }
 
+.entry-input[placeholder]:empty:before {
+    content: attr(placeholder);
+    color: var(--dark);
+}
+
+.entry-input[placeholder]:empty:focus:before {
+    content: "";
+}
+
 /***************
 LEFT SIDEBAR
 ***************/
