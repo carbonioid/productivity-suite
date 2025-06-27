@@ -1,0 +1,109 @@
+.entry-parent {
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(400px,1fr));
+    gap:0.5rem;
+    width:100%;
+}
+
+.entry-container {
+    display:flex;
+    gap:0.4rem; 
+    padding:0.2rem;
+    border-radius:5px;
+    background-color: rgb(250, 250, 250);
+    width:100%;
+}
+
+.data-container {
+    height:4rem;
+    min-width:4rem;
+
+    display:grid;
+    grid-template-rows:1fr 1fr;
+    grid-template-columns: 1fr 1fr;
+
+    margin:0rem;
+}
+
+.day-name {
+    display:grid;
+    grid-template-columns:1fr auto;
+    align-items: center;
+    gap:0.2rem;
+
+    flex-grow:1;
+    font-size:var(--font-regular);
+    font-weight:750;
+
+    margin-bottom:0.4rem;
+}
+
+.day-text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.day-name .date-span {
+    color:var(--regular);
+    font-size:var(--font-small);
+    font-weight:normal;
+}
+
+.content {
+    padding:0.4rem;
+    width:100%;
+}
+
+.menu-button {
+    color:black;
+    right:0.5rem;
+
+    border-radius:4px;
+    cursor:pointer;
+    padding:0.2rem;
+}
+
+.day-name .menu-button:hover {
+    background-color: var(--light);
+}
+
+.date:hover .menu-button {
+    display:inline-block;
+}
+
+.entry {
+    display:flex;
+}
+
+.entry-content {
+    flex-grow:1;
+    overflow:hidden;
+    width:100%;
+    position:relative;
+
+    /* Wrap lines with ellipsis */
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    white-space: normal;
+
+    -webkit-line-clamp: 2; 
+    height:max-content;
+
+    text-align:justify;
+    
+    transition:height 5s ease-out;
+}
+
+.entry .see-more-button {
+    background-color:white;
+    font-weight:950;
+    color:var(--blue);
+    cursor:pointer;
+    position:relative;
+    bottom:0;
+    align-self:flex-end;
+
+    height:min-content;
+}

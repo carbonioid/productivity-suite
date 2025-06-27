@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diary</title>
+    <script src="{{ url_for('static', filename='diary/add/js/run.js') }}" type="module"></script>
+
+    <link href="{{ url_for('static', filename='diary/favicon.ico') }}" rel="shortcut icon" />
+
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+    <link href="{{ url_for('static', filename='general/css/general.css') }}" rel="stylesheet" />
+    <link href="{{ url_for('static', filename='diary/add/styles.css') }}" rel="stylesheet" />
+    <link href="{{ url_for('static', filename='diary/css/diarystyles.css') }}" rel="stylesheet" />
+
+    <template id="slider-template">
+        <div class="slider-container">
+            <input type="range" class="slider" step="1" />
+            <div class="data-rect">
+                <div class="circle"></div>
+                <div class="text"><span class="slider-value"></span></div>
+            </div>
+        </div>
+    </template>
+
+    <template id="tag-template">
+        <div class="tag border">
+            <span class="material-symbols-outlined close-button">close_small</span> <p class="tag-name"><span data-bind="name"></span></p>
+        </div>
+    </template>
+</head>
+<body>
+    <main class="page-container">
+        <div class="left-sidebar">
+            <div class="left-sidebar-form border">
+                <div class="rating-container">
+
+                </div>
+                <div class="hoz-line"></div>
+                <div class="tag-container">
+                    <form class="tag add-tag border" action="">
+                        <span class="material-symbols-outlined">add</span>
+                        <input type="text" class="tag-input hidden" placeholder="Tag name..." name="tag-input">
+                    </form>
+                </div>
+            </div>
+            <button class="impact-button stats-button" style="--color:var(--regular);">
+                Stats for today (<span class="stats-date"></span>) <span class="material-symbols-outlined">open_in_new</span> 
+            </button>  
+        </div>
+        <main class="entry-container">
+            <form class="entry-form border">
+                <input class="entry-title" placeholder="Title">
+                <div contenteditable class="entry-input" placeholder="Write here...">
+                </div>
+            </form>
+            <button class="impact-button submit-button" style="--color:#42ab57;">
+                <span class="material-symbols-outlined">task_alt</span> Save entry
+            </button>
+        </main>
+        <div class="right-sidebar">
+            <div class="collapse-button switch">
+                <span class="material-symbols-outlined hoverable icon-button first">arrow_menu_open</span>
+                <span class="material-symbols-outlined hoverable icon-button second">arrow_menu_close</span>
+            </div>
+            <div class="memory-container border">
+                <p class="title">
+                    <select class="delay-select border">
+                        <option value="365">A year ago</option>
+                        <option value="180">6 months ago</option>
+                        <option value="30">A month ago</option>
+                        <option value="7">A week ago</option>
+                        <option value="1">A day ago</option>
+                    </select>
+                    <span class="material-symbols-outlined icon-button hoverable open-in-new-button" style="font-size:0.7rem;">open_in_new</span>
+                </p>
+
+                <p class="content">
+                    <span class="date-value"></span>
+                    <span class="entry-value"></span>
+                </p>
+            </div>
+        </div>
+    </main>
+</body>

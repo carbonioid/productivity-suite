@@ -91,11 +91,3 @@ DISPLAY FORM
     background-color: white;
     margin-left: auto;
 }
-
-.switch.switched .first {
-    display:none;
-}
-
-.switch:not(.switched) .second {
-    display:none;
-}

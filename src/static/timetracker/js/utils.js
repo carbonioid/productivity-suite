@@ -1,15 +1,4 @@
-export { format_mins, format_yyyymmdd, duration, string_to_mins, dayOfWeek, getCookies, parseElementApiInfo, getAllDays }
-
-function format_yyyymmdd(string) {
-  let [year, month, day] = string.split('-');
-  // We ignore the year for now
-  const months = [
-    "Jan", "Feb", "Mar", "Apr", "May", "June",
-    "July", "Aug", "Sept", "Oct", "Nov", "Dec"
-  ];
-  month = months[Number(month)-1]
-  return `${Number(day)} ${month}`
-}
+export { format_mins, duration, string_to_mins, dayOfWeek, getCookies, parseElementApiInfo, getAllDays }
 
 function string_to_mins(s) {
   let parts = s.split(":");

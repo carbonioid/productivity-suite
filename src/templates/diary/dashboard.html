@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diary</title>
+    <link href="{{ url_for('static', filename='diary/favicon.ico') }}" rel="shortcut icon" />
+    <script src="{{ url_for('static', filename='diary/dashboard/run.js') }}" type="module"></script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+    <link href="{{ url_for('static', filename='diary/dashboard/styles.css') }}" rel="stylesheet" />
+    <link href="{{ url_for('static', filename='diary/css/diarystyles.css') }}" rel="stylesheet" />
+    <link href="{{ url_for('static', filename='general/css/general.css') }}" rel="stylesheet" />
+
+    <template id="data-rect-template">
+        <div class="data-rect">
+            <div class="circle"></div>
+            <div class="text"><span data-bind="value"></span></div>
+        </div>
+    </template>
+
+    <template id="entry-container-template">
+        <div class="entry-container">
+            <div class="data-container">
+                <!-- populate using data-rect-template here -->
+            </div>
+            <div class="content">
+                <div class="day-name">
+                    <span class="day-text">
+                        <span class="title-span"><span data-bind="title"></span></span>
+                        <span class="date-span">(<span data-bind="date"></span>)</span> 
+                    </span>
+                    <span class="material-symbols-outlined menu-button hoverable" style="font-size:0.7rem;">open_in_new</span>
+                </div>
+                <div class="entry">
+                    <span class="entry-content">
+                        <span data-bind="entry"></span>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </template>
+</head>
+<body>
+    <nav>
+        <button class="impact-button" style="--color:#42ab57;" onclick="window.location.pathname = '/diary/add'"><span class="material-symbols-outlined">add_box</span> Add entry</button>
+    </nav>
+    <div class="hoz-line"></div>
+    <main class="entry-parent">
+    <!-- To be populated by JavaScript -->
+    </main>
+</body>
+</html>
