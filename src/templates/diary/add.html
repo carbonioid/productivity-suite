@@ -26,28 +26,30 @@
     </template>
 </head>
 <body>
-    <header class="header">
-        <h1 class="title">Entry for 27 Mar</h1>
-        <span class="material-symbols-outlined icon-button hoverable" style="font-size:0.7rem;">open_in_new</span>
-    </header>
-    <div class="hoz-line"></div>
     <main class="page-container">
-        <div class="left-sidebar border">
-            <div class="rating-container">
+        <div class="left-sidebar">
+            <div class="left-sidebar-form border">
+                <div class="rating-container">
 
+                </div>
+                <div class="hoz-line"></div>
+                <div class="tag-container">
+                    <form class="tag add-tag border" action="">
+                        <span class="material-symbols-outlined">add</span>
+                        <input type="text" class="tag-input hidden" placeholder="Tag name..." name="tag-input">
+                    </form>
+                </div>
             </div>
-            <div class="hoz-line"></div>
-            <div class="tag-container">
-                <form class="tag add-tag border" action="">
-                    <span class="material-symbols-outlined">add</span>
-                    <input type="text" class="tag-input hidden" placeholder="Tag name..." name="tag-input">
-                </form>
-            </div>
+            <button class="impact-button stats-button" style="--color:var(--regular);">
+                See today's stats <span class="material-symbols-outlined">open_in_new</span> 
+            </button>  
         </div>
         <main class="entry-container">
-            <div contenteditable class="entry-input border" placeholder="Write here...">
-            </div>
-            <br>
+            <form class="entry-form border">
+                <input class="entry-title" placeholder="Title">
+                <div contenteditable class="entry-input" placeholder="Write here...">
+                </div>
+            </form>
             <button class="impact-button submit-button" style="--color:#42ab57;">
                 <span class="material-symbols-outlined">task_alt</span> Save entry
             </button>
