@@ -19,6 +19,12 @@ function addSliderListeners(container) {
     slider.addEventListener('input', () => {
         sliderValue.textContent = slider.value
     })
+
+    // Add progress value for data-rect
+    const min = parseFloat(slider.min)
+    const max = parseFloat(slider.max)
+    const progress = (slider.value - min) / (max - min)
+    container.querySelector('.data-rect').style.setProperty('--p', progress)
 }
 
 function initCollapseButtonListeners() {

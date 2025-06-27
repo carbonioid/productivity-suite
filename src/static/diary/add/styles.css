@@ -13,6 +13,7 @@ MAIN PAGE LAYOUT
     column-gap:1rem;
     grid-template-columns: 1fr 6fr 3fr;
     width:100%;
+    height:max-content;
 }
 
 /***************
@@ -52,7 +53,6 @@ ENTRY & ENTRY CONTAINER
 
 .entry-form {
     width:100%;
-    height:100%;
     display:grid;
     overflow:hidden;
     grid-template-rows:auto 1fr;
@@ -82,6 +82,11 @@ ENTRY & ENTRY CONTAINER
     outline:none;
 }
 
+.submit-button {
+    height:1.5rem;
+    justify-self: bottom;
+}
+
 /* placeholder styles */
 .entry-input[placeholder]:empty:before {
     content: attr(placeholder);
@@ -106,7 +111,7 @@ LEFT SIDEBAR
 
 .left-sidebar {
     display:grid;
-    grid-template-rows:14rem 1fr;
+    grid-template-rows:minmax(14rem, auto) 1fr;
     gap:1rem;
 }
 
@@ -135,8 +140,13 @@ SLIDER STYLES
     width:calc(100% - 0.4rem);
 }
 
+.slider-container .data-rect {
+    aspect-ratio: 1 / 1;
+    width:1.5rem;
+    height:1.5rem;
+}
+
 .slider-value {
-    padding:0 0.4rem;
     display:flex;
     justify-content: center;
     align-items: center;

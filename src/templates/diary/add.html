@@ -11,11 +11,15 @@
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
     <link href="{{ url_for('static', filename='general/css/general.css') }}" rel="stylesheet" />
     <link href="{{ url_for('static', filename='diary/add/styles.css') }}" rel="stylesheet" />
+    <link href="{{ url_for('static', filename='diary/css/diarystyles.css') }}" rel="stylesheet" />
 
     <template id="slider-template">
         <div class="slider-container">
             <input type="range" class="slider" step="1" />
-            <span class="slider-value"></span>
+            <div class="data-rect">
+                <div class="circle"></div>
+                <div class="text"><span class="slider-value"></span></div>
+            </div>
         </div>
     </template>
 
