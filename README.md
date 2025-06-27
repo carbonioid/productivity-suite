@@ -15,4 +15,17 @@ Simple diary app. Add days with rich features such as tags and ratings; edit old
 
 ### Usage
 
-To use, run `python3 src/app.py` then access at `127.0.0.1:8000/timetracker` & `127.0.0.1:8000/diary`
+Clone the repository
+```
+git clone https://github.com/carbonioid/productivity-suite
+```
+Install the required packages (create a venv here if you like)
+```
+cd productivity-suite
+pip install -r requirements.txt
+```
+Finally, start the application
+```
+python3 src/app.py
+``` 
+> Access at `127.0.0.1:8000/timetracker` & `127.0.0.1:8000/diary`.
