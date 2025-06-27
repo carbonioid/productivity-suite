@@ -5,7 +5,7 @@ This file uses templates and compiles HTML to the page itself.
 import { getSettings } from "../../js/api.js";
 import { loadTemplate } from "../../../general/js/template.js";
 import { addSliderListeners } from "./listeners.js";
-export { loadSliders, loadTag }
+export { loadSliders, loadTag, loadStatsButton }
 
 async function loadSliders() {
     // Fetch settings from settings.json
@@ -42,4 +42,13 @@ function loadTag(container, name) {
 
     // Insert before last child so that it's not after the add button
     container.insertBefore(template, container.lastElementChild);
+}
+
+function loadStatsButton() {
+    // Set date on "see stats" button
+    const statsDate = document.querySelector(".stats-button").querySelector(".stats-date");
+    statsDate.outerHTML = new Date().toLocaleDateString(undefined, {
+        month: 'short',
+        day: '2-digit'
+    })
 }

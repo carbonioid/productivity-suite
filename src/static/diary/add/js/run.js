@@ -1,7 +1,7 @@
 import { initCollapseButtonListeners, initMemorySelectListener,
         initTagListeners, initEntryInputListeners, 
         initSubmitButtonListeners} from "./listeners.js";
-import { loadSliders } from "./compile.js";
+import { loadSliders, loadStatsButton } from "./compile.js";
 
 initCollapseButtonListeners();
 initMemorySelectListener();
@@ -9,4 +9,5 @@ initTagListeners();
 initEntryInputListeners();
 initSubmitButtonListeners();
 
+loadStatsButton();
 await loadSliders();
