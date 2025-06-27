@@ -119,9 +119,15 @@ function initSubmitButtonListeners() {
     const submitButton = document.querySelector('.submit-button');
     submitButton.addEventListener('click', async (event) => {
         const data = getFormData()
+        if (data[0].length == 0 || data[1].length == 0) {
+            alert("Please fill in both title and entry.")
+            return
+        }
+
         const response = await addEntry(...data)
         if (response.status == 409) {
             alert("An entry for this date already exists.") // TODO: edit exisiting entry instead
+            return
         }
     })
 }
