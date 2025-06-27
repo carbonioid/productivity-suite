@@ -135,5 +135,8 @@ function initSubmitButtonListeners() {
             alert("An entry for this date already exists.") // TODO: edit exisiting entry instead
             return
         }
+
+        // Redirect to the dashboard
+        window.location.pathname = `/diary`
     })
 }
