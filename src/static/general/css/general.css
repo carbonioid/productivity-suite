@@ -25,7 +25,8 @@ body {
 
     --blue:#5686e6;
 
-    --font-large:1rem;
+    --font-huge:1rem;
+    --font-large:0.85rem;
     --font-regular:0.75rem;
     --font-small:0.6rem;
     --font-tiny:0.5rem;
