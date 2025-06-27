@@ -21,6 +21,7 @@ async function loadEntry(date, refresh, container) {
     
     const entryObject = loadTemplate(document, "entry-container-template", {
         'date': format_yyyymmdd(entryData['date']),
+        'title': entryData['title'],
         'entry': entryData['entry']
     })
 

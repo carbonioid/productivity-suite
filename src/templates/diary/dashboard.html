@@ -24,10 +24,13 @@
                 <!-- populate using data-rect-template here -->
             </div>
             <div class="content">
-                <p class="day-name">
-                    <span data-bind="date"></span>  
+                <div class="day-name">
+                    <span class="day-text">
+                        <span class="title-span"><span data-bind="title"></span></span>
+                        <span class="date-span">(<span data-bind="date"></span>)</span> 
+                    </span>
                     <span class="material-symbols-outlined menu-button hoverable" style="font-size:0.7rem;">open_in_new</span>
-                </p>
+                </div>
                 <div class="entry">
                     <span class="entry-content">
                         <span data-bind="entry"></span>
