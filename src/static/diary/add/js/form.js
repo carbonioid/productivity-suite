@@ -11,8 +11,8 @@ function getFormData() {
             name: slider.title,
             color: window.getComputedStyle(slider.parentElement).getPropertyValue('--c'),
             value: parseFloat(slider.value),
-            min: slider.min, 
-            max: slider.max
+            min: parseFloat(slider.min), 
+            max: parseFloat(slider.max)
         };
     });
 
