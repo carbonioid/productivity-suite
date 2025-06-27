@@ -39,6 +39,7 @@ def add_entry_route():
 
     Request body: JSON (application/json)
     {
+        "title": text,
         "entry": text,
         "ratings": JSON,
         "tags": JSON (list)
@@ -53,7 +54,7 @@ def add_entry_route():
     current_date = date.today().isoformat()
 
     try:
-        add_entry(current_date, body["entry"], body["ratings"], body["tags"])
+        add_entry(current_date, body["title"], body["entry"], body["ratings"], body["tags"])
     except Exception as e:
         if (type(e) is ValueError and str(e) == 'An entry for this date already exists'):
             return Response(response='An entry for today already exists', status=409)
@@ -69,6 +70,7 @@ def edit_entry_route():
     Request body: JSON (application/json)
     {
         "date": text,
+        "title": text,
         "entry": text,
         "ratings": JSON,
         "tags": JSON (list)
@@ -81,7 +83,7 @@ def edit_entry_route():
         return Response(response='The supplied body was not valid JSON', status=400)
     
     try:
-        edit_entry(body['date'], body['entry'], body['ratings'], body['tags'])
+        edit_entry(body['date'], body['title'], body['entry'], body['ratings'], body['tags'])
     except Exception as e:
         return str(e), 400
 

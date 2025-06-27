@@ -22,12 +22,15 @@ function getFormData() {
         return tag.querySelector('.tag-name').textContent.trim()
     })
 
-    // Get actual entry
+    // Get actual entry & title
     const entryInput = document.querySelector('.entry-input');
+    const titleInput = document.querySelector('.entry-title');
     const entry = entryInput.textContent.trim();
+    const title = titleInput.value.trim();
 
     return [
-        entry, 
+        title,
+        entry,
         ratings, 
         tags
     ]

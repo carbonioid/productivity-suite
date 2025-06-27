@@ -3,7 +3,7 @@ This file makes request to the database (adding, deleting entries, etc.)
 */
 export { addEntry, getSettings }
 
-async function addEntry(entry, ratings, tags) {
+async function addEntry(title, entry, ratings, tags) {
     /*
     Add an entry to the database.
     Returns the response from the server.
@@ -14,6 +14,7 @@ async function addEntry(entry, ratings, tags) {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
+            title: title,
             entry: entry,
             ratings: ratings,
             tags: tags
