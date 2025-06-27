@@ -15,11 +15,6 @@ MAIN PAGE LAYOUT
     width:100%;
 }
 
-.memory-container, .rating-container, .tag-container {
-    background-color: var(--off-white);
-    border-color:var(--off-white);
-}
-
 /***************
 HEADER STYLES
 ***************/
@@ -81,20 +76,19 @@ ENTRY & ENTRY CONTAINER
 LEFT SIDEBAR
 ***************/
 
-.left-sidebar > * {
-    width:100%;
-}
-
 .left-sidebar {
-    display:flex;
-    flex-direction: column;
-    gap:1rem;
     min-height:14rem;
     height:min-content;
+    background-color:var(--off-white);
 }
 
-.left-sidebar > * {
+.rating-container, .tag-container {
     padding:0.4rem;
+    width:100%;
+    border-color:var(--off-white);
+}
+
+.left-sidebar .hoz-line {
 }
 
 /*****
@@ -203,6 +197,8 @@ MEMORY STYLES / RIGHT SIDEBAR
     overflow: hidden;
     padding:0.5rem 1rem;
     flex:1;
+    background-color: var(--off-white);
+    border-color:var(--off-white);
 }
 
 .title {
