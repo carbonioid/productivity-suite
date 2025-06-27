@@ -13,7 +13,7 @@ Simple timetracker, with granular control over each entry. Add colors, visualise
 Simple diary app. Add days with rich features such as tags and ratings; edit older entries; and view all entries in a cohesive dashboard.
 > Usage: use "Add entry" button to create a new entry; use the edit icon on entries in the main dashboard to edit them.
 
-### Usage
+## Usage
 
 Clone the repository
 ```
