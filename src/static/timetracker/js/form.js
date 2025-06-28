@@ -138,7 +138,11 @@ function exitEditMode() {
     const day = getDay(dayName)
     let lastItem = day[day.length - 1]
 
-    start = lastItem.end
+    if (lastItem) {
+      start = lastItem.end
+    } else {
+      start = '';
+    }
   } else { // Otherwise (if the user inputted that start time manually) do it normally.
     start = prevContent[1];
   }
