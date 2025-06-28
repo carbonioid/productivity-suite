@@ -15,16 +15,18 @@ function addSliderListeners(container) {
     const slider = container.querySelector('.slider')
     const sliderValue = container.querySelector('.slider-value')
 
-    sliderValue.textContent = slider.value
     slider.addEventListener('input', () => {
         sliderValue.textContent = slider.value
+
+        // Add progress value for data-rect
+        const min = parseFloat(slider.min)
+        const max = parseFloat(slider.max)
+        const progress = (slider.value - min) / (max - min)
+        console.log(progress)
+        container.querySelector('.data-rect').style.setProperty('--p', progress)
     })
 
-    // Add progress value for data-rect
-    const min = parseFloat(slider.min)
-    const max = parseFloat(slider.max)
-    const progress = (slider.value - min) / (max - min)
-    container.querySelector('.data-rect').style.setProperty('--p', progress)
+    slider.dispatchEvent(new Event('input')) // Trigger input to set initial value
 }
 
 function initCollapseButtonListeners() {
