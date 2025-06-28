@@ -6,6 +6,7 @@ import { addElement, editElement, deleteElement } from "./compile.js";
 import { displayError } from "./ui.js"
 import { getDay } from "./cache.js"
 import { getAllDays, parseElementApiInfo } from "./utils.js";
+import { hideEmptyMessage } from "../../general/js/display.js";
 export { addFormListeners, registerEditing, addDisplayFormListeners }
 
 // "dictionary" of colors for different bits of text
@@ -86,6 +87,8 @@ async function submitForm() {
   if (form.getAttribute('data-mode') == 'add') { 
     let outcome = await addElement(name, start, end, color);
     if (outcome === true) {
+      hideEmptyMessage(document.querySelector('.parent-container')); // Hide empty message, if it exists (because content now exists in the page)
+
       // Set the start value to the current value of end - QoL.
       setFormContent('', end, '', '220, 220, 220');
       document.querySelector('#start').dataset.auto = true; // The "auto" property trackers whether the info here has been automatically set
