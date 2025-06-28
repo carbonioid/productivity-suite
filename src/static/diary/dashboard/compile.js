@@ -1,7 +1,7 @@
 /*
 This file uses templates to load entries and other HTML components into the page itself.
 */
-export { loadEntry }
+export { loadEntry, loadAddButton }
 import { getEntry } from "../js/cache.js"
 import { loadTemplate } from "../../general/js/template.js"
 import { format_yyyymmdd } from "../js/utils.js"
@@ -40,4 +40,19 @@ async function loadEntry(date, refresh, container) {
     })
 
     container.appendChild(entryObject)
+}
+
+async function loadAddButton() {
+    /*
+    * Loads the add button into the page, only if the entry for today does not exist.
+    */
+    const today = new Date();
+    const formattedDate = today.toLocaleDateString('en-CA') // YYYY-MM-DD format
+
+    const entryData = await getEntry(formattedDate, false) // Assumes cache is loaded
+
+    if (entryData) {
+        const addButton = document.querySelector('.add-button');
+        addButton.classList.add('hidden')
+    }
 }
