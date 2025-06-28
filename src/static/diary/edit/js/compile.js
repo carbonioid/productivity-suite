@@ -78,6 +78,8 @@ async function loadPageContent(date) {
         settings.ratings.forEach(rating => {
             loadSlider(container, rating)
         })
+
+        loadStatsButton(date)
         return;
     }
 
