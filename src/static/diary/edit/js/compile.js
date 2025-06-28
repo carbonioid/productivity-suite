@@ -7,6 +7,7 @@ import { getSettings } from "../../js/api.js";
 import { loadTemplate } from "../../../general/js/template.js";
 import { addSliderListeners } from "./listeners.js";
 import { format_yyyymmdd } from "../../../general/js/utils.js";
+import { initDeleteButtonListeners } from "./listeners.js";
 export { loadTag, loadStatsButton, loadPageContent }
 
 async function loadSlider(container, data) {
@@ -64,6 +65,7 @@ async function loadPageContent(date) {
     (2) Load tags
     (3) Load sliders
     (4) Load stats button
+    (5) Conditionally load delete button if entry exists
     */
     
     // (0) Get entry data
@@ -105,4 +107,9 @@ async function loadPageContent(date) {
 
     // (4) Load stats button
     loadStatsButton(date);
+
+    // (5) Conditionally load delete button if entry exists (if we got to this point, we know we are editing so the button should appear)
+    const deleteButton = document.querySelector('.delete-button');
+    deleteButton.classList.remove('hidden');
+    initDeleteButtonListeners();
 }

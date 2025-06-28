@@ -1,7 +1,7 @@
 /*
 This file makes request to the database (adding, deleting entries, etc.)
 */
-export { addEntry, editEntry, getSettings }
+export { addEntry, editEntry, deleteEntry, getSettings }
 
 async function addEntry(title, entry, ratings, tags) {
     /*
@@ -38,6 +38,22 @@ async function editEntry(date, title, entry, ratings, tags) {
             entry: entry,
             ratings: ratings,
             tags: tags
+        })
+    });
+}
+
+async function deleteEntry(date) {
+    /*
+    Delete an entry from the database.
+    Returns the response from the server.
+    */
+    return await fetch(`/diary/api/delete`, {
+        method: "DELETE",
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            date: date
         })
     });
 }

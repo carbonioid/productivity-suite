@@ -105,6 +105,15 @@ ENTRY & ENTRY CONTAINER
     width:max-content;
 }
 
+/* buttons */
+.entry-actions > * {
+    display:inline-block;
+}
+
+.submit-button {
+    margin-right:1rem;
+}
+
 /***************
 LEFT SIDEBAR
 ***************/

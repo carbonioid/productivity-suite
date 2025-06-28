@@ -1,11 +1,12 @@
 export { initCollapseButtonListeners, addSliderListeners, initMemorySelectListener, 
-    initTagListeners, initEntryInputListeners, initSubmitButtonListeners}
+    initTagListeners, initEntryInputListeners, initSubmitButtonListeners, 
+    initDeleteButtonListeners}
 import { format_yyyymmdd } from "../../../general/js/utils.js"
 import { getEntry } from "../../js/cache.js"
-import { getDateMinusDays, getPageDate } from "./utils.js"
+import { getDateMinusDays, getPageDate, dashboardRedirect } from "./utils.js"
 import { loadTag } from "./compile.js"
 import { getFormData } from "./form.js"
-import { addEntry, editEntry } from "../../js/api.js"
+import { addEntry, editEntry, deleteEntry } from "../../js/api.js"
 
 function addSliderListeners(container) {
     /*
@@ -22,7 +23,7 @@ function addSliderListeners(container) {
         const min = parseFloat(slider.min)
         const max = parseFloat(slider.max)
         const progress = (slider.value - min) / (max - min)
-        console.log(progress)
+
         container.querySelector('.data-rect').style.setProperty('--p', progress)
     })
 
@@ -136,16 +137,36 @@ function initSubmitButtonListeners() {
 
         const entryExists = await getEntry(getPageDate(), false)
 
+        let response = null
         if (entryExists) { // If the page alr exists, we are editing.
-            await editEntry(getPageDate(), ...data)
+            response = await editEntry(getPageDate(), ...data)
         } else { // otherwise, we are adding a new entry.
-            await addEntry(...data)
+            response = await addEntry(...data)
+        }
+        
+        if (response.ok) {
+            dashboardRedirect(); // Redirect to dashboard after submission
+        } else {
+            console.error(`Failed to submit entry: ${response.statusText}`);
+        }
+    })
+}
+
+function initDeleteButtonListeners() {
+    const deleteButton = document.querySelector('.delete-button');
+    deleteButton.addEventListener('click', async (event) => {
+        const sure = confirm("Are you sure you want to delete this entry? This cannot be undone.");
+
+        if (!sure) {
+            return;
         }
 
-        // clear url params and redirect to dashboard
-        window.history.replaceState(null, '', '/diary');
-
-        // Reload the window (otherwise the dashboard will not actually be redirected to)
-        window.location.reload();
+        await deleteEntry(getPageDate()).then(response => {
+            if (response.ok) {
+                dashboardRedirect();
+            } else {
+                console.error(`Failed to delete entry: ${response.statusText}`);
+            }
+        })
     })
 }
