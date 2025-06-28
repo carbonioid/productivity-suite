@@ -9,9 +9,9 @@ diary_bp = Blueprint('diary', __name__)
 def main_route():
     return render_template('diary/dashboard.html')
 
-@diary_bp.route("/add", methods=["GET"])
+@diary_bp.route("/edit", methods=["GET"])
 def add_route():
-    return render_template('diary/add.html')
+    return render_template('diary/edit.html')
 
 @diary_bp.route("/api/data", methods=["GET"])
 def query_db_route():

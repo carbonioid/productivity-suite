@@ -5,6 +5,7 @@ export { loadEntry, loadAddButton }
 import { getEntry } from "../js/cache.js"
 import { loadTemplate } from "../../general/js/template.js"
 import { format_yyyymmdd } from "../js/utils.js"
+import { addEditListener } from "./listeners.js"
 
 async function loadEntry(date, refresh, container) {
     /*
@@ -24,6 +25,8 @@ async function loadEntry(date, refresh, container) {
         'title': entryData['title'],
         'entry': entryData['entry']
     })
+
+    addEditListener(entryObject, date)
 
     // Load data-container entires
     const ratings = entryData.ratings
