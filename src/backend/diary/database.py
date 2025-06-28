@@ -91,3 +91,25 @@ def edit_entry(date, new_title, new_entry, new_ratings, new_tags):
     with open(DATABASE_PATH, 'w') as file:
         writer = csv.writer(file)
         writer.writerows(new_rows)
+
+def delete_entry(date):
+    # Get current rows
+    with open(DATABASE_PATH, 'r') as file:
+        reader = csv.reader(file)
+        rows = list(reader)
+
+    # Modify them in memory
+    new_rows = []
+    found_row = False
+    for row in rows:
+        if row[0] == date: found_row = True # if this row matches the date, we want to delete it
+        else: new_rows.append(row) # Otherwise, we want to keep this row
+    
+    if not found_row:
+        raise ValueError('An entry for that date does not exist')
+    
+    # Rewrite to file
+    with open(DATABASE_PATH, 'w') as file:
+        writer = csv.writer(file)
+        writer.writerows(new_rows)
+    

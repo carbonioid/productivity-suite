@@ -1,7 +1,7 @@
 import werkzeug, json
 from datetime import date
 from flask import render_template, request, Blueprint, Response, jsonify
-from backend.diary.database import fetch_db_contents, add_entry, edit_entry
+from backend.diary.database import fetch_db_contents, add_entry, edit_entry, delete_entry
 
 diary_bp = Blueprint('diary', __name__)
 
@@ -88,6 +88,27 @@ def edit_entry_route():
         return str(e), 400
 
     return '', 201
+
+@diary_bp.route("/api/delete", methods=["DELETE"])
+def delete_entry_route():
+    """Delete row in entries.csv
+
+    Request body: JSON (application/json)
+    {
+        "date": text
+    }
+    """
+    try:
+        body = request.get_json()
+    except werkzeug.exceptions.BadRequest:
+        return Response(response='The supplied body was not valid JSON', status=400)
+    
+    try:
+        delete_entry(body['date'])
+    except Exception as e:
+        return str(e), 400
+    
+    return '', 204
 
 @diary_bp.route("/api/settings", methods=["GET"])
 def get_settings_route():
