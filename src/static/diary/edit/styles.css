@@ -180,7 +180,6 @@ input[type="range"]::-moz-range-track {
 .slider::-webkit-slider-thumb, .slider::-moz-range-thumb {
     appearance: none;
     background-color:var(--c);
-    border-radius:50%;
     border:3px solid var(--off-white); /* Eclipses parts of track either side in small radius */
 }
 
