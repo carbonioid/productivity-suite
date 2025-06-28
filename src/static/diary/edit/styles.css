@@ -47,7 +47,7 @@ ENTRY & ENTRY CONTAINER
 
 .entry-container {
     display:grid;
-    grid-template-rows:14rem 1fr;
+    grid-template-rows:minmax(14rem,auto) 1fr;
     gap:1rem;
 }
 
@@ -82,7 +82,7 @@ ENTRY & ENTRY CONTAINER
     outline:none;
 }
 
-.submit-button {
+.submit-button, .delete-button {
     height:1.5rem;
     justify-self: bottom;
 }
@@ -138,6 +138,7 @@ LEFT SIDEBAR
 
 .stats-button {
    width:max-content;
+   height: 1.5rem;
 }
 
 /*****
