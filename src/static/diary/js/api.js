@@ -1,3 +1,5 @@
+import { date_to_yyyymmdd } from "../../general/js/utils.js";
+
 /*
 This file makes request to the database (adding, deleting entries, etc.)
 */
@@ -33,7 +35,7 @@ async function editEntry(date, title, entry, ratings, tags) {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-            date: date,
+            date: date_to_yyyymmdd(date),
             title: title,
             entry: entry,
             ratings: ratings,
@@ -53,7 +55,7 @@ async function deleteEntry(date) {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-            date: date
+            date: date_to_yyyymmdd(date)
         })
     });
 }

@@ -1,3 +1,5 @@
+import { yyyymmdd_to_date } from "../../../general/js/utils.js";
+
 export {getDateMinusDays, getPageDate, dashboardRedirect }
 
 function getDateMinusDays(date, days) {
@@ -9,7 +11,11 @@ function getDateMinusDays(date, days) {
 function getPageDate() {
     const urlParams = new URLSearchParams(window.location.search);
     const date = urlParams.get('date');
-    return date || new Date().toISOString().split('T')[0]; // Default to today if no date is provided, in YYYY-MM-DD format
+    if (date) {
+        return yyyymmdd_to_date(date)
+    } else {
+        return new Date(); // Default to today if no date is provided in url params
+    }
 }
 
 function dashboardRedirect() {

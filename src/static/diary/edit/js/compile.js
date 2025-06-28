@@ -67,7 +67,7 @@ async function loadPageContent(date) {
     (4) Load stats button
     (5) Conditionally load delete button if entry exists
     */
-    date = yyyymmdd_to_date(date); // Convert date to Date object
+
     // (0) Get entry data
     const entry = await getEntry(date, false);
     if (!entry) {
