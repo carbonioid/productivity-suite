@@ -4,8 +4,8 @@ This file uses templates to load entries and other HTML components into the page
 export { loadEntry, loadAddButton }
 import { getEntry } from "../js/cache.js"
 import { loadTemplate } from "../../general/js/template.js"
-import { format_yyyymmdd } from "../js/utils.js"
 import { addEditListener } from "./listeners.js"
+import { format_yyyymmdd } from "../../general/js/utils.js"
 
 async function loadEntry(date, refresh, container) {
     /*
