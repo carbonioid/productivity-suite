@@ -18,12 +18,6 @@ MAIN FORM
     margin-right:0.5rem;
 }
 
-div.vertical-line {
-    border-left:1px solid var(--light);
-    margin:0 0.5rem;
-    height:1.5rem;
-}
-
 /* Tags */
 div.tag-select {
     background-color:none;
