@@ -178,6 +178,12 @@ Misc
     margin:0.5rem 0;
 }
 
+div.vertical-line, .v-line {
+    border-left:1px solid var(--light);
+    margin:0 0.5rem;
+    height:1.5rem;
+}
+
 /* 
 Empty message styles
 */
