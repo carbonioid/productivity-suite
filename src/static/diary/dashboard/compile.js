@@ -5,7 +5,7 @@ export { loadEntry, loadAddButton }
 import { getEntry } from "../js/cache.js"
 import { loadTemplate } from "../../general/js/template.js"
 import { addEditListener } from "./listeners.js"
-import { format_yyyymmdd } from "../../general/js/utils.js"
+import { format_date } from "../../general/js/utils.js"
 
 async function loadEntry(date, refresh, container) {
     /*
@@ -19,9 +19,12 @@ async function loadEntry(date, refresh, container) {
     }
 
     const entryData = await getEntry(date, refresh)
-    
+    if (!entryData) {
+        console.warn(`Entry for date ${date} does not exist.`)
+        return
+    }
     const entryObject = loadTemplate(document, "entry-container-template", {
-        'date': format_yyyymmdd(entryData['date']),
+        'date': format_date(entryData['date'], "long"),
         'title': entryData['title'],
         'entry': entryData['entry']
     })
@@ -49,10 +52,7 @@ async function loadAddButton() {
     /*
     * Loads the add button into the page, only if the entry for today does not exist.
     */
-    const today = new Date();
-    const formattedDate = today.toLocaleDateString('en-CA') // YYYY-MM-DD format
-
-    const entryData = await getEntry(formattedDate, false) // Assumes cache is loaded
+    const entryData = await getEntry(new Date(), false)
 
     if (entryData) {
         const addButton = document.querySelector('.add-button');

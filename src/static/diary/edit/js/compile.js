@@ -6,7 +6,7 @@ import { getEntry } from "../../js/cache.js";
 import { getSettings } from "../../js/api.js";
 import { loadTemplate } from "../../../general/js/template.js";
 import { addSliderListeners } from "./listeners.js";
-import { format_yyyymmdd } from "../../../general/js/utils.js";
+import { yyyymmdd_to_date, format_date } from "../../../general/js/utils.js";
 import { initDeleteButtonListeners } from "./listeners.js";
 export { loadTag, loadStatsButton, loadPageContent }
 
@@ -50,7 +50,7 @@ function loadTag(container, name) {
 function loadStatsButton(date) {
     // Set date on "see stats" button
     const statsDate = document.querySelector(".stats-button").querySelector(".stats-date");
-    statsDate.outerHTML = format_yyyymmdd(date, false);
+    statsDate.outerHTML = format_date(date, "medium");
 }
 
 async function loadPageContent(date) {
@@ -67,7 +67,7 @@ async function loadPageContent(date) {
     (4) Load stats button
     (5) Conditionally load delete button if entry exists
     */
-    
+    date = yyyymmdd_to_date(date); // Convert date to Date object
     // (0) Get entry data
     const entry = await getEntry(date, false);
     if (!entry) {

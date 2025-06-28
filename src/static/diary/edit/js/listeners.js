@@ -1,7 +1,7 @@
 export { initCollapseButtonListeners, addSliderListeners, initMemorySelectListener, 
     initTagListeners, initEntryInputListeners, initSubmitButtonListeners, 
     initDeleteButtonListeners}
-import { format_yyyymmdd } from "../../../general/js/utils.js"
+import { format_date } from "../../../general/js/utils.js"
 import { getEntry } from "../../js/cache.js"
 import { getDateMinusDays, getPageDate, dashboardRedirect } from "./utils.js"
 import { loadTag } from "./compile.js"
@@ -65,12 +65,11 @@ function initMemorySelectListener() {
         const dateSpan = content.querySelector('.date-value')
 
         entrySpan.innerHTML = entry ? entry.entry : "No entry for this date."
-        dateSpan.innerHTML = format_yyyymmdd(selectedDate, true)
+        dateSpan.innerHTML = format_date(selectedDate, "long")
     })
 
     memorySelect.dispatchEvent(new Event('change')) // Trigger change to load initial value
 }
-
 
 function initTagListeners() {
     /*

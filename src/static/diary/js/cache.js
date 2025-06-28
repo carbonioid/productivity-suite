@@ -1,15 +1,18 @@
 /*
 This file keeps an up-to-date, cached version of entries.csv on the clientside so that other parts of the 
 javascript can interact with it without bothering the backend with too many requests.
+
+This file uses YYYY-MM-DD format strings as cache keys but returns Date objects.
 */
 
 export { getEntry, populateCache }
+import { yyyymmdd_to_date, date_to_yyyymmdd } from "../../general/js/utils.js";
 
 let cache = new Map();
 
 async function getEntry(date, forceReload) {
     /*
-    Get entry from cache, without refetching it
+    Get entry from cache, without refetching it.
     */
     if (forceReload || !cache.has(date)) {
         /*
@@ -18,16 +21,21 @@ async function getEntry(date, forceReload) {
         const data = await fetch("/diary/api/data", {
             method: "GET",
             headers: {
-                'Scope': JSON.stringify([date])
+                'Scope': JSON.stringify([date_to_yyyymmdd(date)])
             }
         }).then(response => {return response.json()})
         
         const entry = data[0]
-        cache.set(date, entry)
+        if (entry) {
+            entry.date = date
+            cache.set(date_to_yyyymmdd(date), entry)
 
-        return entry
+            return entry
+        } else {
+            return null
+        }
     } else {
-        return cache.get(date)
+        return cache.get(date_to_yyyymmdd(date))
     }
 }
 
@@ -51,9 +59,12 @@ async function populateCache() {
         return response.json()
     }).then(data => {
         data.forEach(row => {
-            let date = row['date']
-            cache.set(date, row)
-            names.push(date)
+            const yyyymmdd_date = row['date']
+            const dateObj = yyyymmdd_to_date(row['date'])
+            row.date = dateObj
+
+            cache.set(yyyymmdd_date, row)
+            names.push(dateObj)
         })
     })
 
