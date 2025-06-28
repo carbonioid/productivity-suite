@@ -46,10 +46,14 @@ function initMemorySelectListener() {
     Initialize the memory select listener. This sets the content of the memory containter
     to the content of a specific entry when the user selects a time delta from the memory select.
     */
+    // Get date being edited
+    const urlParams = new URLSearchParams(window.location.search);
+    let date = urlParams.get('date') || new Date(); // Default to current date
+
     const memorySelect = document.querySelector('.delay-select')
     memorySelect.addEventListener('change', async () => {
         const value = memorySelect.options[memorySelect.selectedIndex].value
-        const selectedDate = getDateMinusDays(value)
+        const selectedDate = getDateMinusDays(new Date(date), value)
  
         // Load the entry for this date
         const entry = await getEntry(selectedDate, true)

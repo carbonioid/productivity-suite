@@ -2,30 +2,32 @@
 This file uses templates and compiles HTML to the page itself.
 */
 
+import { getEntry } from "../../js/cache.js";
 import { getSettings } from "../../js/api.js";
 import { loadTemplate } from "../../../general/js/template.js";
 import { addSliderListeners } from "./listeners.js";
-export { loadSliders, loadTag, loadStatsButton }
+import { format_yyyymmdd } from "../../../general/js/utils.js";
+export { loadTag, loadStatsButton, loadPageContent }
 
-async function loadSliders() {
-    // Fetch settings from settings.json
-    const settings = await getSettings();
+async function loadSlider(container, data) {
+    /*
+    Loads a single slider into the page.
+    `data` should contain the properties of the slider.
+    */
+    const sliderTemplate = loadTemplate(document, "slider-template", data);
+    const sliderObj = sliderTemplate.querySelector('.slider');
+
+    // Set attributes for the slider
+    sliderObj.min = data.min;
+    sliderObj.max = data.max;
+    sliderObj.title = data.name;
+    sliderTemplate.style.setProperty('--c', data.color);
+
+    sliderObj.value = data.value || data.min; // Default to min if no value is set (if we are loading from settings.json, there will be no value)
+
+    addSliderListeners(sliderTemplate);
     
-    const container = document.querySelector('.rating-container')
-    settings.values.forEach(slider => {
-        const sliderTemplate = loadTemplate(document, "slider-template", {});
-        const sliderObj = sliderTemplate.querySelector('.slider');
-
-        // Set attributes for the slider
-        sliderObj.min = slider.min;
-        sliderObj.max = slider.max;
-        sliderObj.title = slider.name;
-        sliderTemplate.style.setProperty('--c', slider.color);
-
-        addSliderListeners(sliderTemplate);
-        // Append to container
-        container.appendChild(sliderTemplate);
-    });
+    container.appendChild(sliderTemplate);
 }
 
 function loadTag(container, name) {
@@ -44,11 +46,63 @@ function loadTag(container, name) {
     container.insertBefore(template, container.lastElementChild);
 }
 
-function loadStatsButton() {
+function loadStatsButton(date) {
     // Set date on "see stats" button
     const statsDate = document.querySelector(".stats-button").querySelector(".stats-date");
-    statsDate.outerHTML = new Date().toLocaleDateString(undefined, {
-        month: 'short',
-        day: '2-digit'
+    statsDate.outerHTML = format_yyyymmdd(date, false);
+}
+
+async function loadPageContent(date) {
+    /*
+    Loads the page content for the given date.
+    This includes loading the entry, sliders, tags, and stats button.
+    Takes `date` in YYYY-MM-DD format.
+
+    It follows these steps:
+    (0) Get entry data
+    (1) Load entry & title
+    (2) Load tags
+    (3) Load sliders
+    (4) Load stats button
+    */
+    
+    // (0) Get entry data
+    const entry = await getEntry(date, false);
+    if (!entry) {
+        console.info(`No entry found for date: ${date}. Loading empty page.`);
+        // Load sliders anyway, so that the user can add a new entry
+        const settings = await getSettings();
+        const container = document.querySelector('.rating-container');
+        settings.ratings.forEach(rating => {
+            loadSlider(container, rating)
+        })
+        return;
+    }
+
+    // (1) Load entry & title
+    const entryInput = document.querySelector('.entry-input');
+    const titleInput = document.querySelector('.entry-title');
+    titleInput.value = entry.title || "";
+
+    // Make sure each newline is a separate div
+    entry.entry.split('\n').forEach(line => {
+        const div = document.createElement('div');
+        div.textContent = line;
+        entryInput.appendChild(div);
     })
+
+    // (2) Load tags
+    const tagContainer = document.querySelector('.tag-container');
+    entry.tags.forEach(tag => {
+        loadTag(tagContainer, tag);
+    })
+
+    // (3) Load sliders
+    const container = document.querySelector('.rating-container');
+    entry.ratings.forEach(rating => {
+        loadSlider(container, rating)
+    })
+
+    // (4) Load stats button
+    loadStatsButton(date);
 }

@@ -9,6 +9,6 @@ function addEditListener(entryObject, date) {
     */
     const editButton = entryObject.querySelector('.edit-button');
     editButton.addEventListener('click', async () => {
-        window.location.href = '/diary/add?date=' + date;
+        window.location.href = '/diary/edit?date=' + date;
     });
 }

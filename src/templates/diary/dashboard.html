@@ -30,7 +30,10 @@
                         <span class="title-span"><span data-bind="title"></span></span>
                         <span class="date-span">(<span data-bind="date"></span>)</span> 
                     </span>
-                    <span class="material-symbols-outlined menu-button hoverable" style="font-size:0.7rem;">open_in_new</span>
+                    <div class="actions">
+                        <span class="material-symbols-outlined menu-button hoverable edit-button" style="font-size:0.7rem;">edit</span>
+                        <span class="material-symbols-outlined menu-button hoverable open-button" style="font-size:0.7rem;">open_in_new</span>
+                    </div>
                 </div>
                 <div class="entry">
                     <span class="entry-content">
@@ -43,7 +46,7 @@
 </head>
 <body>
     <nav>
-        <button class="impact-button add-button" style="--color:#42ab57;" onclick="window.location.pathname = '/diary/add'"><span class="material-symbols-outlined">add_box</span> Add entry</button>
+        <button class="impact-button add-button" style="--color:#42ab57;" onclick="window.location.pathname = '/diary/edit'"><span class="material-symbols-outlined">add_box</span> Add entry</button>
     </nav>
     <div class="hoz-line"></div>
     <main class="entry-parent">
