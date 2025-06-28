@@ -5,7 +5,7 @@ import { getEntry } from "../../js/cache.js"
 import { getDateMinusDays, getPageDate } from "./utils.js"
 import { loadTag } from "./compile.js"
 import { getFormData } from "./form.js"
-import { addEntry } from "../../js/api.js"
+import { addEntry, editEntry } from "../../js/api.js"
 
 function addSliderListeners(container) {
     /*
@@ -134,13 +134,18 @@ function initSubmitButtonListeners() {
             return
         }
 
-        const response = await addEntry(...data)
-        if (response.status == 409) {
-            alert("An entry for this date already exists.") // TODO: edit exisiting entry instead
-            return
+        const entryExists = await getEntry(getPageDate(), false)
+
+        if (entryExists) { // If the page alr exists, we are editing.
+            await editEntry(getPageDate(), ...data)
+        } else { // otherwise, we are adding a new entry.
+            await addEntry(...data)
         }
 
-        // Redirect to the dashboard
-        window.location.pathname = `/diary`
+        // clear url params and redirect to dashboard
+        window.history.replaceState(null, '', '/diary');
+
+        // Reload the window (otherwise the dashboard will not actually be redirected to)
+        window.location.reload();
     })
 }
