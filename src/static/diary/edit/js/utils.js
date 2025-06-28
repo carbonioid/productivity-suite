@@ -1,7 +1,13 @@
-export {getDateMinusDays}
+export {getDateMinusDays, getPageDate}
 
 function getDateMinusDays(date, days) {
     const newDate = new Date();
     newDate.setDate(date.getDate() - days); // Subtract 'days' from the current date
     return newDate.toISOString().split('T')[0]; // Extract only the YYYY-MM-DD part
+}
+
+function getPageDate() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const date = urlParams.get('date');
+    return date || new Date().toISOString().split('T')[0]; // Default to today if no date is provided, in YYYY-MM-DD format
 }

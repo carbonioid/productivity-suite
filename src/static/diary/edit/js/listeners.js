@@ -2,7 +2,7 @@ export { initCollapseButtonListeners, addSliderListeners, initMemorySelectListen
     initTagListeners, initEntryInputListeners, initSubmitButtonListeners}
 import { format_yyyymmdd } from "../../../general/js/utils.js"
 import { getEntry } from "../../js/cache.js"
-import { getDateMinusDays } from "./utils.js"
+import { getDateMinusDays, getPageDate } from "./utils.js"
 import { loadTag } from "./compile.js"
 import { getFormData } from "./form.js"
 import { addEntry } from "../../js/api.js"
@@ -48,9 +48,7 @@ function initMemorySelectListener() {
     Initialize the memory select listener. This sets the content of the memory containter
     to the content of a specific entry when the user selects a time delta from the memory select.
     */
-    // Get date being edited
-    const urlParams = new URLSearchParams(window.location.search);
-    let date = urlParams.get('date') || new Date(); // Default to current date
+    const date = getPageDate(); // Get date being edited
 
     const memorySelect = document.querySelector('.delay-select')
     memorySelect.addEventListener('change', async () => {
