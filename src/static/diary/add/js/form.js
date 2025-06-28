@@ -28,8 +28,12 @@ function getFormData() {
     const title = titleInput.value.trim();
 
     // Parse entry, retaining line breaks (each div is a new line in a contenteditable)
-    const entry = Array.from(entryInput.children).map(child => { return child.textContent.trim() }).join('\n');
-    console.log(entry)
+    let entry = null;
+    if (Array.from(entryInput.children).length !== 0) {
+        entry = Array.from(entryInput.children).map(child => { return child.textContent.trim() }).join('\n');
+    } else {
+        entry = entryInput.textContent.trim();
+    }
 
     return [
         title,
