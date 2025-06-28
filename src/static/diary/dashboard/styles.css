@@ -1,7 +1,7 @@
 .entry-parent {
     display:grid;
     grid-template-columns:repeat(auto-fill, minmax(400px,1fr));
-    gap:0.5rem;
+    gap:1.5rem;
     width:100%;
 }
 
