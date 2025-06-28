@@ -61,7 +61,7 @@ ENTRY & ENTRY CONTAINER
 .entry-input {
     width:100%;
     text-wrap:wrap;
-    word-break: break-all;
+    word-wrap:break-word;
 
     overflow:scroll;
 }
