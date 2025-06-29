@@ -122,6 +122,14 @@ function initEntryInputListeners() {
         }
     })
 
+    entryInput.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter' && event.shiftKey) {
+            event.preventDefault(); // Prevent default behavior of adding a new line
+            event.stopPropagation(); // Stop the event from bubbling up 
+        }
+    })
+
+
    entryInput.innerHTML = '' // Trigger ::before psuedo-element on load
 }
 
