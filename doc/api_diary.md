@@ -1,5 +1,5 @@
 # Diary API documentation
-## Searching (`/search` route)
+# Searching (`/search` route)
 The search function takes a list of search terms for each part of an entry (title, body, ratings & tags) in this general form:
 ```json
 {
