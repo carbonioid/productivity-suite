@@ -1,5 +1,5 @@
 export { initCollapseButtonListeners, addSliderListeners, initMemorySelectListener, 
-    initTagListeners, initSubmitButtonListeners, 
+    initTagListeners, initSubmitButtonListeners, initEntryInputListeners, 
     initDeleteButtonListeners}
 import { format_date } from "../../../general/js/utils.js"
 import { getEntry } from "../../js/cache.js"
@@ -109,6 +109,26 @@ function initTagListeners() {
             tagInput.value = ""; // Clear input
         }
     });
+}
+
+function initEntryInputListeners() {
+    const entryInput = document.querySelector('.entry-input');
+     // Add event listener to adjust height of textarea to fit content
+    entryInput.addEventListener('input', (event) => {
+        const prev = window.scrollY;
+
+        entryInput.style.height = '';
+        entryInput.style.height = entryInput.scrollHeight + 'px';
+
+        window.scrollBy(0, prev); // Maintain scroll position
+    })
+
+    // Trigger height chage on resize & initially
+    window.addEventListener('resize', () => {
+        entryInput.dispatchEvent(new Event('input'));
+    })
+
+    entryInput.dispatchEvent(new Event('input'));
 }
 
 function initSubmitButtonListeners() {
