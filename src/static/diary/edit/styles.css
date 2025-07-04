@@ -64,6 +64,10 @@ ENTRY & ENTRY CONTAINER
     word-wrap:break-word;
 
     overflow:scroll;
+
+    border:none;
+    font-family:unset;
+    resize:none;
 }
 
 .entry-title {
@@ -87,25 +91,11 @@ ENTRY & ENTRY CONTAINER
     justify-self: bottom;
 }
 
-/* placeholder styles */
-.entry-input[placeholder]:empty:before {
-    content: attr(placeholder);
-    color: var(--dark);
-}
-
-.entry-title::placeholder {
-    color:var(--dark);
-}
-
-.entry-input[placeholder]:empty:focus:before {
-    content: "";
-}
-
+/* buttons */
 .entry-container button {
     width:max-content;
 }
 
-/* buttons */
 .entry-actions > * {
     display:inline-block;
 }

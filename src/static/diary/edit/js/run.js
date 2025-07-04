@@ -1,13 +1,11 @@
 import { initCollapseButtonListeners, initMemorySelectListener,
-        initTagListeners, initEntryInputListeners, 
-        initSubmitButtonListeners} from "./listeners.js";
+        initTagListeners, initSubmitButtonListeners} from "./listeners.js";
 import { loadPageContent } from "./compile.js";
 import { getPageDate } from "./utils.js";
 
 initCollapseButtonListeners();
 initMemorySelectListener();
 initTagListeners();
-initEntryInputListeners();
 initSubmitButtonListeners();
 
 

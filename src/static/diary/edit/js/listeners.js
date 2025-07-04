@@ -1,5 +1,5 @@
 export { initCollapseButtonListeners, addSliderListeners, initMemorySelectListener, 
-    initTagListeners, initEntryInputListeners, initSubmitButtonListeners, 
+    initTagListeners, initSubmitButtonListeners, 
     initDeleteButtonListeners}
 import { format_date } from "../../../general/js/utils.js"
 import { getEntry } from "../../js/cache.js"
@@ -109,28 +109,6 @@ function initTagListeners() {
             tagInput.value = ""; // Clear input
         }
     });
-}
-
-function initEntryInputListeners() {
-    /*
-    Initialise listeners for the entry input, which create and remove a placeholder
-    */
-    const entryInput = document.querySelector('.entry-input');
-    entryInput.addEventListener('focusout', () => {
-        if (!entryInput.textContent.length) {
-            entryInput.innerHTML = '' // Empty text so placeholder exists again
-        }
-    })
-
-    entryInput.addEventListener('keydown', (event) => {
-        if (event.key === 'Enter' && event.shiftKey) {
-            event.preventDefault(); // Prevent default behavior of adding a new line
-            event.stopPropagation(); // Stop the event from bubbling up 
-        }
-    })
-
-
-   entryInput.innerHTML = '' // Trigger ::before psuedo-element on load
 }
 
 function initSubmitButtonListeners() {
