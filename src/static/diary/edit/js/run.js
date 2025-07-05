@@ -1,14 +1,17 @@
 import { initCollapseButtonListeners, initMemorySelectListener,
-        initTagListeners, initSubmitButtonListeners, 
-        initEntryInputListeners } from "./listeners.js";
+    initTagListeners, initSubmitButtonListeners, 
+    initEntryInputListeners } from "./listeners.js";
 import { loadPageContent } from "./compile.js";
 import { getPageDate } from "./utils.js";
 
-initCollapseButtonListeners();
-initMemorySelectListener();
-initTagListeners();
-initSubmitButtonListeners();
-initEntryInputListeners();
+window.addEventListener('DOMContentLoaded', async () => {
+    // Load content based on ?date query parameter
+    await loadPageContent(getPageDate());
 
-// Load content based on ?date query parameter
-loadPageContent(getPageDate());
+    // Initialize listeners
+    initCollapseButtonListeners();
+    initMemorySelectListener();
+    initTagListeners();
+    initSubmitButtonListeners();
+    initEntryInputListeners();
+})
