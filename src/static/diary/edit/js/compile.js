@@ -78,6 +78,8 @@ async function loadPageContent(date) {
         settings.ratings.forEach(rating => {
             loadSlider(container, rating)
         })
+
+        loadStatsButton(date)
         return;
     }
 
@@ -85,13 +87,7 @@ async function loadPageContent(date) {
     const entryInput = document.querySelector('.entry-input');
     const titleInput = document.querySelector('.entry-title');
     titleInput.value = entry.title || "";
-
-    // Make sure each newline is a separate div
-    entry.entry.split('\n').forEach(line => {
-        const div = document.createElement('div');
-        div.textContent = line;
-        entryInput.appendChild(div);
-    })
+    entryInput.value = entry.entry || "";
 
     // (2) Load tags
     const tagContainer = document.querySelector('.tag-container');

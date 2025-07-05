@@ -1,5 +1,5 @@
 export { initCollapseButtonListeners, addSliderListeners, initMemorySelectListener, 
-    initTagListeners, initEntryInputListeners, initSubmitButtonListeners, 
+    initTagListeners, initSubmitButtonListeners, initEntryInputListeners, 
     initDeleteButtonListeners}
 import { format_date } from "../../../general/js/utils.js"
 import { getEntry } from "../../js/cache.js"
@@ -112,17 +112,23 @@ function initTagListeners() {
 }
 
 function initEntryInputListeners() {
-    /*
-    Initialise listeners for the entry input, which create and remove a placeholder
-    */
     const entryInput = document.querySelector('.entry-input');
-    entryInput.addEventListener('focusout', () => {
-        if (!entryInput.textContent.length) {
-            entryInput.innerHTML = '' // Empty text so placeholder exists again
-        }
+     // Add event listener to adjust height of textarea to fit content
+    entryInput.addEventListener('input', (event) => {
+        const prev = window.scrollY;
+
+        entryInput.style.height = '';
+        entryInput.style.height = entryInput.scrollHeight + 'px';
+
+        window.scrollBy(0, prev); // Maintain scroll position
     })
 
-   entryInput.innerHTML = '' // Trigger ::before psuedo-element on load
+    // Trigger height chage on resize & initially
+    window.addEventListener('resize', () => {
+        entryInput.dispatchEvent(new Event('input'));
+    })
+
+    entryInput.dispatchEvent(new Event('input'));
 }
 
 function initSubmitButtonListeners() {
@@ -140,7 +146,7 @@ function initSubmitButtonListeners() {
         if (entryExists) { // If the page alr exists, we are editing.
             response = await editEntry(getPageDate(), ...data)
         } else { // otherwise, we are adding a new entry.
-            response = await addEntry(...data)
+            response = await addEntry(getPageDate(), ...data)
         }
         
         if (response.ok) {

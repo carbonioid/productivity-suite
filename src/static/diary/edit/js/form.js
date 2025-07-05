@@ -26,14 +26,7 @@ function getFormData() {
     const entryInput = document.querySelector('.entry-input');
     const titleInput = document.querySelector('.entry-title');
     const title = titleInput.value.trim();
-
-    // Parse entry, retaining line breaks (each div is a new line in a contenteditable)
-    let entry = null;
-    if (Array.from(entryInput.children).length !== 0) {
-        entry = Array.from(entryInput.children).map(child => { return child.textContent.trim() }).join('\n');
-    } else {
-        entry = entryInput.textContent.trim();
-    }
+    const entry = entryInput.value.trim()
 
     return [
         title,
