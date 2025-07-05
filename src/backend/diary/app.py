@@ -39,6 +39,7 @@ def add_entry_route():
 
     Request body: JSON (application/json)
     {
+        "date": text (YYYY-MM-DD),
         "title": text,
         "entry": text,
         "ratings": JSON,
@@ -51,13 +52,11 @@ def add_entry_route():
     except werkzeug.exceptions.BadRequest:
         return Response(response='The supplied body was not valid JSON', status=400)
     
-    current_date = date.today().isoformat()
-
     try:
-        add_entry(current_date, body["title"], body["entry"], body["ratings"], body["tags"])
+        add_entry(body["date"], body["title"], body["entry"], body["ratings"], body["tags"])
     except Exception as e:
         if (type(e) is ValueError and str(e) == 'An entry for this date already exists'):
-            return Response(response='An entry for today already exists', status=409)
+            return Response(response='An entry for this date already exists', status=409)
         else:
             return str(e), 400
 

@@ -53,9 +53,9 @@ def fetch_db_contents(scope: list):
 
 def add_entry(date, title, entry, ratings, tags):
     # Check that there isn't already an entry for this day
-    current_date_entry = fetch_db_contents([date])
+    date_entry = fetch_db_contents([date])
 
-    if current_date_entry:
+    if date_entry:
         raise ValueError('An entry for this date already exists')
     elif (message := validate_ratings(ratings)) is not None:
         raise ValueError(message)
@@ -112,4 +112,3 @@ def delete_entry(date):
     with open(DATABASE_PATH, 'w') as file:
         writer = csv.writer(file)
         writer.writerows(new_rows)
-    
