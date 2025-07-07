@@ -2,6 +2,7 @@ import traceback
 from flask import Flask, Response
 from backend.timetracker.app import timetracker_bp
 from backend.diary.app import diary_bp
+import sys
 
 app = Flask(__name__)
 app.register_blueprint(timetracker_bp, url_prefix='/timetracker')
@@ -13,4 +14,9 @@ def handle(e):
     traceback.print_exception(e)
     return Response(response=f'Something went wrong: {e}', status=500)
 
-app.run(port=8000, host="0.0.0.0")
+if len(sys.argv) > 1:
+    port = int(sys.argv[1])
+else:
+    port = 8000
+
+app.run(port=port, host="0.0.0.0")

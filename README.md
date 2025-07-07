@@ -24,8 +24,9 @@ Install the required packages (create a venv here if you like)
 cd productivity-suite
 pip install -r requirements.txt
 ```
-Finally, start the application
+Finally, start the application. Optionally, set a port here. The value will default to 8000 otherwise.
 ```
-python3 src/app.py
-``` 
-> Access at `127.0.0.1:8000/timetracker` & `127.0.0.1:8000/diary`.
+python3 src/app.py <port>
+```
+
+> Access at `127.0.0.1:<port>/timetracker` & `127.0.0.1:<port>/diary` 
