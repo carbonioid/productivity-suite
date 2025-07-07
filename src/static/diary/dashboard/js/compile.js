@@ -5,7 +5,7 @@ export { loadPageContent }
 import { getEntry, populateCache } from "../../js/cache.js"
 import { loadTemplate } from "../../../general/js/template.js"
 import { addEditListener } from "./listeners.js"
-import { format_date } from "../../../general/js/utils.js"
+import { date_to_yyyymmdd, format_date } from "../../../general/js/utils.js"
 import { showEmptyMessage } from "../../../general/js/display.js"
 
 function loadEntry(entryData, container) {
@@ -14,10 +14,6 @@ function loadEntry(entryData, container) {
     If `refresh` is true, it refreshes the entry in the cache (uses fetchEntry()).
     Otherwise, it does not (uses getEntry())
     */
-
-    if (container == null) {
-        container = document.querySelector('.entry-parent')
-    }
 
     if (!entryData) {
         console.warn(`Entry for date ${date} does not exist.`)
@@ -48,6 +44,16 @@ function loadEntry(entryData, container) {
     container.appendChild(entryObject)
 }
 
+function loadEmptyEntry(date, container) {
+    const template = loadTemplate(document, 'empty-entry-template', {
+        'date': format_date(date)
+    })
+    
+    template.href = `/diary/edit?date=${date_to_yyyymmdd(date)}`
+
+    container.appendChild(template)
+}
+
 async function loadAddButton() {
     /*
     * Loads the add button into the page, only if the entry for today does not exist.
@@ -69,11 +75,12 @@ async function loadPageContent() {
     const entryDates = await populateCache()
 
     // Load all entries into page from newly populated cache
+    const container = document.querySelector('.entry-parent')
     for (const entry of entryDates) {
         if (entry.empty) {
-            // Load empty entry
+            loadEmptyEntry(entry.date, container)
         } else {
-            loadEntry(entry)
+            loadEntry(entry, container)
         }
     }
 
