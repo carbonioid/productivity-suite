@@ -128,7 +128,7 @@ function initEntryInputListeners() {
 function initSubmitButtonListeners() {
     const submitButton = document.querySelector('.submit-button');
     submitButton.addEventListener('click', async (event) => {
-        const data = getFormData()
+        const data = Object.values(getFormData())
         if (data[0].length == 0 || data[1].length == 0) {
             alert("Please fill in both title and entry.")
             return
