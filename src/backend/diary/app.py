@@ -2,6 +2,7 @@ import werkzeug, json
 from datetime import date
 from flask import render_template, request, Blueprint, Response, jsonify
 from backend.diary.database import fetch_db_contents, add_entry, edit_entry, delete_entry
+from pprint import pprint
 
 diary_bp = Blueprint('diary', __name__)
 
@@ -51,7 +52,7 @@ def add_entry_route():
         body = request.get_json()
     except werkzeug.exceptions.BadRequest:
         return Response(response='The supplied body was not valid JSON', status=400)
-    
+
     try:
         add_entry(body["date"], body["title"], body["entry"], body["ratings"], body["tags"])
     except Exception as e:

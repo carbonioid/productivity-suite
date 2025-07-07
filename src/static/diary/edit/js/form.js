@@ -28,10 +28,10 @@ function getFormData() {
     const title = titleInput.value.trim();
     const entry = entryInput.value.trim()
 
-    return [
-        title,
-        entry,
-        ratings, 
-        tags
-    ]
+    return {
+        'title': title,
+        'entry': entry,
+        'ratings': ratings, 
+        'tags': tags
+    }
 }

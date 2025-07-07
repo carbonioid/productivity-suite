@@ -60,13 +60,18 @@ async function loadPageContent(date) {
     Takes `date` in YYYY-MM-DD format.
 
     It follows these steps:
-    (0) Get entry data
-    (1) Load entry & title
-    (2) Load tags
-    (3) Load sliders
-    (4) Load stats button
-    (5) Conditionally load delete button if entry exists
+    (0) Populate title span with formatted date
+    (1) Get entry data
+    (2) Load entry & title & page title
+    (3) Load tags
+    (4) Load sliders
+    (5) Load stats button
+    (6) Conditionally load delete button if entry exists
     */
+
+    // Page title - populate span
+    const valueSpan = document.querySelector('.title-date-value');
+    valueSpan.textContent = format_date(date, "medium");
 
     // (0) Get entry data
     const entry = await getEntry(date, false);
@@ -83,7 +88,7 @@ async function loadPageContent(date) {
         return;
     }
 
-    // (1) Load entry & title
+    // (1) Load entry & title & page title
     const entryInput = document.querySelector('.entry-input');
     const titleInput = document.querySelector('.entry-title');
     titleInput.value = entry.title || "";

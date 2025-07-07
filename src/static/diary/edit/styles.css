@@ -5,6 +5,7 @@
 body {
     box-sizing: content-box; /* The body sizing breaks otherwise */
 }
+
 /***************
 MAIN PAGE LAYOUT
 ***************/
@@ -19,26 +20,19 @@ MAIN PAGE LAYOUT
 /***************
 HEADER STYLES
 ***************/
-.header {
+.page-title {
     display:flex;
-    align-items:center;
-    gap:0.5rem;
-    margin-bottom:0.5rem;
-    margin-left:0.5rem;
+    align-items: center;
+    gap:.5rem;
 }
 
-.header h1 {
-    font-size:var(--font-large);
-    margin:0.3rem 0;
+.back-button {
+    text-decoration: none;
+    color: inherit;
 }
 
-.header.hoverable {
-    display: inline-block;
-    margin-left:0;
-}
-
-.header .hoverable:hover {
-    background-color: var(--lightest);
+.back-button:hover {
+    background-color:var(--light);
 }
 
 /***************

@@ -2,7 +2,7 @@
 This file listens adds event listeners to the dashboard page.
 */
 export { addEditListener }
-import { date_to_yyyymmdd } from "../../general/js/utils.js";
+import { date_to_yyyymmdd } from "../../../general/js/utils.js";
 
 function addEditListener(entryObject, date) {
     /*

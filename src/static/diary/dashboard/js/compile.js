@@ -1,24 +1,20 @@
 /*
 This file uses templates to load entries and other HTML components into the page itself.
 */
-export { loadEntry, loadAddButton }
-import { getEntry } from "../js/cache.js"
-import { loadTemplate } from "../../general/js/template.js"
+export { loadPageContent }
+import { getEntry, populateCache } from "../../js/cache.js"
+import { loadTemplate } from "../../../general/js/template.js"
 import { addEditListener } from "./listeners.js"
-import { format_date } from "../../general/js/utils.js"
+import { date_to_yyyymmdd, format_date } from "../../../general/js/utils.js"
+import { showEmptyMessage } from "../../../general/js/display.js"
 
-async function loadEntry(date, refresh, container) {
+function loadEntry(entryData, container) {
     /*
     Takes entry date and loads the entry of this name.
     If `refresh` is true, it refreshes the entry in the cache (uses fetchEntry()).
     Otherwise, it does not (uses getEntry())
     */
 
-    if (container == null) {
-        container = document.querySelector('.entry-parent')
-    }
-
-    const entryData = await getEntry(date, refresh)
     if (!entryData) {
         console.warn(`Entry for date ${date} does not exist.`)
         return
@@ -29,7 +25,7 @@ async function loadEntry(date, refresh, container) {
         'entry': entryData['entry']
     })
 
-    addEditListener(entryObject, date)
+    addEditListener(entryObject, entryData.date)
 
     // Load data-container entires
     const ratings = entryData.ratings
@@ -48,6 +44,16 @@ async function loadEntry(date, refresh, container) {
     container.appendChild(entryObject)
 }
 
+function loadEmptyEntry(date, container) {
+    const template = loadTemplate(document, 'empty-entry-template', {
+        'date': format_date(date)
+    })
+    
+    template.href = `/diary/edit?date=${date_to_yyyymmdd(date)}`
+
+    container.appendChild(template)
+}
+
 async function loadAddButton() {
     /*
     * Loads the add button into the page, only if the entry for today does not exist.
@@ -58,4 +64,30 @@ async function loadAddButton() {
         const addButton = document.querySelector('.add-button');
         addButton.classList.add('hidden')
     }
+}
+
+async function loadPageContent() {
+    /*
+    Load entries into page
+    */
+
+    // Populate cache and get dates of all entries
+    const entryDates = await populateCache()
+
+    // Load all entries into page from newly populated cache
+    const container = document.querySelector('.entry-parent')
+    for (const entry of entryDates) {
+        if (entry.empty) {
+            loadEmptyEntry(entry.date, container)
+        } else {
+            loadEntry(entry, container)
+        }
+    }
+
+    if (entryDates.length === 0) {
+        showEmptyMessage(document.querySelector('.entry-parent'))
+    }
+
+    // Load add button, if required.
+    await loadAddButton()
 }

@@ -1,7 +1,41 @@
 import csv, json
 import re
+from datetime import datetime, timedelta
 
 DATABASE_PATH = 'src/backend/diary/entries.csv'
+
+def add_entry_padding(entries):
+    """
+    Add padding to a list of entries: all dates not present between the starting & ending date will be added as empty entries.
+    IMPORTANT: Assumes the `entries` list is sorted
+    """
+    if len(entries) < 2: # if 1-length, none of this is needed.
+        return entries
+    
+    entry_dates = [entry['date'] for entry in entries]
+
+    # get start & end date as datetime objects
+    start_date = datetime.strptime(entry_dates[-1], '%Y-%m-%d')
+    end_date = datetime.strptime(entry_dates[0], '%Y-%m-%d')
+
+    # Get all dates inbetween them
+    dates_inbetween = []
+    current_date = start_date + timedelta(days=1)
+    while current_date < end_date:
+        dates_inbetween.append(current_date)
+        current_date += timedelta(days=1)
+
+    # Check for any not present in the list
+    for date in dates_inbetween:
+        yyyymmdd_date = str(date.date())
+        if yyyymmdd_date not in entry_dates:
+            entries.append({
+                'date': yyyymmdd_date,
+                'empty': True
+            })
+
+    # Resort array & return
+    return sorted(entries, key=lambda x: x['date'], reverse=True)
 
 def validate_ratings(ratings):
     """
@@ -48,6 +82,9 @@ def fetch_db_contents(scope: list):
                     'ratings': json.loads(line[3]),
                     'tags': json.loads(line[4])
                 })
+    
+    entries = sorted(entries, key=lambda x: x['date'], reverse=True)
+    entries = add_entry_padding(entries)
 
     return entries
 

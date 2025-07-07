@@ -14,7 +14,8 @@ async function getEntry(date, forceReload) {
     /*
     Get entry from cache, without refetching it.
     */
-    if (forceReload || !cache.has(date)) {
+    let yyyymmdd_date = date_to_yyyymmdd(date)
+    if (forceReload || !cache.has(yyyymmdd_date)) {
         /*
         Refect entry from backend, add it to cache and return it.
         */
@@ -28,7 +29,7 @@ async function getEntry(date, forceReload) {
         const entry = data[0]
         if (entry) {
             entry.date = date
-            cache.set(date_to_yyyymmdd(date), entry)
+            cache.set(yyyymmdd_date, entry)
 
             return entry
         } else {
@@ -48,9 +49,8 @@ async function populateCache() {
         // If the cache is already populated, return the names
         return Array.from(cache.keys())
     }
-    const names = []
    
-    await fetch("/diary/api/data", {
+    return await fetch("/diary/api/data", {
         method: "GET",
         headers: {
             'Scope': '*'
@@ -64,9 +64,8 @@ async function populateCache() {
             row.date = dateObj
 
             cache.set(yyyymmdd_date, row)
-            names.push(dateObj)
         })
-    })
 
-    return names
+        return Object.values(data)
+    })
 }
