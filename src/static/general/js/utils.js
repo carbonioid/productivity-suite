@@ -5,7 +5,7 @@ function format_yyyymmdd(string, includeYear) {
   const date = new Date(year, month - 1, day)
   return date.toLocaleDateString(undefined, {
     'month': 'short',
-    'day': '2-digit'
+    'day': 'numeric'
   })
 }
 
@@ -33,7 +33,7 @@ function format_date(date, format) {
   let [year, month, day] = typeDict[format] || [true, true, true];
   if (year) {options.year = 'numeric'}
   if (month) {options.month = 'short'}
-  if (day) {options.day = '2-digit'}
+  if (day) {options.day = 'numeric'}
 
   return date.toLocaleDateString(undefined, options)
 }
