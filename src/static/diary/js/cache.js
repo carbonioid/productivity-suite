@@ -14,7 +14,8 @@ async function getEntry(date, forceReload) {
     /*
     Get entry from cache, without refetching it.
     */
-    if (forceReload || !cache.has(date)) {
+    let yyyymmdd_date = date_to_yyyymmdd(date)
+    if (forceReload || !cache.has(yyyymmdd_date)) {
         /*
         Refect entry from backend, add it to cache and return it.
         */
@@ -28,7 +29,7 @@ async function getEntry(date, forceReload) {
         const entry = data[0]
         if (entry) {
             entry.date = date
-            cache.set(date_to_yyyymmdd(date), entry)
+            cache.set(yyyymmdd_date, entry)
 
             return entry
         } else {
