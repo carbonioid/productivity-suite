@@ -2,6 +2,7 @@ import werkzeug, json
 from datetime import date
 from flask import render_template, request, Blueprint, Response, jsonify
 from backend.diary.database import fetch_db_contents, add_entry, edit_entry, delete_entry
+from pprint import pprint
 
 diary_bp = Blueprint('diary', __name__)
 
@@ -31,8 +32,7 @@ def query_db_route():
             return Response(response='The supplied scope was not valid JSON', status=400)
     
     queried_entries = fetch_db_contents(scope)
-    sorted_entries = sorted(queried_entries, key=lambda x: x['date'], reverse=True)
-    return jsonify(sorted_entries), 200
+    return jsonify(queried_entries), 200
 
 @diary_bp.route("/api/add", methods=["POST"])
 def add_entry_route():
