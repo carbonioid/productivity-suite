@@ -1,5 +1,5 @@
-import { showEmptyMessage } from "../../general/js/display.js"
-import { populateCache } from "../js/cache.js"
+import { showEmptyMessage } from "../../../general/js/display.js"
+import { populateCache } from "../../js/cache.js"
 import { loadEntry, loadAddButton } from "./compile.js"
 
 
