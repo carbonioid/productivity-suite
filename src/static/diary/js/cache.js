@@ -49,9 +49,8 @@ async function populateCache() {
         // If the cache is already populated, return the names
         return Array.from(cache.keys())
     }
-    const names = []
    
-    await fetch("/diary/api/data", {
+    return await fetch("/diary/api/data", {
         method: "GET",
         headers: {
             'Scope': '*'
@@ -65,9 +64,8 @@ async function populateCache() {
             row.date = dateObj
 
             cache.set(yyyymmdd_date, row)
-            names.push(dateObj)
         })
-    })
 
-    return names
+        return Object.values(data)
+    })
 }
