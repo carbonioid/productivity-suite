@@ -140,7 +140,7 @@ function initSubmitButtonListeners() {
         if (entryExists) { // If the page alr exists, we are editing.
             response = await editEntry(getPageDate(), ...data)
         } else { // otherwise, we are adding a new entry.
-            response = await addEntry(...data)
+            response = await addEntry(getPageDate(), ...data)
         }
         
         if (response.ok) {
