@@ -7,9 +7,9 @@ import { loadEntry, loadAddButton } from "./compile.js"
 const entryDates = await populateCache()
 
 // Load all entries into page from newly populated cache
-entryDates.forEach(async (date) => {
-    loadEntry(date, false)
-})
+for (const date of entryDates) {
+    await loadEntry(date, false)
+}
 
 if (entryDates.length === 0) {
     showEmptyMessage(document.querySelector('.entry-parent'))
