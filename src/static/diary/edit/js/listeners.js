@@ -1,12 +1,12 @@
 export { initCollapseButtonListeners, addSliderListeners, initMemorySelectListener, 
     initTagListeners, initEntryInputListeners, initSubmitButtonListeners, 
-    initDeleteButtonListeners}
+    initDeleteButtonListeners, addBackButtonListeners }
 import { format_date } from "../../../general/js/utils.js"
 import { getEntry } from "../../js/cache.js"
 import { getDateMinusDays, getPageDate, dashboardRedirect } from "./utils.js"
 import { loadTag } from "./compile.js"
 import { getFormData } from "./form.js"
-import { addEntry, editEntry, deleteEntry } from "../../js/api.js"
+import { addEntry, editEntry, deleteEntry, getSettings } from "../../js/api.js"
 
 function addSliderListeners(container) {
     /*
@@ -167,5 +167,56 @@ function initDeleteButtonListeners() {
                 console.error(`Failed to delete entry: ${response.statusText}`);
             }
         })
+    })
+}
+
+function addBackButtonListeners() {
+    const backButton = document.querySelector('.back-button');
+    backButton.addEventListener('click', async (event) => {
+        /*
+        Redirect to the dashboard when the back button is clicked. 
+        Trigger a confirm dialogue if the user has unsaved changes.
+        */
+
+        // Check if what is entered differs from the value in cache
+        let cachedValue = await getEntry(getPageDate(), true);
+        if (!cachedValue) {
+            // If there is no cached value, set to a dummy object.
+            cachedValue = {
+                'title': "",
+                'entry': "",
+                'ratings': (await getSettings()).ratings,
+                'tags': []
+            }
+        }
+
+        const currentValue = getFormData();
+        
+        // Set ratings to just contain values rather than whole arrays, because it makes comparison a lot easier
+        cachedValue.ratings = cachedValue.ratings.map(rating => {return rating.value || rating.min}) // Default to rating.min (if we fetched using getSettings())
+        currentValue.ratings = currentValue.ratings.map(rating => {return rating.value})
+        
+        if (currentValue['title'] === cachedValue['title'] &&
+            currentValue['entry'] === cachedValue['entry'] &&
+            JSON.stringify([...currentValue['ratings']].sort()) === JSON.stringify([...cachedValue['ratings']].sort()) &&
+            JSON.stringify([...currentValue['tags']].sort()) === JSON.stringify([...cachedValue['tags']].sort())) {
+            // No unsaved changes, redirect
+            dashboardRedirect();
+            return;
+        } else {
+            console.log("Title check:", currentValue['title'] === cachedValue['title']);
+            console.log("Entry check:", currentValue['entry'] === cachedValue['entry']);
+            console.log("Ratings check:", JSON.stringify([...currentValue['ratings']].sort()) === JSON.stringify([...cachedValue['ratings']].sort()));
+            console.log("Tags check:", JSON.stringify([...currentValue['tags']].sort()) === JSON.stringify([...cachedValue['tags']].sort()));
+
+            console.log(currentValue.entry)
+            console.log(cachedValue.entry)
+
+            const redirectConfirmed = confirm("You have unsaved changes. Do you want to discard them and go back to the dashboard?");
+
+            if (redirectConfirmed) {
+                dashboardRedirect();
+            }
+        }
     })
 }
