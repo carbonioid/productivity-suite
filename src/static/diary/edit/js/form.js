@@ -35,10 +35,10 @@ function getFormData() {
         entry = entryInput.textContent.trim();
     }
 
-    return [
-        title,
-        entry,
-        ratings, 
-        tags
-    ]
+    return {
+        'title': title,
+        'entry': entry,
+        'ratings': ratings, 
+        'tags': tags
+    }
 }
