@@ -1,6 +1,7 @@
 export { initCollapseButtonListeners, addSliderListeners, initMemorySelectListener, 
     initTagListeners, initEntryInputListeners, initSubmitButtonListeners, 
     initDeleteButtonListeners, addBackButtonListeners }
+
 import { format_date } from "../../../general/js/utils.js"
 import { getEntry } from "../../js/cache.js"
 import { getDateMinusDays, getPageDate, dashboardRedirect } from "./utils.js"
@@ -112,17 +113,23 @@ function initTagListeners() {
 }
 
 function initEntryInputListeners() {
-    /*
-    Initialise listeners for the entry input, which create and remove a placeholder
-    */
     const entryInput = document.querySelector('.entry-input');
-    entryInput.addEventListener('focusout', () => {
-        if (!entryInput.textContent.length) {
-            entryInput.innerHTML = '' // Empty text so placeholder exists again
-        }
+     // Add event listener to adjust height of textarea to fit content
+    entryInput.addEventListener('input', (event) => {
+        const prev = window.scrollY;
+
+        entryInput.style.height = '';
+        entryInput.style.height = entryInput.scrollHeight + 'px';
+
+        window.scrollBy(0, prev); // Maintain scroll position
     })
 
-   entryInput.innerHTML = '' // Trigger ::before psuedo-element on load
+    // Trigger height chage on resize & initially
+    window.addEventListener('resize', () => {
+        entryInput.dispatchEvent(new Event('input'));
+    })
+
+    entryInput.dispatchEvent(new Event('input'));
 }
 
 function initSubmitButtonListeners() {

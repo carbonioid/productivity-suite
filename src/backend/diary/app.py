@@ -40,7 +40,7 @@ def add_entry_route():
 
     Request body: JSON (application/json)
     {
-        "date": text,
+        "date": text (YYYY-MM-DD),
         "title": text,
         "entry": text,
         "ratings": JSON,
