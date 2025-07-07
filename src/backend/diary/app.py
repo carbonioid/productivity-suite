@@ -31,7 +31,7 @@ def query_db_route():
             return Response(response='The supplied scope was not valid JSON', status=400)
     
     queried_entries = fetch_db_contents(scope)
-    sorted_entries = sorted(queried_entries, key=lambda x: x['date'])
+    sorted_entries = sorted(queried_entries, key=lambda x: x['date'], reverse=True)
     return jsonify(sorted_entries), 200
 
 @diary_bp.route("/api/add", methods=["POST"])
