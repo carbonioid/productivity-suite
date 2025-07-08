@@ -7,7 +7,8 @@ import { displayError } from "./ui.js"
 import { getDay } from "./cache.js"
 import { getAllDays, parseElementApiInfo } from "./utils.js";
 import { hideEmptyMessage } from "../../general/js/display.js";
-export { addFormListeners, registerEditing, addDisplayFormListeners }
+import { date_to_yyyymmdd, format_date, format_yyyymmdd } from "../../general/js/utils.js";
+export { addFormListeners, registerEditing, addDisplayFormListeners, registerAddToButton, addDayEditIndicator }
 
 // "dictionary" of colors for different bits of text
 let colors = [
@@ -85,7 +86,11 @@ async function submitForm() {
 
   // If add mode, simply add content
   if (form.getAttribute('data-mode') == 'add') { 
-    let outcome = await addElement(name, start, end, color);
+    let params = new URLSearchParams(document.location.search);
+    let date = params.get("date"); // Will default to null, which addElement supports.
+
+    let outcome = await addElement(name, start, end, color, date);
+
     if (outcome === true) {
       hideEmptyMessage(document.querySelector('.parent-container')); // Hide empty message, if it exists (because content now exists in the page)
 
@@ -150,7 +155,7 @@ function exitEditMode() {
   setFormContent(name, start, end, color);
 
   // Hide the editing indicator
-  document.querySelector('.editing-indicator').classList.add("soft-hidden")
+  document.querySelector('#editing-indicator').classList.add("hidden")
 
   // Exit edit mode in the form attributes.
   form.setAttribute('data-mode', `add`);
@@ -185,7 +190,9 @@ function enterEditMode(itemObject) {
   form.setAttribute('data-mode', `edit;${day_name}\\${id};prev;${tmpName}\\${tmpStart}\\${tmpEnd}\\${tmpColor}`);
 
   // Activate the editing indicator
-  document.querySelector('.editing-indicator').classList.remove("soft-hidden")
+  const indicator = document.querySelector('#editing-indicator')
+  indicator.classList.remove("hidden")
+  indicator.querySelector('.name-value').textContent = name
 
   form.querySelector('#name').focus()
 }
@@ -199,6 +206,43 @@ function registerEditing(obj) {
     event.preventDefault();
     enterEditMode(obj)
   });
+}
+
+function registerAddToButton(button, date) {
+  button.addEventListener('click', () => {
+    startAddingTo(date)
+  })
+}
+
+function startAddingTo(date) {
+  const indicator = document.querySelector('#day-editing-indicator')
+
+  const currentDate = date_to_yyyymmdd(new Date())
+
+    if (date === currentDate) {
+      // Clear the ?date param as this is the current day and needs no such declaration
+      const url = new URL(window.location.href);
+      const params = url.searchParams;
+
+      if (params.has('date')) {
+        params.delete('date'); // Remove the 'date' parameter
+        history.replaceState({}, '', url.pathname + url.search + url.hash);
+      }
+    
+      indicator.classList.add("hidden")
+    } else {
+      const newParams = new URLSearchParams({ "date": date });
+      window.history.pushState({}, "", "?" + newParams.toString());
+
+      addDayEditIndicator(date)
+    }
+}
+
+function addDayEditIndicator(date) {
+  const indicator = document.querySelector('#day-editing-indicator')
+
+  indicator.classList.remove("hidden")
+  indicator.querySelector('.name-value').textContent = format_yyyymmdd(date)
 }
 
 /*
@@ -259,6 +303,11 @@ function addFormListeners() {
 
   // Editing indicator Listener
   document.querySelector('.editing-exit-button').addEventListener('click', exitEditMode)
+
+  // Day editing indicator listener
+  document.querySelector('.day-editing-exit-button').addEventListener('click', () => {
+    startAddingTo(date_to_yyyymmdd(new Date()))
+  })
 }
 
 function addDisplayFormListeners() {

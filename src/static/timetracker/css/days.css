@@ -136,3 +136,9 @@ Day titles (title popups are in popups.css)
     position:relative;
     float:left;
 }
+
+.add-to-button {
+    padding:.1rem .4rem;
+    margin-top:.3rem;
+    cursor: pointer;
+}

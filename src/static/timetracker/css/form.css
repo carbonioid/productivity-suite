@@ -57,7 +57,7 @@ input.tag:checked {
 EDITING INDICATOR
 */
 
-.editing-indicator {
+.editing-indicator-container {
     color:var(--blue);
     font-weight:950;
     font-family: Helvetica, Arial, sans-serif;
@@ -65,12 +65,18 @@ EDITING INDICATOR
 
     margin-left:2rem;
     margin-bottom:0.3rem;
+
+    height:var(--font-regular);
 }
 
-.editing-exit-button {
+.editing-exit-button, .day-editing-exit-button {
     text-decoration:underline;
     text-decoration-thickness: 0.5px;
     cursor: pointer;
+}
+
+#day-editing-indicator {
+    margin-right:1rem;
 }
 
 /*
