@@ -18,10 +18,10 @@ def add_route():
 def query_db_route():
     """Get data from entries.csv based on a specified list of dates, or all (*)
 
-    Request body: * or JSON list of dates (as text)
-    *
-    OR
-    ["2025-05-05", "2025-05"-06"]
+    Headers:
+        'Scope': * or JSON list of dates (as text) e.g. ["2025-05-05", "2025-05"-06"]
+        'padding': bool (whether to pad the entries, which notes where there are missing entries up to today)
+        
     """
     if request.headers['Scope'] == '*':
         scope = '*'
@@ -30,8 +30,12 @@ def query_db_route():
             scope = json.loads(request.headers['Scope'])
         except json.decoder.JSONDecodeError: # If JSON loading fails
             return Response(response='The supplied scope was not valid JSON', status=400)
-    
-    queried_entries = fetch_db_contents(scope)
+        
+    # Convert padding to boolean
+    padding = request.headers.get('padding', "false")
+    padding = {"false": False, "true": True}.get(padding, False)
+
+    queried_entries = fetch_db_contents(scope, add_padding=padding)
     return jsonify(queried_entries), 200
 
 @diary_bp.route("/api/add", methods=["POST"])

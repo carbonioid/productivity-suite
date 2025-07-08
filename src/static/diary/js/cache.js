@@ -22,7 +22,8 @@ async function getEntry(date, forceReload) {
         const data = await fetch("/diary/api/data", {
             method: "GET",
             headers: {
-                'Scope': JSON.stringify([date_to_yyyymmdd(date)])
+                'Scope': JSON.stringify([date_to_yyyymmdd(date)]),
+                'padding': false
             }
         }).then(response => {return response.json()})
         
@@ -53,7 +54,8 @@ async function populateCache() {
     return await fetch("/diary/api/data", {
         method: "GET",
         headers: {
-            'Scope': '*'
+            'Scope': '*',
+            'padding': true
         }
     }).then(response => {
         return response.json()

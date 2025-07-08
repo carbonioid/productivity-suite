@@ -53,7 +53,7 @@ def validate_ratings(ratings):
     
     return None
 
-def fetch_db_contents(scope: list):
+def fetch_db_contents(scope: list, add_padding):
     """Take scope as list of YYYY-MM-DD dates and return the full data for these dates in formatted JSON
 
     Args:
@@ -75,7 +75,11 @@ def fetch_db_contents(scope: list):
                 })
     
     entries = sorted(entries, key=lambda x: x['date'], reverse=True)
-    entries = add_entry_padding(entries)
+
+    if add_padding:
+        entries = add_entry_padding(entries)
+    
+    print(f'returning {entries}')
 
     return entries
 
