@@ -75,7 +75,7 @@ async function loadPageContent(date) {
 
     // (0) Get entry data
     const entry = await getEntry(date, false);
-    if (!entry) {
+    if (entry.empty || entry == undefined) {
         console.info(`No entry found for date: ${date}. Loading empty page.`);
         // Load sliders anyway, so that the user can add a new entry
         const settings = await getSettings();

@@ -83,7 +83,7 @@ def add_entry(date, title, entry, ratings, tags):
     # Check that there isn't already an entry for this day
     date_entry = fetch_db_contents([date])
 
-    if date_entry:
+    if not (date_entry or date_entry[0].get('empty', True)):
         raise ValueError('An entry for this date already exists')
     elif (message := validate_ratings(ratings)) is not None:
         raise ValueError(message)

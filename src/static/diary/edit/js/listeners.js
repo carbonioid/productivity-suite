@@ -141,13 +141,13 @@ function initSubmitButtonListeners() {
             return
         }
 
-        const entryExists = await getEntry(getPageDate(), false)
+        const entry = await getEntry(getPageDate(), false)
 
         let response = null
-        if (entryExists) { // If the page alr exists, we are editing.
-            response = await editEntry(getPageDate(), ...data)
-        } else { // otherwise, we are adding a new entry.
+        if (entry.empty || entry == undefined) { // If the page doesn't alr exist, we are adding
             response = await addEntry(getPageDate(), ...data)
+        } else { // otherwise, we are editing an exiting entry.
+            response = await editEntry(getPageDate(), ...data)
         }
         
         if (response.ok) {
@@ -187,7 +187,7 @@ function addBackButtonListeners() {
 
         // Check if what is entered differs from the value in cache
         let cachedValue = await getEntry(getPageDate(), true);
-        if (!cachedValue) {
+        if (cachedValue.empty || cachedValue == undefined) {
             // If there is no cached value, set to a dummy object.
             cachedValue = {
                 'title': "",
