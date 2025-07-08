@@ -20,6 +20,8 @@
 
     cursor:pointer;
 
+    gap:.5rem;
+
     height:66.8px;
 
     text-decoration: none;
@@ -27,12 +29,12 @@
 }
 
 .empty-entry .empty-add-button {
-    color:var(--off-black);
-    font-size:3rem;
+    color:black;
+    font-size:1.5rem;
 }
 
 .empty-entry .date {
-    color:var(--regular);
+    color:var(--dark);
     font-size:var(--font-small);
 }
 
