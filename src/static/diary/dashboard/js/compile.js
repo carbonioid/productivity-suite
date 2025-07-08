@@ -84,7 +84,7 @@ async function loadPageContent() {
         }
     }
 
-    if (entryDates.length === 0) {
+    if (entryDates.filter(e => {return !e.empty}).length === 0) {
         showEmptyMessage(document.querySelector('.entry-parent'))
     }
 

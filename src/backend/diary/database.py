@@ -9,10 +9,7 @@ def add_entry_padding(entries):
     """
     Add padding to a list of entries: all dates not present between the starting & ending date will be added as empty entries.
     IMPORTANT: Assumes the `entries` list is sorted
-    """
-    if len(entries) < 2: # if 1-length, none of this is needed.
-        return entries
-    
+    """    
     entry_dates = [entry['date'] for entry in entries]
 
     # Find all the missing dates, making sure to end the check at today's date so that:
@@ -67,7 +64,7 @@ def fetch_db_contents(scope: list):
     with open(DATABASE_PATH, 'r') as file:
         reader = csv.reader(file)
         for line in reader:
-            date = line[0] 
+            date = line[0]
             if date in scope or scope == '*':
                 entries.append({
                     'date': line[0],
