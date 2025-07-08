@@ -13,6 +13,15 @@ def missing_dates(dates, start=None, end=None):
 
     dates = sorted(dates, reverse=True)
 
+    # If there is no start or end and no dates, return a blank list
+    if len(dates) == 0 and start is None and end is None:
+        return []
+    # If dates is empty and there is exactly *one* of `start` or `end` (but not both), just return that value
+    elif len(dates) == 0 and (start is not None) ^ (end is not None):
+        if start is not None: return [start]
+        if end is not None: return [end]
+    # (if both start & end are defined, the length of the list is irrelevant. This will function properly, giving all the values between them)
+
     if start is None: start = dates[-1]
     if end is None: end = dates[0]
 
