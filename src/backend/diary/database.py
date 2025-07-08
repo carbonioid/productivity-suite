@@ -1,6 +1,7 @@
 import csv, json
 import re
 from datetime import datetime, timedelta
+from backend.common.utils import missing_dates
 
 DATABASE_PATH = 'src/backend/diary/entries.csv'
 
@@ -14,25 +15,18 @@ def add_entry_padding(entries):
     
     entry_dates = [entry['date'] for entry in entries]
 
-    # get start & end date as datetime objects
-    start_date = datetime.strptime(entry_dates[-1], '%Y-%m-%d')
-    end_date = datetime.strptime(entry_dates[0], '%Y-%m-%d')
-
-    # Get all dates inbetween them
-    dates_inbetween = []
-    current_date = start_date + timedelta(days=1)
-    while current_date < end_date:
-        dates_inbetween.append(current_date)
-        current_date += timedelta(days=1)
+    # Find all the missing dates, making sure to end the check at today's date so that:
+    # (a) there is always an add button for today's date
+    # (b) if many days are missing up to and including today, buttons exist for all of them
+    # (c) any entries for after today (which exist for whatever reason) do not cause a bunch of annoying empty buttons
+    missing = missing_dates(entry_dates, end=str(datetime.today().date()))
 
     # Check for any not present in the list
-    for date in dates_inbetween:
-        yyyymmdd_date = str(date.date())
-        if yyyymmdd_date not in entry_dates:
-            entries.append({
-                'date': yyyymmdd_date,
-                'empty': True
-            })
+    for date in missing:
+        entries.append({
+            'date': date,
+            'empty': True
+        })
 
     # Resort array & return
     return sorted(entries, key=lambda x: x['date'], reverse=True)
