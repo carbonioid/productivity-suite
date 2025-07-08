@@ -85,7 +85,11 @@ async function submitForm() {
 
   // If add mode, simply add content
   if (form.getAttribute('data-mode') == 'add') { 
-    let outcome = await addElement(name, start, end, color);
+    let params = new URLSearchParams(document.location.search);
+    let date = params.get("date"); // Will default to null, which addElement supports.
+
+    let outcome = await addElement(name, start, end, color, date);
+
     if (outcome === true) {
       hideEmptyMessage(document.querySelector('.parent-container')); // Hide empty message, if it exists (because content now exists in the page)
 
