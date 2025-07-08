@@ -79,15 +79,13 @@ def fetch_db_contents(scope: list, add_padding):
     if add_padding:
         entries = add_entry_padding(entries)
     
-    print(f'returning {entries}')
-
     return entries
 
 def add_entry(date, title, entry, ratings, tags):
     # Check that there isn't already an entry for this day
-    date_entry = fetch_db_contents([date])
+    date_entry = fetch_db_contents([date], False)
 
-    if not (date_entry or date_entry[0].get('empty', True)):
+    if not len([entry for entry in date_entry if not entry.get('empty', False)]) == 0:
         raise ValueError('An entry for this date already exists')
     elif (message := validate_ratings(ratings)) is not None:
         raise ValueError(message)
