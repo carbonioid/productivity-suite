@@ -209,9 +209,15 @@ function registerEditing(obj) {
 }
 
 function registerAddToButton(button, date) {
-  const indicator = document.querySelector('#day-editing-indicator')
   button.addEventListener('click', () => {
-    const currentDate = date_to_yyyymmdd(new Date())
+    startAddingTo(date)
+  })
+}
+
+function startAddingTo(date) {
+  const indicator = document.querySelector('#day-editing-indicator')
+
+  const currentDate = date_to_yyyymmdd(new Date())
 
     if (date === currentDate) {
       // Clear the ?date param as this is the current day and needs no such declaration
@@ -230,7 +236,6 @@ function registerAddToButton(button, date) {
 
       addDayEditIndicator(date)
     }
-  })
 }
 
 function addDayEditIndicator(date) {
@@ -298,6 +303,11 @@ function addFormListeners() {
 
   // Editing indicator Listener
   document.querySelector('.editing-exit-button').addEventListener('click', exitEditMode)
+
+  // Day editing indicator listener
+  document.querySelector('.day-editing-exit-button').addEventListener('click', () => {
+    startAddingTo(date_to_yyyymmdd(new Date()))
+  })
 }
 
 function addDisplayFormListeners() {

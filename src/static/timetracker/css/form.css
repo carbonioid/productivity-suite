@@ -69,7 +69,7 @@ EDITING INDICATOR
     height:var(--font-regular);
 }
 
-.editing-exit-button {
+.editing-exit-button, .day-editing-exit-button {
     text-decoration:underline;
     text-decoration-thickness: 0.5px;
     cursor: pointer;
