@@ -78,7 +78,11 @@
 </head>
 <html>
     <body>
-        <p class="editing-indicator soft-hidden">editing (<a class="editing-exit-button">exit</a>)</p>
+        <p class="editing-indicator-container">
+            <span id="day-editing-indicator" class="hidden">You are adding to <span class="name-value"></span></span>
+
+            <span id="editing-indicator" class="hidden">Editing "<span class="name-value"></span>" (<a class="editing-exit-button">exit</a>)</span>
+        </p>
         <form class="form-body" action="#" data-mode="add">
             <button class="icon-button hoverable" value="" id="add">
                 <span class="material-symbols-outlined" style="color:#1f1f1f;">add_circle</span>

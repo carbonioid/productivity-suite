@@ -1,4 +1,4 @@
-import { addFormListeners, addDisplayFormListeners } from "./form.js";
+import { addFormListeners, addDisplayFormListeners, addDayEditIndicator } from "./form.js";
 import { addCheckboxListeners, showOthers, setCompact, setDisplayOptionsFromCookie } from "./ui.js";
 import { load, initialiseContainers } from "./compile.js"
 import { getDay, populateCache } from "./cache.js";
@@ -21,9 +21,15 @@ if (names.length === 1 && getDay(names[0]).length === 0) {
 await initialiseContainers(names) // Create containers
 names.forEach(name => { load(name, false) }) // Create elements themselves, but do not reload cache    
 
-
 addFormListeners()
 addDisplayFormListeners()
 addCheckboxListeners()
 showOthers()
 setCompact()
+
+// Get ?date if applicable
+const url = new URL(window.location.href);
+const params = url.searchParams;
+if (params.has('date')) {
+    addDayEditIndicator(params.get('date'))
+}

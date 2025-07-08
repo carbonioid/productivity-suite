@@ -7,7 +7,8 @@ import { displayError } from "./ui.js"
 import { getDay } from "./cache.js"
 import { getAllDays, parseElementApiInfo } from "./utils.js";
 import { hideEmptyMessage } from "../../general/js/display.js";
-export { addFormListeners, registerEditing, addDisplayFormListeners, registerAddToButton }
+import { date_to_yyyymmdd, format_date, format_yyyymmdd } from "../../general/js/utils.js";
+export { addFormListeners, registerEditing, addDisplayFormListeners, registerAddToButton, addDayEditIndicator }
 
 // "dictionary" of colors for different bits of text
 let colors = [
@@ -154,7 +155,7 @@ function exitEditMode() {
   setFormContent(name, start, end, color);
 
   // Hide the editing indicator
-  document.querySelector('.editing-indicator').classList.add("soft-hidden")
+  document.querySelector('#editing-indicator').classList.add("hidden")
 
   // Exit edit mode in the form attributes.
   form.setAttribute('data-mode', `add`);
@@ -189,7 +190,9 @@ function enterEditMode(itemObject) {
   form.setAttribute('data-mode', `edit;${day_name}\\${id};prev;${tmpName}\\${tmpStart}\\${tmpEnd}\\${tmpColor}`);
 
   // Activate the editing indicator
-  document.querySelector('.editing-indicator').classList.remove("soft-hidden")
+  const indicator = document.querySelector('#editing-indicator')
+  indicator.classList.remove("hidden")
+  indicator.querySelector('.name-value').textContent = name
 
   form.querySelector('#name').focus()
 }
@@ -206,10 +209,35 @@ function registerEditing(obj) {
 }
 
 function registerAddToButton(button, date) {
+  const indicator = document.querySelector('#day-editing-indicator')
   button.addEventListener('click', () => {
-    const newParams = new URLSearchParams({ "date": date });
-    window.history.pushState({}, "", "?" + newParams.toString());
+    const currentDate = date_to_yyyymmdd(new Date())
+
+    if (date === currentDate) {
+      // Clear the ?date param as this is the current day and needs no such declaration
+      const url = new URL(window.location.href);
+      const params = url.searchParams;
+
+      if (params.has('date')) {
+        params.delete('date'); // Remove the 'date' parameter
+        history.replaceState({}, '', url.pathname + url.search + url.hash);
+      }
+    
+      indicator.classList.add("hidden")
+    } else {
+      const newParams = new URLSearchParams({ "date": date });
+      window.history.pushState({}, "", "?" + newParams.toString());
+
+      addDayEditIndicator(date)
+    }
   })
+}
+
+function addDayEditIndicator(date) {
+  const indicator = document.querySelector('#day-editing-indicator')
+
+  indicator.classList.remove("hidden")
+  indicator.querySelector('.name-value').textContent = format_yyyymmdd(date)
 }
 
 /*
