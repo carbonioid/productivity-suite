@@ -1,6 +1,7 @@
 import csv, json
 import re
 from datetime import datetime, timedelta
+from backend.common.utils import missing_dates
 
 DATABASE_PATH = 'src/backend/diary/entries.csv'
 
@@ -8,31 +9,21 @@ def add_entry_padding(entries):
     """
     Add padding to a list of entries: all dates not present between the starting & ending date will be added as empty entries.
     IMPORTANT: Assumes the `entries` list is sorted
-    """
-    if len(entries) < 2: # if 1-length, none of this is needed.
-        return entries
-    
+    """    
     entry_dates = [entry['date'] for entry in entries]
 
-    # get start & end date as datetime objects
-    start_date = datetime.strptime(entry_dates[-1], '%Y-%m-%d')
-    end_date = datetime.strptime(entry_dates[0], '%Y-%m-%d')
-
-    # Get all dates inbetween them
-    dates_inbetween = []
-    current_date = start_date + timedelta(days=1)
-    while current_date < end_date:
-        dates_inbetween.append(current_date)
-        current_date += timedelta(days=1)
+    # Find all the missing dates, making sure to end the check at today's date so that:
+    # (a) there is always an add button for today's date
+    # (b) if many days are missing up to and including today, buttons exist for all of them
+    # (c) any entries for after today (which exist for whatever reason) do not cause a bunch of annoying empty buttons
+    missing = missing_dates(entry_dates, end=str(datetime.today().date()))
 
     # Check for any not present in the list
-    for date in dates_inbetween:
-        yyyymmdd_date = str(date.date())
-        if yyyymmdd_date not in entry_dates:
-            entries.append({
-                'date': yyyymmdd_date,
-                'empty': True
-            })
+    for date in missing:
+        entries.append({
+            'date': date,
+            'empty': True
+        })
 
     # Resort array & return
     return sorted(entries, key=lambda x: x['date'], reverse=True)
@@ -73,7 +64,7 @@ def fetch_db_contents(scope: list):
     with open(DATABASE_PATH, 'r') as file:
         reader = csv.reader(file)
         for line in reader:
-            date = line[0] 
+            date = line[0]
             if date in scope or scope == '*':
                 entries.append({
                     'date': line[0],
@@ -92,7 +83,7 @@ def add_entry(date, title, entry, ratings, tags):
     # Check that there isn't already an entry for this day
     date_entry = fetch_db_contents([date])
 
-    if date_entry:
+    if not (date_entry or date_entry[0].get('empty', True)):
         raise ValueError('An entry for this date already exists')
     elif (message := validate_ratings(ratings)) is not None:
         raise ValueError(message)

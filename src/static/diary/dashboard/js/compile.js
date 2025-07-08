@@ -54,18 +54,6 @@ function loadEmptyEntry(date, container) {
     container.appendChild(template)
 }
 
-async function loadAddButton() {
-    /*
-    * Loads the add button into the page, only if the entry for today does not exist.
-    */
-    const entryData = await getEntry(new Date(), false)
-
-    if (entryData) {
-        const addButton = document.querySelector('.add-button');
-        addButton.classList.add('hidden')
-    }
-}
-
 async function loadPageContent() {
     /*
     Load entries into page
@@ -84,10 +72,7 @@ async function loadPageContent() {
         }
     }
 
-    if (entryDates.length === 0) {
+    if (entryDates.filter(e => {return !e.empty}).length === 0) {
         showEmptyMessage(document.querySelector('.entry-parent'))
     }
-
-    // Load add button, if required.
-    await loadAddButton()
 }

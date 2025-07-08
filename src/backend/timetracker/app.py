@@ -1,7 +1,7 @@
 import os
 from flask import Flask, render_template, request, Response, jsonify, Blueprint
 from backend.timetracker.database import fetch_db_contents, add_row, edit_row, delete_row, invalid
-from backend.timetracker.utils import add_new_file_if_needed
+from backend.timetracker.utils import add_new_files
 
 timetracker_bp = Blueprint('timetracker', __name__)
 
@@ -9,9 +9,9 @@ timetracker_bp = Blueprint('timetracker', __name__)
 def main():
     """
     Main route for the website. Renders the website and also runs additional checks on load:
-        (1) Adds a new day file if one currently doesn't exist
+        (1) Adds new days files that are needed (see add_new_files docstring)
     """
-    add_new_file_if_needed() # (1)
+    add_new_files() # (1)
 
     return render_template("timetracker.html")
 
