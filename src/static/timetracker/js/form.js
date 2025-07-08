@@ -7,7 +7,7 @@ import { displayError } from "./ui.js"
 import { getDay } from "./cache.js"
 import { getAllDays, parseElementApiInfo } from "./utils.js";
 import { hideEmptyMessage } from "../../general/js/display.js";
-export { addFormListeners, registerEditing, addDisplayFormListeners }
+export { addFormListeners, registerEditing, addDisplayFormListeners, registerAddToButton }
 
 // "dictionary" of colors for different bits of text
 let colors = [
@@ -203,6 +203,13 @@ function registerEditing(obj) {
     event.preventDefault();
     enterEditMode(obj)
   });
+}
+
+function registerAddToButton(button, date) {
+  button.addEventListener('click', () => {
+    const newParams = new URLSearchParams({ "date": date });
+    window.history.pushState({}, "", "?" + newParams.toString());
+  })
 }
 
 /*

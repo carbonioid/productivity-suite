@@ -6,9 +6,9 @@ It also handles adding, editing and deleting elements.
 export {  addElement, editElement, deleteElement, load, initialiseContainers };
 import {  format_mins, duration, dayOfWeek, getAllDays } from './utils.js'
 import { format_yyyymmdd } from '../../general/js/utils.js';
-import {  registerWeekCollapseIcon, displayError, getDisplayOptions} from "./ui.js";
+import {  registerWeekCollapseIcon, displayError, getDisplayOptions } from "./ui.js";
 import { registerPopup, registerContextMenu } from "../../general/js/popup.js"
-import { registerEditing } from './form.js';
+import { registerEditing, registerAddToButton } from './form.js';
 import { fetchDay, getDay } from "./cache.js"
 import { loadTemplate } from '../../general/js/template.js';
 
@@ -251,6 +251,7 @@ function loadDayTitle(container, name, entries) {
 
   // Register listeners and load
   registerContextMenu(title.querySelector('.menu-button'), title.querySelector('.context-menu'))
+  registerAddToButton(title.querySelector('.add-to-button'), name)
 
   container.appendChild(title)
 }
