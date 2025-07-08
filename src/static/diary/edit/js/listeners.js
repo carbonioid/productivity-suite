@@ -144,7 +144,7 @@ function initSubmitButtonListeners() {
         const entry = await getEntry(getPageDate(), false)
 
         let response = null
-        if (entry.empty || entry == undefined) { // If the page doesn't alr exist, we are adding
+        if (entry == undefined || entry.empty) { // If the page doesn't alr exist, we are adding
             response = await addEntry(getPageDate(), ...data)
         } else { // otherwise, we are editing an exiting entry.
             response = await editEntry(getPageDate(), ...data)
@@ -187,7 +187,7 @@ function addBackButtonListeners() {
 
         // Check if what is entered differs from the value in cache
         let cachedValue = await getEntry(getPageDate(), true);
-        if (cachedValue.empty || cachedValue == undefined) {
+        if (cachedValue == undefined || cachedValue.empty) {
             // If there is no cached value, set to a dummy object.
             cachedValue = {
                 'title': "",
@@ -211,14 +211,6 @@ function addBackButtonListeners() {
             dashboardRedirect();
             return;
         } else {
-            console.log("Title check:", currentValue['title'] === cachedValue['title']);
-            console.log("Entry check:", currentValue['entry'] === cachedValue['entry']);
-            console.log("Ratings check:", JSON.stringify([...currentValue['ratings']].sort()) === JSON.stringify([...cachedValue['ratings']].sort()));
-            console.log("Tags check:", JSON.stringify([...currentValue['tags']].sort()) === JSON.stringify([...cachedValue['tags']].sort()));
-
-            console.log(currentValue.entry)
-            console.log(cachedValue.entry)
-
             const redirectConfirmed = confirm("You have unsaved changes. Do you want to discard them and go back to the dashboard?");
 
             if (redirectConfirmed) {
