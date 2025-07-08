@@ -2,7 +2,6 @@ import werkzeug, json
 from datetime import date
 from flask import render_template, request, Blueprint, Response, jsonify
 from backend.diary.database import fetch_db_contents, add_entry, edit_entry, delete_entry
-from pprint import pprint
 
 diary_bp = Blueprint('diary', __name__)
 
