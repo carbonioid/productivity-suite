@@ -73,6 +73,6 @@ async function loadPageContent() {
     }
 
     if (entryDates.filter(e => {return !e.empty}).length === 0) {
-        showEmptyMessage(document.querySelector('.entry-parent'), "You haven't written any diary entires yet. Click on the add button above to get started.")
+        showEmptyMessage(document.querySelector('.entry-parent'), "No entries", "You haven't written any diary entires yet. Click on the add button above to get started.")
     }
 }

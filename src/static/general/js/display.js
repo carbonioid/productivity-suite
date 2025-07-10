@@ -1,6 +1,6 @@
 export {showEmptyMessage, hideEmptyMessage}
 
-function showEmptyMessage(container, message) {
+function showEmptyMessage(container, titleMessage, message) {
     const messageContainer = document.createElement('div');
     messageContainer.classList.add("empty-container")
 
@@ -11,7 +11,7 @@ function showEmptyMessage(container, message) {
 
     let title = document.createElement('h2');
     title.classList.add("empty-title")
-    title.textContent = 'No entries'
+    title.textContent = titleMessage
 
     let content = document.createElement('p');
     content.classList.add("empty-content")
