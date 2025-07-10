@@ -1,6 +1,6 @@
 export {showEmptyMessage, hideEmptyMessage}
 
-function showEmptyMessage(container) {
+function showEmptyMessage(container, message) {
     const messageContainer = document.createElement('div');
     messageContainer.classList.add("empty-container")
 
@@ -15,7 +15,7 @@ function showEmptyMessage(container) {
 
     let content = document.createElement('p');
     content.classList.add("empty-content")
-    content.textContent = "You haven't added any entries yet. Use the form at the top to get started.";
+    content.textContent = message;
 
     messageContainer.appendChild(icon);
     messageContainer.appendChild(title);

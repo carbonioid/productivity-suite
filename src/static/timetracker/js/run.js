@@ -15,7 +15,7 @@ let names = await populateCache() // Populate cache and get names of all element
 
 if (names.length === 1 && getDay(names[0]).length === 0) {
     const container = document.querySelector('.parent-container')
-    showEmptyMessage(container) // Show empty message if no entries exist
+    showEmptyMessage(container, "You haven't added any data yet. Use the form at the top to get started.") // Show empty message if no entries exist
 }
 
 await initialiseContainers(names) // Create containers
