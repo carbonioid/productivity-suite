@@ -27,7 +27,7 @@ addCheckboxListeners()
 showOthers()
 setCompact()
 
-// Get ?date if applicable
+// Get ?date if exists and add appropriate indicator
 const url = new URL(window.location.href);
 const params = url.searchParams;
 if (params.has('date')) {
