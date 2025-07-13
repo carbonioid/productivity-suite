@@ -62,6 +62,8 @@ ENTRY & ENTRY CONTAINER
     border:none;
     font-family:unset;
     resize:none;
+
+    scrollbar-width: none;
 }
 
 .entry-title {
