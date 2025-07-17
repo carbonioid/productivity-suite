@@ -75,7 +75,6 @@ Note that there is no case-sensitivity option because tags are already stored as
 {
     "type": "rating",
     "name": str,
-    "case-sensitive": bool,
     "required": bool,
     "min": int,
     "max": int
