@@ -2,6 +2,7 @@ import werkzeug, json
 from datetime import date
 from flask import render_template, request, Blueprint, Response, jsonify
 from backend.diary.database import fetch_db_contents, add_entry, edit_entry, delete_entry
+from backend.diary.search import evaluate_search
 
 diary_bp = Blueprint('diary', __name__)
 
@@ -112,6 +113,25 @@ def delete_entry_route():
         return str(e), 400
     
     return '', 204
+
+@diary_bp.route("/api/search", methods=["GET"])
+def search_entries_route():
+    """
+    Search entries using the schema provided in the request body.
+    See docs/api_diary.md for more details.
+    """
+
+    try:
+        body = request.get_json()
+    except werkzeug.exceptions.BadRequest:
+        return Response(response='The supplied body was not valid JSON', status=400)
+    
+    try:
+        results = evaluate_search(body)
+    except Exception as e:
+        return str(e), 400
+    
+    return jsonify(results), 200
 
 @diary_bp.route("/api/settings", methods=["GET"])
 def get_settings_route():
