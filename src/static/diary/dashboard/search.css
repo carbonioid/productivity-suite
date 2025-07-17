@@ -1,0 +1,119 @@
+
+/*
+Tags
+*/
+.tag-container {
+    display: inline-flex;
+    gap:0.2rem;
+    overflow-x:scroll;
+    width:25%;
+
+    border:1px solid red;
+    scrollbar-width: none;
+}
+
+.tags {
+    padding:0.2rem 0;
+    overflow-y:scroll;
+    white-space:nowrap;
+    scrollbar-width:none;
+}
+
+.tag {
+    display: inline-flex;
+    align-items: center;
+    padding:0.2rem 0.4rem;
+
+    width:auto;
+    position: relative;
+
+    vertical-align: middle; /* fix stupidity with icons */
+}
+
+.tag:not(.add-tag) {
+    height:25px;
+}
+
+.tag span {
+    font-size:1rem;
+    cursor:pointer;
+    margin-left:-0.2rem;
+}
+
+.tag:not(.add-tag):hover span {
+    opacity:1;
+}
+
+.tag:not(.add-tag) span {
+    position: absolute;
+    background-color:white;
+    opacity:0;
+    transition: opacity 0.05s linear;
+}
+
+.add-tag {
+    padding-right:0.2rem;
+    border-right:1px solid var(--light);
+    background-color:var(--off-white);
+}
+
+.tag-input {
+    width:auto;
+    background-color:transparent;
+    border:none;
+    width:5rem;
+}
+
+.tag-input:focus {
+    outline:none;
+}
+
+.input-tag {
+    padding:0;
+}
+
+
+/* Navbar */
+nav {
+    display:flex;
+    gap:0.5rem;
+    align-items: center;
+}
+nav > * {
+    height:2rem;
+}
+
+.text-input input[type="text"], select.options {
+    height:100%;
+    border:none;
+    overflow:hidden;
+}
+
+select.options {
+    border-right:1px solid var(--light);
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+
+.text-input .name-search {
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+.text-input input[type="text"]:focus, select.options:focus {
+    outline:none;
+}
+
+.text-input {
+    display:flex;
+    align-items:center;
+}
+
+.options {
+    background-color:var(--off-white);
+}
+
+.add-button {
+    margin-left:auto;
+    height:1.5rem;
+}

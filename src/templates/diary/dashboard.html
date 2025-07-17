@@ -9,6 +9,7 @@
     
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
     <link href="{{ url_for('static', filename='diary/dashboard/styles.css') }}" rel="stylesheet" />
+    <link href="{{ url_for('static', filename='diary/dashboard/search.css') }}" rel="stylesheet" />
     <link href="{{ url_for('static', filename='diary/css/diarystyles.css') }}" rel="stylesheet" />
     <link href="{{ url_for('static', filename='general/css/general.css') }}" rel="stylesheet" />
 
@@ -52,6 +53,32 @@
     </template>
 </head>
 <body>
+    <nav class="nav-bar">
+        <button class="search-button icon-button hoverable"><span class="material-symbols-outlined">document_search</span></button>
+        <div class="text-input border">
+            <select class="options">
+                <option value="all">All text</option>
+                <option value="title">Only title</option>
+                <option value="entry">Only entry</option>
+            </select>
+            <input class="name-search" type="text" placeholder="Search text..." id="search-bar">
+        </div>
+                
+        <div class="tag-container border">
+            <form class="tag add-tag" action="">
+                <span class="material-symbols-outlined">add</span>
+            </form>
+            <div class="tags">
+                <div class="tag input-tag border">
+                    <input type="text" class="tag-input" placeholder="Tag name..." name="tag-input">
+                </div>
+                <div class="tag border">
+                    <span class="material-symbols-outlined close-button">close_small</span> <p class="tag-name">tagname</p>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <div class="hoz-line"></div>
     <main class="entry-parent"></main>
 </body>
 </html>
