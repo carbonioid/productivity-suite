@@ -4,7 +4,15 @@ Evaluator for search queries in api/search route
 from backend.diary.database import fetch_db_contents
 
 def evaluate_search(main_group):
-    # TODO: VERIFICATION
+    if main_group is None:
+        raise ValueError("main group not supplied")
+    if main_group["type"] != "group":
+        raise TypeError("main group must be of type group")
+    if len(main_group["conditions"]) == 0:
+        raise TypeError("main group must have at least one condition")
+    if main_group["required"] == False:
+        raise TypeError("main group must be required")
+    
     data = fetch_db_contents("*", False)
 
     results = []
