@@ -52,15 +52,8 @@ function initFormListeners() {
     /* Tag input */
     let tempValue = ''
     const tagForm = document.querySelector(".tag-select")
+    const tagMenu = tagForm.querySelector(".tag-menu")
     const tagInput = tagForm.querySelector(".search-bar")
-    tagInput.addEventListener("focus", () => {
-        // Undo anything done by focusout listener
-        tagInput.value = tempValue
-        tagInput.classList.remove("indicating")
-
-        tagForm.classList.remove("collapsed")
-    })
-
     // Listen for clicks off the input (unfocusing) to collapse the menu.
     // Do not listen for focusout because this activates when the user tries to select tags.
     document.addEventListener("click", (event) => {
@@ -68,7 +61,6 @@ function initFormListeners() {
             tagForm.classList.add("collapsed")
 
             // Add indicator for selected tags on focusout, if any selected
-            tempValue = tagInput.value 
             const selectedTags = getFormData()["tags"]
             if (selectedTags.length > 0) {
                 // Change content to indicator (and save in temp so can be put back)
@@ -78,6 +70,27 @@ function initFormListeners() {
                 tagInput.classList.add("indicating")
             } else {
                 tagInput.value = '';
+            }
+        }
+        else if (tagInput.contains(event.target)) {
+            tagInput.value = tempValue
+            tagInput.classList.remove("indicating")
+
+            tagForm.classList.remove("collapsed")
+        }
+    })
+
+    // Listener for searching
+    tagInput.addEventListener('input', (event) => {
+        console.log(event)
+        tempValue = tagInput.value
+        // Iterate through all tags and check if the substring in the input exists. If so, show it. Otherwise, hide.
+        const searchStr = tagInput.value;
+        for (const tag of Array.from(tagMenu.children)) {
+            if (tag.textContent.includes(searchStr.toLowerCase())) {
+                tag.classList.remove("hidden")
+            } else {
+                tag.classList.add("hidden")
             }
         }
     })
