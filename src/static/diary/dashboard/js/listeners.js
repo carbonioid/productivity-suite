@@ -1,7 +1,7 @@
 /*
 This file listens adds event listeners to the dashboard page.
 */
-export { addEditListener }
+export { addEditListener, addTagListeners }
 import { date_to_yyyymmdd } from "../../../general/js/utils.js";
 
 function addEditListener(entryObject, date) {
@@ -12,4 +12,10 @@ function addEditListener(entryObject, date) {
     editButton.addEventListener('click', async () => {
         window.location.href = '/diary/edit?date=' + date_to_yyyymmdd(date);
     });
+}
+
+function addTagListeners(tag) {
+    tag.addEventListener('click', () => {
+        tag.classList.toggle('selected')
+    })
 }

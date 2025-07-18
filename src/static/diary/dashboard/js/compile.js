@@ -2,11 +2,12 @@
 This file uses templates to load entries and other HTML components into the page itself.
 */
 export { loadPageContent }
-import { getEntry, populateCache } from "../../js/cache.js"
+import { populateCache } from "../../js/cache.js"
 import { loadTemplate } from "../../../general/js/template.js"
-import { addEditListener } from "./listeners.js"
+import { addEditListener, addTagListeners } from "./listeners.js"
 import { date_to_yyyymmdd, format_date } from "../../../general/js/utils.js"
 import { showEmptyMessage } from "../../../general/js/display.js"
+import { getTagIndex } from "../../js/api.js"
 
 function loadEntry(entryData, container) {
     /*
@@ -59,6 +60,19 @@ async function loadPageContent() {
     Load entries into page
     */
 
+    // Load tags into search box
+    const tagContainer = document.querySelector(".tag-menu")
+
+    const tags = Object.entries(await getTagIndex());
+    tags.sort((a, b) => b[1]-a[1]) // Sort, putting items with most instances at the top.
+    for (const tag of tags) {
+        const [name, _] = tag;
+        const tagObj = loadTemplate(document, 'tag-template', {"name": name});
+        addTagListeners(tagObj);
+        
+        tagContainer.appendChild(tagObj)
+    }
+
     // Populate cache and get dates of all entries
     const entryDates = await populateCache()
 
@@ -72,6 +86,7 @@ async function loadPageContent() {
         }
     }
 
+    // Load empty message
     if (entryDates.filter(e => {return !e.empty}).length === 0) {
         showEmptyMessage(document.querySelector('.entry-parent'), "No entries", "You haven't written any diary entires yet. Click on the add button above to get started.")
     }

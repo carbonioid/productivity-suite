@@ -90,6 +90,10 @@ nav .tag-select {
 
     border-top-left-radius:0;
     border-top-right-radius:0;
+
+    max-height:10rem;
+    overflow-y: scroll;
+    scrollbar-width: none;
 }
 
 .tag-select.collapsed .tag-menu {
@@ -108,9 +112,12 @@ nav .tag-select {
     vertical-align: middle;
     height:25px;
 
+    margin-right:0.2rem;
     margin-bottom:0.2rem;
 
     cursor:pointer;
+
+    user-select: none;
 }
 
 .tag span {
