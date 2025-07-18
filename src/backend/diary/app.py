@@ -147,7 +147,7 @@ def get_settings_route():
     return jsonify(settings), 200
 
 @diary_bp.route("/api/tag-index", methods=["GET"])
-def get_settings_route():
+def get_tag_index_route():
     """Return settings from settings.json"""
     try:
         with open('src/backend/diary/data/tag_index.json', 'r') as file:
