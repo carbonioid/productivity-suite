@@ -10,11 +10,18 @@ function format_yyyymmdd(string, includeYear) {
 }
 
 function yyyymmdd_to_date(string) {
+  if (typeof string !== 'string') {
+    throw Error("String object not provided to yyyymmdd_to_date")
+  }
   let [year, month, day] = string.split('-');
   return new Date(year, month - 1, day);
 }
 
 function date_to_yyyymmdd(date) {
+  if (!(date instanceof Date)) {
+    throw Error("Date object not provided to date_to_yyyymmdd")
+  }
+
   return date.toLocaleDateString('en-CA', {
     year: 'numeric',
     month: '2-digit',
