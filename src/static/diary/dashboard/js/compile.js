@@ -100,6 +100,13 @@ async function loadPageContent() {
         tagContainer.appendChild(tagObj)
     }
 
+    // Show empty message if there are no tags
+    if (tags.length == 0) {
+        let message = document.createElement('p')
+        message.textContent = 'No tags found'
+        tagContainer.appendChild(message)
+    }
+
     // Populate cache and load entries
     await populateCache()
     loadAllEntries();
