@@ -50,9 +50,14 @@ function initFormListeners() {
     })
 
     /* Tag input */
+    let tempValue = ''
     const tagForm = document.querySelector(".tag-select")
     const tagInput = tagForm.querySelector(".search-bar")
     tagInput.addEventListener("focus", () => {
+        // Undo anything done by focusout listener
+        tagInput.value = tempValue
+        tagInput.classList.remove("indicating")
+
         tagForm.classList.remove("collapsed")
     })
 
@@ -61,6 +66,19 @@ function initFormListeners() {
     document.addEventListener("click", (event) => {
         if (!tagForm.contains(event.target)) {
             tagForm.classList.add("collapsed")
+
+            // Add indicator for selected tags on focusout, if any selected
+            tempValue = tagInput.value 
+            const selectedTags = getFormData()["tags"]
+            if (selectedTags.length > 0) {
+                // Change content to indicator (and save in temp so can be put back)
+                tagInput.value = selectedTags.join(' • ')
+
+                // Make text color change
+                tagInput.classList.add("indicating")
+            } else {
+                tagInput.value = '';
+            }
         }
     })
 }

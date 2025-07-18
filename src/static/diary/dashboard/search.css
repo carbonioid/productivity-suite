@@ -76,6 +76,10 @@ nav .tag-select {
     width:100%;
 }
 
+.search-bar.indicating {
+    color:black;
+}
+
 /* Menu containing tags */
 .tag-select .tag-menu {
     padding:.3rem;
