@@ -136,3 +136,15 @@ nav .tag-select {
     background-color:color-mix(in srgb, var(--blue) 50%, white);
     border-color:var(--blue);
 }
+
+/*
+Matching
+*/
+.matching {
+    display: flex;
+    align-items: center;
+    gap:0.1rem;
+    font-size:var(--font-small);
+    color:var(--dark);
+    margin-left:0.75rem;
+}

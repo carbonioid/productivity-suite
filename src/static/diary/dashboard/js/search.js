@@ -17,10 +17,14 @@ function getFormData() {
         .filter(tag => {return tag.classList.contains('selected')})
         .map(tag => {return tag.textContent})
     
+    // Strict matching?
+    const strict = document.querySelector(".strict-matching").checked
+    
     return {
         "text-type": tSearchType,
         "text-text": tSearchText,
-        "tags": selectedTags
+        "tags": selectedTags,
+        "strict": strict
     }
 }
 
@@ -34,6 +38,7 @@ async function getSearchResults(formData) {
     const tSearchText = formData["text-text"]
     const tSearchType = formData["text-type"]
     const selectedTags = formData["tags"]
+    const strict = formData["strict"]
 
     // Construct query
     const conditions = []
@@ -55,7 +60,7 @@ async function getSearchResults(formData) {
         for (const sType of textCondTypes) {
             textGroup["conditions"].push({
                 "type": sType,
-                "required": false,
+                "required": strict,
                 "case-sensitive": false,
                 "text": tSearchText
             })
@@ -73,7 +78,7 @@ async function getSearchResults(formData) {
         for (const tag of selectedTags) {
             tagGroup["conditions"].push({
                 "type": "tag",
-                "required": false,
+                "required": strict,
                 "name": tag
             })
         }
