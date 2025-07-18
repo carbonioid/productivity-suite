@@ -1,7 +1,7 @@
 export { loadSearchResults, getSearchResults, getFormData, exitSearchResults }
 import { yyyymmdd_to_date } from "../../../general/js/utils.js"
 import { search } from "../../js/api.js"
-import { loadEntry } from "./compile.js"
+import { loadEntry, loadAllEntries } from "./compile.js"
 
 function getFormData() {
     const form = document.querySelector('.search-form')
@@ -109,4 +109,7 @@ function exitSearchResults() {
     indicator.classList.add("hidden")
     
     // Add back all results
+    const container = document.querySelector('.entry-parent')
+    container.innerHTML = ''
+    loadAllEntries();
 }
