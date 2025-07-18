@@ -81,16 +81,25 @@ function initFormListeners() {
     })
 
     // Listener for searching
+    const emptyMsg = tagForm.querySelector('.empty-msg')
     tagInput.addEventListener('input', (event) => {
         tempValue = tagInput.value
         // Iterate through all tags and check if the substring in the input exists. If so, show it. Otherwise, hide.
         const searchStr = tagInput.value;
+        let tagFound = false; // Whether a tag was found to *not* hide
         for (const tag of Array.from(tagMenu.children)) {
             if (tag.textContent.includes(searchStr.toLowerCase())) {
+                tagFound = true;
                 tag.classList.remove("hidden")
             } else {
                 tag.classList.add("hidden")
             }
+        }
+
+        if (!tagFound) {
+            emptyMsg.classList.remove("hidden")
+        } else {
+            emptyMsg.classList.add("hidden")
         }
     })
 }

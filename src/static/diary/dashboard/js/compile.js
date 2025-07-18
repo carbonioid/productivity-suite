@@ -102,9 +102,7 @@ async function loadPageContent() {
 
     // Show empty message if there are no tags
     if (tags.length == 0) {
-        let message = document.createElement('p')
-        message.textContent = 'No tags found'
-        tagContainer.appendChild(message)
+        document.querySelector(".empty-msg").classList.remove("hidden")
     }
 
     // Populate cache and load entries
