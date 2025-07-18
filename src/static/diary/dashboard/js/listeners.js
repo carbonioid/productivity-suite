@@ -22,6 +22,7 @@ function addTagListeners(tag) {
 }
 
 function initFormListeners() {
+    /* Form submission */
     async function submitForm() {
         const formData = getFormData();
         if (formData["text-text"].length === 0 && formData["tags"].length === 0) {
@@ -42,11 +43,13 @@ function initFormListeners() {
         await submitForm();
     })
 
+    /* Search results */
     const exitButton = document.querySelector(".exit-search-button")
     exitButton.addEventListener("click", () => {
         exitSearchResults();
     })
 
+    /* Tag input */
     const tagForm = document.querySelector(".tag-select")
     const tagInput = tagForm.querySelector(".search-bar")
     tagInput.addEventListener("focus", () => {
