@@ -1,7 +1,7 @@
 /*
 This file uses templates to load entries and other HTML components into the page itself.
 */
-export { loadPageContent }
+export { loadPageContent, loadEntry }
 import { populateCache } from "../../js/cache.js"
 import { loadTemplate } from "../../../general/js/template.js"
 import { addEditListener, addTagListeners, initFormListeners } from "./listeners.js"

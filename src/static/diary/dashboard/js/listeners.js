@@ -3,7 +3,7 @@ This file listens adds event listeners to the dashboard page.
 */
 export { addEditListener, addTagListeners, initFormListeners }
 import { date_to_yyyymmdd } from "../../../general/js/utils.js";
-import { getSearchResults } from "./search.js";
+import { getSearchResults, loadSearchResults } from "./search.js";
 
 function addEditListener(entryObject, date) {
     /*
@@ -23,8 +23,8 @@ function addTagListeners(tag) {
 
 function initFormListeners() {
     const form = document.querySelector(".search-form")
-    form.addEventListener('submit', (event) => {
+    form.addEventListener('submit', async (event) => {
         event.preventDefault();
-        getSearchResults();
+        loadSearchResults(await getSearchResults());
     })
 }

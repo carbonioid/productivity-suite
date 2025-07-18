@@ -1,5 +1,7 @@
-export { getSearchResults }
+export { loadSearchResults, getSearchResults }
+import { yyyymmdd_to_date } from "../../../general/js/utils.js"
 import { search } from "../../js/api.js"
+import { loadEntry } from "./compile.js"
 
 function getFormData() {
     const form = document.querySelector('.search-form')
@@ -55,7 +57,7 @@ async function getSearchResults() {
         conditions.push(textGroup)
     }
 
-    if (selectedTags) {
+    if (selectedTags.length > 0) {
         let tagGroup = {
             "type": "group",
             "required": true,
@@ -74,4 +76,19 @@ async function getSearchResults() {
 
     // Get results from query
     const results = await search(conditions)
+    return results
+}
+
+function loadSearchResults(results) {
+    results.sort((a, b) => (b.matches - a.matches)) // sort with most matches at top
+
+    const container = document.querySelector('.entry-parent')
+    container.innerHTML = ''
+
+    for (const result of results) {
+        const r = result.result
+        r.date = yyyymmdd_to_date(r.date) // Format date properly so that loadEntry can interop with it. 
+
+        loadEntry(result.result, container)
+    }
 }
