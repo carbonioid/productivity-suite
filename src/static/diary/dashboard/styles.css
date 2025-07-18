@@ -140,3 +140,13 @@
     
     transition:height 5s ease-out;
 }
+
+/*
+Results indicator
+*/
+.results-indicator {
+    display:flex;
+    gap:0.2rem;
+    align-items: center;
+    margin-bottom:0.5rem;
+}

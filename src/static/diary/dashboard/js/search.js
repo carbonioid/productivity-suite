@@ -1,4 +1,4 @@
-export { loadSearchResults, getSearchResults }
+export { loadSearchResults, getSearchResults, getFormData, exitSearchResults }
 import { yyyymmdd_to_date } from "../../../general/js/utils.js"
 import { search } from "../../js/api.js"
 import { loadEntry } from "./compile.js"
@@ -16,17 +16,23 @@ function getFormData() {
         .filter(tag => {return tag.classList.contains('selected')})
         .map(tag => {return tag.textContent})
     
-    return [tSearchType, tSearchText, selectedTags]
+    return {
+        "text-type": tSearchType,
+        "text-text": tSearchText,
+        "tags": selectedTags
+    }
 }
 
-async function getSearchResults() {
+async function getSearchResults(formData) {
     /*
     Perform a search to the API via the data in the form.
     The form is constructed as such:
     (1) the body and title requests are wrapped in a required group
     (2) all the tags requests are wrapped in a separate required group
     */
-    const [tSearchType, tSearchText, selectedTags] = getFormData();
+    const tSearchText = formData["text-text"]
+    const tSearchType = formData["text-type"]
+    const selectedTags = formData["tags"]
 
     // Construct query
     const conditions = []
@@ -91,4 +97,16 @@ function loadSearchResults(results) {
 
         loadEntry(result.result, container)
     }
+
+    // Show editing indicator
+    const indicator = document.querySelector(".results-indicator")
+    indicator.classList.remove("hidden")
+}
+
+function exitSearchResults() {
+    // Hide editing indicator
+    const indicator = document.querySelector(".results-indicator")
+    indicator.classList.add("hidden")
+    
+    // Add back all results
 }
