@@ -54,6 +54,24 @@ def validate_ratings(ratings):
     
     return None
 
+def update_tag_index(tags, remove=False):
+    """
+    Update tag_index.json to note that these tags are used 1 more time
+    (or are being used on less time if remove=True)
+
+    Args:
+        tags (list): the list of tags to note the use of
+    """
+
+    with open(TAG_INDEX_PATH, 'r') as file:
+        file_content = json.load(file)
+        for tag in tags:
+            change = -1 if remove else 1
+            file_content[tag] = file_content.get(tag, 0)+change # account for the tag not yet tracked using get()
+    
+    with open(TAG_INDEX_PATH, 'w') as file:
+        json.dump(file_content, file)
+
 def fetch_db_contents(scope: list, add_padding):
     """Take scope as list of YYYY-MM-DD dates and return the full data for these dates in formatted JSON
 
@@ -94,6 +112,8 @@ def add_entry(date, title, entry, ratings, tags):
         with open(DATABASE_PATH, 'a') as file:
             writer = csv.writer(file)
             writer.writerow((date, title, entry, json.dumps(ratings), json.dumps(tags)))
+        
+        update_tag_index(tags, remove=False)
 
 def edit_entry(date, new_title, new_entry, new_ratings, new_tags):
     # Validate ratings
@@ -107,21 +127,25 @@ def edit_entry(date, new_title, new_entry, new_ratings, new_tags):
 
     # Modify them in memory
     new_rows = []
-    found_row = False
+    found_row = None
     for row in rows:
         if row[0] == date:
-            found_row = True
+            found_row = row
             new_rows.append([date, new_title, new_entry, json.dumps(new_ratings), json.dumps(new_tags)])
         else:
             new_rows.append(row)
     
-    if not found_row:
+    if found_row is None:
         raise ValueError('An entry for that date does not exist')
     
     # Rewrite to file
     with open(DATABASE_PATH, 'w') as file:
         writer = csv.writer(file)
         writer.writerows(new_rows)
+    
+    # Remove tags from old entry and add those from the new one
+    update_tag_index(json.loads(found_row[4]), remove=True)
+    update_tag_index(new_tags, remove=False)
 
 def delete_entry(date):
     # Get current rows
@@ -131,9 +155,9 @@ def delete_entry(date):
 
     # Modify them in memory
     new_rows = []
-    found_row = False
+    found_row = None
     for row in rows:
-        if row[0] == date: found_row = True # if this row matches the date, we want to delete it
+        if row[0] == date: found_row = row # if this row matches the date, we want to delete it
         else: new_rows.append(row) # Otherwise, we want to keep this row
     
     if not found_row:
@@ -143,3 +167,5 @@ def delete_entry(date):
     with open(DATABASE_PATH, 'w') as file:
         writer = csv.writer(file)
         writer.writerows(new_rows)
+    
+    update_tag_index(json.loads(found_row[4]), remove=True)
