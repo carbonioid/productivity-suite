@@ -2,23 +2,6 @@
 /*
 Tags
 */
-.tag-container {
-    display: inline-flex;
-    gap:0.2rem;
-    overflow-x:scroll;
-    width:25%;
-
-    border:1px solid red;
-    scrollbar-width: none;
-}
-
-.tags {
-    padding:0.2rem 0;
-    overflow-y:scroll;
-    white-space:nowrap;
-    scrollbar-width:none;
-}
-
 .tag {
     display: inline-flex;
     align-items: center;
@@ -27,49 +10,17 @@ Tags
     width:auto;
     position: relative;
 
-    vertical-align: middle; /* fix stupidity with icons */
-}
-
-.tag:not(.add-tag) {
+    vertical-align: middle;
     height:25px;
+
+    margin-bottom:0.2rem;
 }
 
 .tag span {
-    font-size:1rem;
+    font-size:.75rem;
     cursor:pointer;
-    margin-left:-0.2rem;
-}
-
-.tag:not(.add-tag):hover span {
-    opacity:1;
-}
-
-.tag:not(.add-tag) span {
-    position: absolute;
-    background-color:white;
-    opacity:0;
-    transition: opacity 0.05s linear;
-}
-
-.add-tag {
-    padding-right:0.2rem;
-    border-right:1px solid var(--light);
-    background-color:var(--off-white);
-}
-
-.tag-input {
-    width:auto;
-    background-color:transparent;
-    border:none;
-    width:5rem;
-}
-
-.tag-input:focus {
-    outline:none;
-}
-
-.input-tag {
-    padding:0;
+    margin-right:0.1rem;
+    margin-left:-0.1rem;
 }
 
 
@@ -77,9 +28,9 @@ Tags
 nav {
     display:flex;
     gap:0.5rem;
-    align-items: center;
+    align-items:center;
 }
-nav > * {
+.text-input, .search-button, .search-bar {
     height:2rem;
 }
 
@@ -116,4 +67,58 @@ select.options {
 .add-button {
     margin-left:auto;
     height:1.5rem;
+}
+
+/*
+New tag input
+*/
+nav .tag-select {
+    padding: 1px;
+    width:10rem;
+    position: relative;
+
+    border-bottom-left-radius:0;
+    border-bottom-right-radius:0;
+}
+
+.tag-select.collapsed .search-bar {
+    height:100%;
+}
+
+.tag-select.collapsed {
+    height:2rem;
+    border-radius:5px;
+}
+
+.tag-select:not(.collapsed) {
+    align-self:flex-start;
+}
+
+.tag-select .hoz-line {
+    margin:0.1rem 0;
+}
+
+.tag-select .search-bar {
+    border:none;
+    width:100%;
+}
+
+.tag-select .tag-menu {
+    padding:.3rem;
+    position: absolute;
+    z-index:10;
+    background-color:white;
+    white-space:wrap;
+
+    margin-top:1px;
+    margin-left:-2px;
+
+    width:calc(100% + 2px);
+
+    border-top-left-radius:0;
+    border-top-right-radius:0;
+}
+
+.tag-select.collapsed .tag-menu {
+    display: none;
 }
