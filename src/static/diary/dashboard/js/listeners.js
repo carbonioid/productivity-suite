@@ -26,8 +26,9 @@ function initFormListeners() {
         const formData = getFormData();
         if (formData["text-text"].length === 0 && formData["tags"].length === 0) {
             exitSearchResults();
+        } else {
+            loadSearchResults(await getSearchResults(formData));
         }
-        loadSearchResults(await getSearchResults(formData));
     }
 
     const form = document.querySelector(".search-form")
