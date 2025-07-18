@@ -1,29 +1,3 @@
-
-/*
-Tags
-*/
-.tag {
-    display: inline-flex;
-    align-items: center;
-    padding:0.2rem 0.4rem;
-
-    width:auto;
-    position: relative;
-
-    vertical-align: middle;
-    height:25px;
-
-    margin-bottom:0.2rem;
-}
-
-.tag span {
-    font-size:.75rem;
-    cursor:pointer;
-    margin-right:0.1rem;
-    margin-left:-0.1rem;
-}
-
-
 /* Navbar */
 nav {
     display:flex;
@@ -70,8 +44,9 @@ select.options {
 }
 
 /*
-New tag input
+Tag input
 */
+/* Main container */
 nav .tag-select {
     padding: 1px;
     width:10rem;
@@ -79,10 +54,6 @@ nav .tag-select {
 
     border-bottom-left-radius:0;
     border-bottom-right-radius:0;
-}
-
-.tag-select.collapsed .search-bar {
-    height:100%;
 }
 
 .tag-select.collapsed {
@@ -94,8 +65,9 @@ nav .tag-select {
     align-self:flex-start;
 }
 
-.tag-select .hoz-line {
-    margin:0.1rem 0;
+/* Search bar */
+.tag-select.collapsed .search-bar {
+    height:100%;
 }
 
 .tag-select .search-bar {
@@ -103,6 +75,7 @@ nav .tag-select {
     width:100%;
 }
 
+/* Menu containing tags */
 .tag-select .tag-menu {
     padding:.3rem;
     position: absolute;
@@ -121,4 +94,32 @@ nav .tag-select {
 
 .tag-select.collapsed .tag-menu {
     display: none;
+}
+
+/* Tags */
+.tag {
+    display: inline-flex;
+    align-items: center;
+    padding:0.2rem 0.4rem;
+
+    width:auto;
+    position: relative;
+
+    vertical-align: middle;
+    height:25px;
+
+    margin-bottom:0.2rem;
+
+    cursor:pointer;
+}
+
+.tag span {
+    font-size:.75rem;
+    margin-right:0.1rem;
+    margin-left:-0.1rem;
+}
+
+.tag.selected {
+    background-color:color-mix(in srgb, var(--blue) 50%, white);
+    border-color:var(--blue);
 }
