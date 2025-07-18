@@ -101,6 +101,7 @@ def fetch_db_contents(scope: list, add_padding):
     return entries
 
 def add_entry(date, title, entry, ratings, tags):
+    tags = list(map(str.lower, tags))
     # Check that there isn't already an entry for this day
     date_entry = fetch_db_contents([date], False)
 
@@ -116,6 +117,7 @@ def add_entry(date, title, entry, ratings, tags):
         update_tag_index(tags, remove=False)
 
 def edit_entry(date, new_title, new_entry, new_ratings, new_tags):
+    new_tags = list(map(str.lower, new_tags))
     # Validate ratings
     if (message := validate_ratings(new_ratings)) is not None:
         raise ValueError(message)
