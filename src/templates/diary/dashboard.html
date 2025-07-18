@@ -59,7 +59,7 @@
 <body>
     <nav class="nav-bar">
         <form class="search-form">
-            <button class="search-button icon-button hoverable"><span class="material-symbols-outlined">document_search</span></button>
+            <button type="submit" class="search-button icon-button hoverable"><span class="material-symbols-outlined">document_search</span></button>
             <div class="text-input border">
                 <select class="options">
                     <option value="all">All text</option>
@@ -82,6 +82,13 @@
             <span class="material-symbols-outlined">arrow_back</span>
         </div>
         <p>You're viewing search results.</p>
+        <form class="sort-form">
+            <p>Sort by:</p>
+            <select class="options border">
+                <option value="matches">Matches</option>
+                <option value="date">Date</option>
+            </select>
+        </form>
     </div>
     <main class="entry-parent"></main>
 </body>

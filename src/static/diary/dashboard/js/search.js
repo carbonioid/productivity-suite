@@ -1,7 +1,8 @@
 export { loadSearchResults, getSearchResults, getFormData, exitSearchResults }
-import { yyyymmdd_to_date } from "../../../general/js/utils.js"
+import { date_to_yyyymmdd, yyyymmdd_to_date } from "../../../general/js/utils.js"
 import { search } from "../../js/api.js"
 import { loadEntry, loadAllEntries } from "./compile.js"
+import { getEntry } from "../../js/cache.js"
 
 function getFormData() {
     const form = document.querySelector('.search-form')
@@ -81,22 +82,24 @@ async function getSearchResults(formData) {
     }
 
     // Get results from query
-    const results = await search(conditions)
-    return results
+    return await search(conditions)
 }
 
-function loadSearchResults(results) {
-    results.sort((a, b) => (b.matches - a.matches)) // sort with most matches at top
+function loadSearchResults(results, sortType) {
+    if (sortType == "matches") {
+        results.sort((a, b) => (b.matches - a.matches)) // sort with most matches at top
+    }
+    if (sortType == "date") {
+        results.sort((a, b) => (yyyymmdd_to_date(b.result.date) - yyyymmdd_to_date(a.result.date))) // sort with latest date first
+    }
 
     const container = document.querySelector('.entry-parent')
     container.innerHTML = ''
 
-    for (const result of results) {
-        const r = result.result
-        r.date = yyyymmdd_to_date(r.date) // Format date properly so that loadEntry can interop with it. 
-
-        loadEntry(result.result, container)
-    }
+    results.forEach(async result => {
+        const data = await getEntry(yyyymmdd_to_date(result.result.date))
+        loadEntry(data, container)
+    })
 
     // Show editing indicator
     const indicator = document.querySelector(".results-indicator")

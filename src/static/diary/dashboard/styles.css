@@ -150,3 +150,16 @@ Results indicator
     align-items: center;
     margin-bottom:0.5rem;
 }
+
+.sort-form {
+    display:flex;
+    align-items: center;
+    margin-left:auto;
+    gap:0.2rem;
+}
+
+.sort-form .options {
+    padding:0.15rem 0.3rem;
+    background:var(--lightest);
+    font-size:var(--font-regular);
+}

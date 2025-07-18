@@ -21,14 +21,18 @@ function addTagListeners(tag) {
     })
 }
 
+let searchCache = null; // Cache for most recent search result. Used when sorting data to avoid re-requesting data.
 function initFormListeners() {
+    const sortSelect = document.querySelector('.sort-form').querySelector('.options')
+
     /* Form submission */
     async function submitForm() {
         const formData = getFormData();
         if (formData["text-text"].length === 0 && formData["tags"].length === 0) {
             exitSearchResults();
         } else {
-            loadSearchResults(await getSearchResults(formData));
+            searchCache = await getSearchResults(formData)
+            loadSearchResults(searchCache, sortSelect.value);
         }
     }
 
@@ -38,15 +42,14 @@ function initFormListeners() {
         await submitForm();
     })
 
-    const button = form.querySelector(".search-button")
-    button.addEventListener('click', async () => {
-        await submitForm();
-    })
-
     /* Search results */
     const exitButton = document.querySelector(".exit-search-button")
     exitButton.addEventListener("click", () => {
         exitSearchResults();
+    })
+
+    sortSelect.addEventListener("change", () => {
+        loadSearchResults(searchCache, sortSelect.value);
     })
 
     /* Tag input */

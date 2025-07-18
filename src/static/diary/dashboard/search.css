@@ -10,13 +10,13 @@
     height:2rem;
 }
 
-.text-input input[type="text"], select.options {
+.text-input input[type="text"], .search-form select.options {
     height:100%;
     border:none;
     overflow:hidden;
 }
 
-select.options {
+.search-form select.options {
     border-right:1px solid var(--light);
     border-top-left-radius: 5px;
     border-bottom-left-radius: 5px;
