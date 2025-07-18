@@ -82,7 +82,6 @@ function initFormListeners() {
 
     // Listener for searching
     tagInput.addEventListener('input', (event) => {
-        console.log(event)
         tempValue = tagInput.value
         // Iterate through all tags and check if the substring in the input exists. If so, show it. Otherwise, hide.
         const searchStr = tagInput.value;
