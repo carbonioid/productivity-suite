@@ -3,7 +3,7 @@ import { date_to_yyyymmdd } from "../../general/js/utils.js";
 /*
 This file makes request to the database (adding, deleting entries, etc.)
 */
-export { addEntry, editEntry, deleteEntry, getSettings }
+export { addEntry, editEntry, deleteEntry, getSettings, getTagIndex }
 
 async function addEntry(date, title, entry, ratings, tags) {
     /*
@@ -61,16 +61,24 @@ async function deleteEntry(date) {
     });
 }
 
-async function getSettings() {
-    return await fetch('/diary/api/settings')
+async function getJSON(endpoint) {
+    return await fetch(endpoint)
     .then(response => {
         if (!response.ok) {
             throw new Error(`HTTP error; status: ${response.status}`);
         }
         return response.json();
     })
-    .catch(error => { console.error('Error fetching settings:', error); })
-    .then(settings => {
-        return settings;
+    .catch(error => { console.error('Error fetching generic JSON:', error); })
+    .then(data => {
+        return data;
     })
+}
+
+async function getSettings() {
+    return await getJSON('/diary/api/settings')
+}
+
+async function getTagIndex() {
+    return await getJSON('/diary/api/tag-index')
 }
