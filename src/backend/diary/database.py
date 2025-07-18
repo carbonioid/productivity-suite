@@ -3,7 +3,8 @@ import re
 from datetime import datetime, timedelta
 from backend.common.utils import missing_dates
 
-DATABASE_PATH = 'src/backend/diary/entries.csv'
+DATABASE_PATH = 'src/backend/diary/data/entries.csv'
+TAG_INDEX_PATH = 'src/backend/diary/data/tag_index.json'
 
 def add_entry_padding(entries):
     """
