@@ -46,4 +46,18 @@ function initFormListeners() {
     exitButton.addEventListener("click", () => {
         exitSearchResults();
     })
+
+    const tagForm = document.querySelector(".tag-select")
+    const tagInput = tagForm.querySelector(".search-bar")
+    tagInput.addEventListener("focus", () => {
+        tagForm.classList.remove("collapsed")
+    })
+
+    // Listen for clicks off the input (unfocusing) to collapse the menu.
+    // Do not listen for focusout because this activates when the user tries to select tags.
+    document.addEventListener("click", (event) => {
+        if (!tagForm.contains(event.target)) {
+            tagForm.classList.add("collapsed")
+        }
+    })
 }
