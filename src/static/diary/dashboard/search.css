@@ -1,9 +1,10 @@
 /* Navbar */
-nav {
+.search-form {
     display:flex;
     gap:0.5rem;
     align-items:center;
 }
+
 .text-input, .search-button, .search-bar {
     height:2rem;
 }

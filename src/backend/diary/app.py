@@ -114,7 +114,7 @@ def delete_entry_route():
     
     return '', 204
 
-@diary_bp.route("/api/search", methods=["GET"])
+@diary_bp.route("/api/search", methods=["POST"])
 def search_entries_route():
     """
     Search entries using the schema provided in the request body.

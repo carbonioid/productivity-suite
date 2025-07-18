@@ -58,20 +58,22 @@
 </head>
 <body>
     <nav class="nav-bar">
-        <button class="search-button icon-button hoverable"><span class="material-symbols-outlined">document_search</span></button>
-        <div class="text-input border">
-            <select class="options">
-                <option value="all">All text</option>
-                <option value="title">Only title</option>
-                <option value="entry">Only entry</option>
-            </select>
-            <input class="name-search" type="text" placeholder="Search text..." id="search-bar">
-        </div>
+        <form class="search-form">
+            <button class="search-button icon-button hoverable"><span class="material-symbols-outlined">document_search</span></button>
+            <div class="text-input border">
+                <select class="options">
+                    <option value="all">All text</option>
+                    <option value="title">Only title</option>
+                    <option value="body">Only entry</option>
+                </select>
+                <input class="name-search" type="text" placeholder="Search text..." id="search-bar">
+            </div>
 
-        <div class="border tag-select">
-            <input type="text" class="search-bar" placeholder="Search tags...">
-            <div class="border tag-menu"></div>
-        </div>
+            <div class="border tag-select">
+                <input type="text" class="search-bar" placeholder="Search tags...">
+                <div class="border tag-menu"></div>
+            </div>
+        </form>
     </nav>
     <div class="hoz-line"></div>
     <main class="entry-parent"></main>

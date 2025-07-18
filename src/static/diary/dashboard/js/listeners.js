@@ -1,8 +1,9 @@
 /*
 This file listens adds event listeners to the dashboard page.
 */
-export { addEditListener, addTagListeners }
+export { addEditListener, addTagListeners, initFormListeners }
 import { date_to_yyyymmdd } from "../../../general/js/utils.js";
+import { getSearchResults } from "./search.js";
 
 function addEditListener(entryObject, date) {
     /*
@@ -17,5 +18,13 @@ function addEditListener(entryObject, date) {
 function addTagListeners(tag) {
     tag.addEventListener('click', () => {
         tag.classList.toggle('selected')
+    })
+}
+
+function initFormListeners() {
+    const form = document.querySelector(".search-form")
+    form.addEventListener('submit', (event) => {
+        event.preventDefault();
+        getSearchResults();
     })
 }
