@@ -145,3 +145,16 @@ def get_settings_route():
         return Response(response='Settings file is not valid JSON', status=400)
 
     return jsonify(settings), 200
+
+@diary_bp.route("/api/tag-index", methods=["GET"])
+def get_settings_route():
+    """Return settings from settings.json"""
+    try:
+        with open('src/backend/diary/data/tag_index.json', 'r') as file:
+            tags = json.load(file)
+    except FileNotFoundError:
+        return Response(response='Tags file not found', status=404)
+    except json.JSONDecodeError:
+        return Response(response='Tags file is not valid JSON', status=400)
+
+    return jsonify(tags), 200
