@@ -1,8 +1,8 @@
 /*
 This file uses templates to load entries and other HTML components into the page itself.
 */
-export { loadPageContent, loadEntry }
-import { populateCache } from "../../js/cache.js"
+export { loadPageContent, loadEntry, loadAllEntries }
+import { allEntries, populateCache, getEntry } from "../../js/cache.js"
 import { loadTemplate } from "../../../general/js/template.js"
 import { addEditListener, addTagListeners, initFormListeners } from "./listeners.js"
 import { date_to_yyyymmdd, format_date } from "../../../general/js/utils.js"
@@ -55,6 +55,31 @@ function loadEmptyEntry(date, container) {
     container.appendChild(template)
 }
 
+function loadAllEntries() {
+    /*
+    Load all entries into page. Returns true if all entries were empty,
+    false otherwise.
+    */
+    const entries = allEntries();
+
+    // Load all entries into page from newly populated cache
+    const container = document.querySelector('.entry-parent')
+    let nonEmptyEntry = false;
+    for (const entry of entries) {
+        if (entry.empty) {
+            loadEmptyEntry(entry.date, container)
+        } else {
+            nonEmptyEntry = true;
+            loadEntry(entry, container)
+        }
+    }
+
+    if (!nonEmptyEntry) {
+        // Load empty message
+        showEmptyMessage(document.querySelector('.entry-parent'), "No entries", "You haven't written any diary entries yet. Click on the add button above to get started.")
+    }
+}
+
 async function loadPageContent() {
     /*
     Load entries into page
@@ -75,21 +100,7 @@ async function loadPageContent() {
         tagContainer.appendChild(tagObj)
     }
 
-    // Populate cache and get dates of all entries
-    const entryDates = await populateCache()
-
-    // Load all entries into page from newly populated cache
-    const container = document.querySelector('.entry-parent')
-    for (const entry of entryDates) {
-        if (entry.empty) {
-            loadEmptyEntry(entry.date, container)
-        } else {
-            loadEntry(entry, container)
-        }
-    }
-
-    // Load empty message
-    if (entryDates.filter(e => {return !e.empty}).length === 0) {
-        showEmptyMessage(document.querySelector('.entry-parent'), "No entries", "You haven't written any diary entires yet. Click on the add button above to get started.")
-    }
+    // Populate cache and load entries
+    await populateCache()
+    loadAllEntries();
 }

@@ -5,7 +5,7 @@ javascript can interact with it without bothering the backend with too many requ
 This file uses YYYY-MM-DD format strings as cache keys but returns Date objects.
 */
 
-export { getEntry, populateCache }
+export { getEntry, populateCache, allEntries }
 import { yyyymmdd_to_date, date_to_yyyymmdd } from "../../general/js/utils.js";
 
 let cache = new Map();
@@ -67,7 +67,12 @@ async function populateCache() {
 
             cache.set(yyyymmdd_date, row)
         })
-
-        return Object.values(data)
     })
+}
+
+function allEntries() {
+    /*
+    Return the dates of all the entries in the cache, as Date objects
+    */
+    return Array.from(cache.values())
 }
