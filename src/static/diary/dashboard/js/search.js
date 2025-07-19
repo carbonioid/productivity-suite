@@ -1,5 +1,5 @@
-export { loadSearchResults, getSearchResults, getFormData, exitSearchResults }
-import { date_to_yyyymmdd, yyyymmdd_to_date } from "../../../general/js/utils.js"
+export { loadSearchResults, getSearchResults, getFormData, exitSearchResults, clearForm}
+import { yyyymmdd_to_date } from "../../../general/js/utils.js"
 import { search } from "../../js/api.js"
 import { loadEntry, loadAllEntries } from "./compile.js"
 import { getEntry } from "../../js/cache.js"
@@ -7,7 +7,21 @@ import { getEntry } from "../../js/cache.js"
 function getSelectedTags(form) {
     return Array.from(form.querySelector('.tag-menu').children)
     .filter(tag => {return tag.classList.contains('selected')})
-    .map(tag => {return tag.textContent})
+}
+
+function setSelectedTags(tagNames, form) {
+    /*
+    Add .selected class to all tags with .textContent matching a value in tagNames. Case sensitive (but tag names are always lowercase).
+    Affects tags from `form`.
+    */
+    const tags = getSelectedTags(form);
+    for (const tag of tags) {
+        if (tagNames.includes(tag.textContent)) {
+            tag.classList.add("selected")
+        } else {
+            tag.classList.remove("selected")
+        }
+    }
 }
 
 function getFormData() {
@@ -24,9 +38,21 @@ function getFormData() {
     return {
         "text-type": tSearchType,
         "text-text": tSearchText,
-        "tags": getSelectedTags(form),
+        "tags": getSelectedTags(form).map(tag => tag.textContent),
         "strict": strict
     }
+}
+
+function clearForm() {
+    const form = document.querySelector('.search-form')
+
+    const text = form.querySelector('.text-input')
+    text.querySelector('.options').value = 'all'
+    text.querySelector('#search-bar').value = ''
+
+    document.querySelector(".strict-matching").checked = false
+
+    setSelectedTags([], form)
 }
 
 async function getSearchResults(formData) {

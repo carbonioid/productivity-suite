@@ -3,7 +3,7 @@ This file listens adds event listeners to the dashboard page.
 */
 export { addEditListener, addTagListeners, initFormListeners, initNavListeners, initTagListeners }
 import { date_to_yyyymmdd } from "../../../general/js/utils.js";
-import { getFormData, getSearchResults, loadSearchResults, exitSearchResults } from "./search.js";
+import { getFormData, getSearchResults, loadSearchResults, exitSearchResults, clearForm } from "./search.js";
 import { loadTag } from "./compile.js";
 
 function addEditListener(entryObject, date) {
@@ -60,6 +60,7 @@ function initFormListeners() {
     const exitButton = document.querySelector(".exit-search-button")
     exitButton.addEventListener("click", () => {
         exitSearchResults();
+        clearForm();
     })
 
     sortSelect.addEventListener("change", loadResults)
