@@ -79,6 +79,7 @@ nav .tag-select {
 
 .search-bar.indicating {
     color:black;
+    text-align: center;
 }
 
 /* Menu containing tags */

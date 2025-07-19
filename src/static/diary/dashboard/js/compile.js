@@ -1,10 +1,10 @@
 /*
 This file uses templates to load entries and other HTML components into the page itself.
 */
-export { loadPageContent, loadEntry, loadAllEntries }
+export { loadPageContent, loadEntry, loadAllEntries, loadTag }
 import { allEntries, populateCache } from "../../js/cache.js"
 import { loadTemplate } from "../../../general/js/template.js"
-import { addEditListener, addTagListeners, initFormListeners, initNavListeners } from "./listeners.js"
+import { addEditListener, addTagListeners, initFormListeners, initNavListeners, initTagListeners } from "./listeners.js"
 import { date_to_yyyymmdd, format_date } from "../../../general/js/utils.js"
 import { showEmptyMessage } from "../../../general/js/display.js"
 import { getTagIndex } from "../../js/api.js"
@@ -80,6 +80,22 @@ function loadAllEntries() {
     }
 }
 
+function loadTag(name, container, initAsSelected) {
+    /*
+    Load a tag into `container` with name `name`.
+    if initAsSelected is true, the tag will be initialised with the selected class
+    */
+    if (container == undefined) {
+        container = document.querySelector(".tag-menu")
+    }
+    
+    const tagObj = loadTemplate(document, 'tag-template', {"name": name});
+    if (initAsSelected) {tagObj.classList.add("selected")}
+    addTagListeners(tagObj, container);
+
+    container.appendChild(tagObj)
+}
+
 async function loadPageContent() {
     /*
     Load entries into page
@@ -88,6 +104,21 @@ async function loadPageContent() {
     initFormListeners();
     initNavListeners();
 
+    await loadTagInput(false); // The version for this page is not adaptable because the user shouldn't be able to add custom tags (hence false)
+
+    // Populate cache and load entries
+    await populateCache()
+    loadAllEntries();
+}
+
+async function loadTagInput(adaptable) {
+    /*
+    Fully load tag input with class .tag-menu.
+    If `adaptable` is true, this function will look for a .adapt-tag and will place the user input in that tag, and allow it to be selected
+    If `adaptable` is false, the function will ook for a .empty-msg and display that if there are no results.
+
+    If `floatSelected` is true, when a tag is selected, it will be placed at the top of the tag list. Otherwise, the tags will not move.
+    */
     // Load tags into search box
     const tagContainer = document.querySelector(".tag-menu")
 
@@ -95,10 +126,7 @@ async function loadPageContent() {
     tags.sort((a, b) => b[1]-a[1]) // Sort, putting items with most instances at the top.
     for (const tag of tags) {
         const [name, _] = tag;
-        const tagObj = loadTemplate(document, 'tag-template', {"name": name});
-        addTagListeners(tagObj);
-
-        tagContainer.appendChild(tagObj)
+        loadTag(name)
     }
 
     // Show empty message if there are no tags
@@ -106,7 +134,5 @@ async function loadPageContent() {
         document.querySelector(".empty-msg").classList.remove("hidden")
     }
 
-    // Populate cache and load entries
-    await populateCache()
-    loadAllEntries();
+    initTagListeners(adaptable);
 }

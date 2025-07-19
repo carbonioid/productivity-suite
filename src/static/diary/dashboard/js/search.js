@@ -4,6 +4,12 @@ import { search } from "../../js/api.js"
 import { loadEntry, loadAllEntries } from "./compile.js"
 import { getEntry } from "../../js/cache.js"
 
+function getSelectedTags(form) {
+    return Array.from(form.querySelector('.tag-menu').children)
+    .filter(tag => {return tag.classList.contains('selected')})
+    .map(tag => {return tag.textContent})
+}
+
 function getFormData() {
     const form = document.querySelector('.search-form')
 
@@ -11,19 +17,14 @@ function getFormData() {
     const text = form.querySelector('.text-input')
     const tSearchType = text.querySelector('.options').value
     const tSearchText = text.querySelector('#search-bar').value
-
-    // Tags search
-    const selectedTags = Array.from(form.querySelector('.tag-menu').children)
-        .filter(tag => {return tag.classList.contains('selected')})
-        .map(tag => {return tag.textContent})
     
-    // Strict matching?
+    // Strict matching option (checkbox)
     const strict = document.querySelector(".strict-matching").checked
     
     return {
         "text-type": tSearchType,
         "text-text": tSearchText,
-        "tags": selectedTags,
+        "tags": getSelectedTags(form),
         "strict": strict
     }
 }
