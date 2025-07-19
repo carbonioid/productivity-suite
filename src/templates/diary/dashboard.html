@@ -85,12 +85,16 @@
         <div class="icon-button hoverable exit-search-button">
             <span class="material-symbols-outlined">arrow_back</span>
         </div>
-        <p>You're viewing search results.</p>
+        <p><span class="num-results-value"></span></p>
         <form class="sort-form">
-            <p>Sort by:</p>
-            <select class="options border">
+            <p>Sort by </p>
+            <select class="sort-type options border">
                 <option value="matches">Matches</option>
                 <option value="date">Date</option>
+            </select>
+            <select class="sort-order options border">
+                <option value="descending">High to low</option>
+                <option value="ascending">Low to high</option>
             </select>
         </form>
     </div>

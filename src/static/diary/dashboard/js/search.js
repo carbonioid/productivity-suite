@@ -90,7 +90,7 @@ async function getSearchResults(formData) {
     return await search(conditions)
 }
 
-function loadSearchResults(results, sortType) {
+function loadSearchResults(results, sortType, ascending) {
     if (sortType == "matches") {
         results.sort((a, b) => (b.matches - a.matches)) // sort with most matches at top
     }
@@ -98,6 +98,9 @@ function loadSearchResults(results, sortType) {
         results.sort((a, b) => (yyyymmdd_to_date(b.result.date) - yyyymmdd_to_date(a.result.date))) // sort with latest date first
     }
 
+    if (ascending) {results.reverse()} // They are currently sorted descending, flip if we are sorting asscending
+
+    // Clear container and load results
     const container = document.querySelector('.entry-parent')
     container.innerHTML = ''
 
@@ -109,6 +112,11 @@ function loadSearchResults(results, sortType) {
     // Show editing indicator
     const indicator = document.querySelector(".results-indicator")
     indicator.classList.remove("hidden")
+
+    // Show indicator of how many results
+    const value = document.querySelector(".num-results-value")
+    // Add s to results only if > 1 result
+    value.textContent = `${results.length} search result`+(results.length > 1 ? "s" : "")
 }
 
 function exitSearchResults() {
