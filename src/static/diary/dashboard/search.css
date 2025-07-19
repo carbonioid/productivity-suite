@@ -50,7 +50,6 @@ Tag input
 */
 /* Main container */
 nav .tag-select {
-    padding: 1px;
     width:10rem;
     position: relative;
 
@@ -75,6 +74,7 @@ nav .tag-select {
 .tag-select .search-bar {
     border:none;
     width:100%;
+    background: none;
 }
 
 .search-bar.indicating {
@@ -89,10 +89,8 @@ nav .tag-select {
     background-color:white;
     white-space:wrap;
 
-    margin-top:1px;
-    margin-left:-2px;
-
-    width:calc(100% + 2px);
+    width: calc(100% + 2px);
+    transform:translate(-1px, 0);
 
     border-top-left-radius:0;
     border-top-right-radius:0;
