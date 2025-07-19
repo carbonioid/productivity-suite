@@ -1,7 +1,7 @@
 import os
 from flask import Flask, render_template, request, Response, jsonify, Blueprint
 from backend.timetracker.database import fetch_db_contents, add_row, edit_row, delete_row, invalid
-from backend.timetracker.utils import add_new_files
+from backend.timetracker.utils import add_new_files, pathto, DIR_PATH
 
 timetracker_bp = Blueprint('timetracker', __name__)
 
@@ -94,9 +94,9 @@ def fetch_data():
     # Aliases: * for all data. Otherwise takes comma-separated filenames e.g. 2025-05-02,2025-05-03
     scope = request.headers['Scope']
     if scope == '*': # All files
-        scope = ['src/backend/timetracker/res/'+str(file) for file in os.listdir('src/backend/timetracker/res') if os.path.splitext(file)[1] == '.csv']
+        scope = [pathto(file.split('.')[0]) for file in os.listdir(DIR_PATH) if os.path.splitext(file)[1] == '.csv']
     else:
-        scope = [f'src/backend/timetracker/res/{file}.csv' for file in scope.split(',')]
+        scope = [pathto(file) for file in scope.split(',')]
 
     data = fetch_db_contents(scope)
     if data is not None:

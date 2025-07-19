@@ -1,3 +1,7 @@
+* {
+    box-sizing: border-box;
+}
+
 .entry-parent {
     display:grid;
     grid-template-columns:repeat(auto-fill, minmax(400px,1fr));
@@ -135,16 +139,4 @@
     text-align:justify;
     
     transition:height 5s ease-out;
-}
-
-.entry .see-more-button {
-    background-color:white;
-    font-weight:950;
-    color:var(--blue);
-    cursor:pointer;
-    position:relative;
-    bottom:0;
-    align-self:flex-end;
-
-    height:min-content;
 }

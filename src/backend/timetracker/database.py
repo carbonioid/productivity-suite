@@ -1,5 +1,6 @@
 import csv, os
-from backend.timetracker.utils import hhmm_to_minutes
+from pathlib import Path
+from backend.timetracker.utils import hhmm_to_minutes, pathto
 
 def fetch_db_contents(scope: list):
     """
@@ -31,8 +32,8 @@ def fetch_db_contents(scope: list):
                     "color": color
                 })
 
-        # Take only file name - e.g. just "24-apr" from "24-apr.csv" for the entry in the json
-        name = os.path.splitext(filename)[0].replace('src/backend/timetracker/res/', '')
+        # Take only file name - e.g. just "2025-01-01" from "2025-01-01.csv" for the entry in the json
+        name = Path(filename).stem
         final_json[name] = sorted(file_json, key=lambda x: hhmm_to_minutes(x['start']))
 
     return final_json
@@ -43,7 +44,7 @@ def add_row(filename, name, start, end, color):
     If the name of the entry is the same as the name of the entry it is adjacent to (its start = its end),
     then simply merge the two and don't actually add a new item.
     """
-    filepath = f'src/backend/timetracker/res/{filename}.csv'
+    filepath = pathto(filename)
 
     num_lines = len(list(csv.reader(open(filepath)))) # This is the row's id.
     with open(filepath, "a") as file:
@@ -55,7 +56,7 @@ def add_row(filename, name, start, end, color):
     combination_check(filename)
 
 def edit_row(filename, id, new_name, new_start, new_end, new_color):
-    filepath = f'src/backend/timetracker/res/{filename}.csv'
+    filepath = pathto(filename)
 
     # It is not convenient ot edit specific lines in a CSV file directly, so we will
     # simply construct the entire file again and write that to the file.
@@ -76,7 +77,7 @@ def edit_row(filename, id, new_name, new_start, new_end, new_color):
     combination_check(filename)
 
 def delete_row(filename, id):
-    filepath = f'src/backend/timetracker/res/{filename}.csv'
+    filepath = pathto(filename)
 
     if not os.path.exists(filepath): return None
 
@@ -130,7 +131,7 @@ def invalid(json, day, ignore=None):
     if '' in json.values(): return 'One or more of your fields is blank' # (2)
 
     start, end = hhmm_to_minutes(json['start']), hhmm_to_minutes(json['end'])
-    data = fetch_db_contents([f'src/backend/timetracker/res/{day}.csv'])
+    data = fetch_db_contents([pathto(day)])
     if data is None: return f"The requested file ({day}) does not exist" # (3)
 
     # Check no times overlap - (4)
@@ -147,7 +148,7 @@ def combination_check(filename):
     """
     Check if any parts of the databse need to be combined (items with same name & color that are adjacent and combine them.)
     """
-    filepath = f'src/backend/timetracker/res/{filename}.csv'
+    filepath = pathto(filename)
     data = fetch_db_contents([filepath])
 
     # Check if the adjacent item has the same name - if so, merge
