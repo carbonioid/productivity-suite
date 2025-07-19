@@ -115,8 +115,11 @@ function loadSearchResults(results, sortType, ascending) {
 
     // Show indicator of how many results
     const value = document.querySelector(".num-results-value")
-    // Add s to results only if > 1 result
-    value.textContent = `${results.length} search result`+(results.length > 1 ? "s" : "")
+    const num = results.length
+
+    if (num === 0) value.textContent = "Query returned no results"
+    else if (num === 1) value.textContent = "1 search result"
+    else value.textContent = `${num} search results`
 }
 
 function exitSearchResults() {
