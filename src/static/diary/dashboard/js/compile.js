@@ -2,9 +2,9 @@
 This file uses templates to load entries and other HTML components into the page itself.
 */
 export { loadPageContent, loadEntry, loadAllEntries }
-import { allEntries, populateCache, getEntry } from "../../js/cache.js"
+import { allEntries, populateCache } from "../../js/cache.js"
 import { loadTemplate } from "../../../general/js/template.js"
-import { addEditListener, addTagListeners, initFormListeners } from "./listeners.js"
+import { addEditListener, addTagListeners, initFormListeners, initNavListeners } from "./listeners.js"
 import { date_to_yyyymmdd, format_date } from "../../../general/js/utils.js"
 import { showEmptyMessage } from "../../../general/js/display.js"
 import { getTagIndex } from "../../js/api.js"
@@ -86,6 +86,7 @@ async function loadPageContent() {
     */
 
     initFormListeners();
+    initNavListeners();
 
     // Load tags into search box
     const tagContainer = document.querySelector(".tag-menu")

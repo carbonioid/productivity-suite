@@ -9,6 +9,18 @@
     width:100%;
 }
 
+.entry-parent.reader-view {
+    grid-template-columns:1fr;
+}
+
+.entry-parent.reader-view .entry .entry-content {
+    -webkit-line-clamp:1000;
+}
+
+.entry-parent.hide-empty .empty-entry {
+    display:none;
+}
+
 /* Empty entries */
 
 .empty-entry {
@@ -139,4 +151,19 @@
     text-align:justify;
     
     transition:height 5s ease-out;
+}
+
+/* Nav bar*/
+.nav-bar {
+    display:flex;
+}
+
+.display-options {
+    display:inline-flex;
+    gap:0.4rem;
+    justify-content:center;
+
+    background-color: white;
+    margin-left: auto;
+    height:max-content;
 }
