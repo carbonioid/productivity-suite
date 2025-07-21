@@ -3,7 +3,7 @@ import { yyyymmdd_to_date } from "../../../general/js/utils.js"
 import { search } from "../../js/api.js"
 import { loadEntry, loadAllEntries } from "./compile.js"
 import { getEntry } from "../../js/cache.js"
-import { getSelectedTags, setSelectedTags } from "./tag-select.js"
+import { getSelectedTags, setSelectedTags } from "../../js/tag-select.js"
 
 function getFormData() {
     const form = document.querySelector('.search-form')

@@ -62,6 +62,14 @@ nav .tag-select {
     scrollbar-width: none;
 }
 
+.tag-select.collapsed .search-bar {
+    display:none;
+}
+
+.tag-select:not(.collapsed) .search-bar-placeholder {
+    display:none;
+}
+
 .tag-select.collapsed .tag-menu {
     display: none;
 }

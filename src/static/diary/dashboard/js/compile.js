@@ -7,7 +7,7 @@ import { loadTemplate } from "../../../general/js/template.js"
 import { addEditListener, initFormListeners, initNavListeners } from "./listeners.js"
 import { date_to_yyyymmdd, format_date } from "../../../general/js/utils.js"
 import { showEmptyMessage } from "../../../general/js/display.js"
-import { loadTagInput } from "./tag-select.js"
+import { loadTagInput } from "../../js/tag-select.js"
 
 function loadEntry(entryData, container) {
     /*

@@ -11,7 +11,7 @@
 
     <link href="{{ url_for('static', filename='diary/dashboard/styles.css') }}" rel="stylesheet" />
     <link href="{{ url_for('static', filename='diary/dashboard/search.css') }}" rel="stylesheet" />
-    <link href="{{ url_for('static', filename='diary/dashboard/tag-select.css') }}" rel="stylesheet" />
+    <link href="{{ url_for('static', filename='diary/css/tag-select.css') }}" rel="stylesheet" />
 
     <link href="{{ url_for('static', filename='diary/css/diarystyles.css') }}" rel="stylesheet" />
     <link href="{{ url_for('static', filename='general/css/general.css') }}" rel="stylesheet" />
@@ -74,7 +74,7 @@
 
             <div class="border tag-select collapsed">
                 <input type="text" class="search-bar" placeholder="Search tags...">
-                <input type="text" class="search-bar-placeholder hidden" readonly>
+                <input type="text" class="search-bar-placeholder" readonly placeholder="Search tags..." autocomplete="off">
 
                 <div class="border tag-menu">
                     <p class="empty-msg hidden">No tags found</p>

@@ -1,6 +1,6 @@
 export { getSelectedTags, setSelectedTags, loadTagInput }
-import { getTagIndex } from "../../js/api.js"
-import { loadTemplate } from "../../../general/js/template.js"
+import { getTagIndex } from "./api.js"
+import { loadTemplate } from "../../general/js/template.js"
 
 /* form functions */
 function getTags(form) {
@@ -26,7 +26,6 @@ function setSelectedTags(tagNames, form) {
     const tags = getTags(form);
     
     for (const tag of tags) {
-        console.log(tag)
         tag.classList.remove('selected')
         if (tagNames.includes(tag.textContent)) {
             selectTag(tag)
@@ -90,25 +89,15 @@ function addCollapseListeners(tagForm) {
             if (selectedTags.length > 0) {
                 // Add appropriate content to indicator
                 indicator.value = parseTagNames(selectedTags).join(' • ')
-
-                // Hide real input & replace with fake input
-                indicator.classList.remove("hidden")
-                tagInput.classList.add("hidden")
-            } else {
-                // If no tags selected, make sure real input is still visibel
-                indicator.classList.add("hiden")
-                tagInput.classList.remove("hidden")
             }
         }
         else if (tagInput.contains(event.target) || indicator.contains(event.target)) {
             if (tagForm.classList.contains("collapsed")) {
                 // If clicking onto collapsed form, show real input and focus it
-                indicator.classList.add("hidden")
-                tagInput.classList.remove("hidden")
-                tagInput.focus()
-
                 // Also, uncollapse form.
                 tagForm.classList.remove("collapsed")
+
+                tagInput.focus()
             }
         }
     })
@@ -148,7 +137,6 @@ function addInputListeners(tagForm, tagInput, adaptable) {
     })
 
 }
-
 
 function initTagListeners(tagForm, adaptable) {
     /*
@@ -202,6 +190,4 @@ async function loadTagInput(tagForm, adaptable) {
     }
 
     initTagListeners(tagForm, adaptable);
-
-    console.log("all loaded!")
 }
