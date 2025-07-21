@@ -1,7 +1,9 @@
 /*
 This file reads data from the form for submission to the databsae.
 */
-export { getFormData}
+export { getFormData }
+import { getSelectedTags, parseTagNames } from "../../js/tag-select.js";
+
 
 function getFormData() {
     // Get ratings data
@@ -16,12 +18,6 @@ function getFormData() {
         };
     });
 
-    // Get tag data
-    const tagContainer = document.querySelector('.tag-container');
-    const tags = Array.from(tagContainer.querySelectorAll('div.tag')).map(tag => {
-        return tag.querySelector('.tag-name').textContent.trim()
-    })
-
     // Get entry title & entry
     const entryInput = document.querySelector('.entry-input');
     const titleInput = document.querySelector('.entry-title');
@@ -32,6 +28,6 @@ function getFormData() {
         'title': title,
         'entry': entry,
         'ratings': ratings, 
-        'tags': tags
+        'tags': parseTagNames(getSelectedTags(document.querySelector(".tag-select")))
     }
 }

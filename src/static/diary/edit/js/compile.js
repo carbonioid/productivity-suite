@@ -9,6 +9,7 @@ import { addSliderListeners } from "./listeners.js";
 import { format_date } from "../../../general/js/utils.js";
 import { initDeleteButtonListeners } from "./listeners.js";
 import { loadTagInput } from "../../js/tag-select.js";
+import { setSelectedTags } from "../../js/tag-select.js";
 export { loadStatsButton, loadPageContent }
 
 async function loadSlider(container, data) {
@@ -80,7 +81,8 @@ async function loadPageContent(date) {
     entryInput.value = entry.entry || "";
 
     // (2) Load tags
-    loadTagInput(document.querySelector(".tag-select"), true)
+    await loadTagInput(document.querySelector(".tag-select"), true)
+    setSelectedTags(entry.tags, document.querySelector(".tag-select"))
 
     // (3) Load sliders
     const container = document.querySelector('.rating-container');
