@@ -6,9 +6,10 @@ import { getEntry } from "../../js/cache.js";
 import { getSettings } from "../../js/api.js";
 import { loadTemplate } from "../../../general/js/template.js";
 import { addSliderListeners } from "./listeners.js";
-import { yyyymmdd_to_date, format_date } from "../../../general/js/utils.js";
+import { format_date } from "../../../general/js/utils.js";
 import { initDeleteButtonListeners } from "./listeners.js";
-export { loadTag, loadStatsButton, loadPageContent }
+import { loadTagInput } from "../../js/tag-select.js";
+export { loadStatsButton, loadPageContent }
 
 async function loadSlider(container, data) {
     /*
@@ -29,22 +30,6 @@ async function loadSlider(container, data) {
     addSliderListeners(sliderTemplate);
     
     container.appendChild(sliderTemplate);
-}
-
-function loadTag(container, name) {
-    /*
-    Load tag into `container` with name `name`.
-    */
-    const template = loadTemplate(document, "tag-template", {
-        name: name
-    });
-
-    template.querySelector('.close-button').addEventListener('click', () => {
-        template.remove();
-    })
-
-    // Insert before last child so that it's not after the add button
-    container.insertBefore(template, container.lastElementChild);
 }
 
 function loadStatsButton(date) {
@@ -95,10 +80,7 @@ async function loadPageContent(date) {
     entryInput.value = entry.entry || "";
 
     // (2) Load tags
-    const tagContainer = document.querySelector('.tag-container');
-    entry.tags.forEach(tag => {
-        loadTag(tagContainer, tag);
-    })
+    loadTagInput(document.querySelector(".tag-select"), true)
 
     // (3) Load sliders
     const container = document.querySelector('.rating-container');
