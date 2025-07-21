@@ -1,10 +1,9 @@
 /*
 This file listens adds event listeners to the dashboard page.
 */
-export { addEditListener, addTagListeners, initFormListeners, initNavListeners, initTagListeners }
+export { addEditListener, initFormListeners, initNavListeners }
 import { date_to_yyyymmdd } from "../../../general/js/utils.js";
 import { getFormData, getSearchResults, loadSearchResults, exitSearchResults, clearForm } from "./search.js";
-import { loadTag } from "./compile.js";
 
 function addEditListener(entryObject, date) {
     /*
@@ -14,19 +13,6 @@ function addEditListener(entryObject, date) {
     editButton.addEventListener('click', async () => {
         window.location.href = '/diary/edit?date=' + date_to_yyyymmdd(date);
     });
-}
-
-function addTagListeners(tag, container) {
-    tag.addEventListener('click', () => {
-        tag.classList.toggle("selected")
-
-        if (tag.classList.contains("selected")) {
-            const tags = Array.from(container.children).filter(tag => tag.classList.contains("tag") && !tag.classList.contains("adapt-tag"))
-            if (tags.length > 0) {
-                container.insertBefore(tag, tags[0])
-            }
-        }
-    })
 }
 
 let searchCache = null; // Cache for most recent search result. Used when sorting data to avoid re-requesting data.
@@ -66,95 +52,6 @@ function initFormListeners() {
     sortSelect.addEventListener("change", loadResults)
     orderSelect.addEventListener("change", loadResults)
 
-}
-
-function initTagListeners(adaptable) {
-    /*
-    See loadTagInput() for explanation of adaptable parameter.
-    Init the listeners for a tag input (but not the tags themselves)
-    */
-    let tempValue = ''
-    const tagForm = document.querySelector(".tag-select")
-    const tagMenu = tagForm.querySelector(".tag-menu")
-    const tagInput = tagForm.querySelector(".search-bar")
-    // Listen for clicks off the input (unfocusing) to collapse the menu.
-    // Do not listen for focusout because this activates when the user tries to select tags.
-    document.addEventListener("click", (event) => {
-        if (!tagForm.contains(event.target)) {
-            tagForm.classList.add("collapsed")
-
-            // Add indicator for selected tags on focusout, if any selected
-            const selectedTags = getFormData()["tags"]
-            if (selectedTags.length > 0) {
-                // Change content to indicator (and save in temp so can be put back)
-                tagInput.value = selectedTags.join(' • ')
-
-                // Make text color change
-                tagInput.classList.add("indicating")
-            } else {
-                tagInput.value = '';
-            }
-        }
-        else if (tagInput.contains(event.target)) {
-            tagInput.value = tempValue
-            tagInput.classList.remove("indicating")
-
-            tagForm.classList.remove("collapsed")
-        }
-    })
-
-    // Listener for searching
-    tagInput.addEventListener('input', (event) => {
-        tempValue = tagInput.value
-
-        // Iterate through all tags and check if the substring in the input exists. If so, show it. Otherwise, hide.
-        const searchStr = tagInput.value;
-        let tagFound = false; // Whether a tag was found to *not* hide
-        for (const tag of Array.from(tagMenu.children).filter(tag => !tag.classList.contains("adapt-tag") && tag.classList.contains("tag"))) { // Never hide adapt tag
-            if (tag.textContent.includes(searchStr.toLowerCase())) {
-                tagFound = true;
-                tag.classList.remove("hidden")
-            } else {
-                tag.classList.add("hidden")
-            }
-        }
-        
-        if (adaptable) {
-            const adaptTag = tagForm.querySelector(".adapt-tag")
-
-            if (tagInput.value.trim().length == 0) {
-                // If input is empty, hide the adapt tag
-                adaptTag.classList.add("hidden")
-            } else {
-                adaptTag.textContent = tagInput.value
-                adaptTag.classList.remove("hidden")
-            }
-        } else {
-            const emptyMsg = tagForm.querySelector('.empty-msg')
-            if (!tagFound) emptyMsg.classList.remove("hidden")
-            else emptyMsg.classList.add("hidden")
-        }
-    })
-
-    // Add listener for adapt tag
-    if (adaptable) {
-        const adaptTag = tagForm.querySelector(".adapt-tag")
-
-        // If the adapt tag is selected, we need to add a regular tag which has its input. Never modify the adapt-tag, though
-        adaptTag.addEventListener("click", () => {
-            const tagNames = Array.from(tagMenu.children).filter(tag => !tag.classList.contains("adapt-tag")).map(tag => tag.textContent)
-            if (!tagNames.includes(tagInput.value)) {
-                loadTag(tagInput.value, tagMenu, true)
-
-                const tags = Array.from(tagMenu.children).filter(tag => tag.classList.contains("tag") && !tag.classList.contains("adapt-tag"))
-                if (tags.length > 0) {
-                    tagMenu.insertBefore(tagMenu.lastElementChild, tags[0])
-                } else {
-                    tagMenu.insertBefore(tagMenu.lastElementChild, adaptTag)
-                }
-            }
-        })
-    }
 }
 
 function initNavListeners() {

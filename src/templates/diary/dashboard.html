@@ -8,8 +8,11 @@
     <script src="{{ url_for('static', filename='diary/dashboard/js/run.js') }}" type="module"></script>
     
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+
     <link href="{{ url_for('static', filename='diary/dashboard/styles.css') }}" rel="stylesheet" />
     <link href="{{ url_for('static', filename='diary/dashboard/search.css') }}" rel="stylesheet" />
+    <link href="{{ url_for('static', filename='diary/dashboard/tag-select.css') }}" rel="stylesheet" />
+
     <link href="{{ url_for('static', filename='diary/css/diarystyles.css') }}" rel="stylesheet" />
     <link href="{{ url_for('static', filename='general/css/general.css') }}" rel="stylesheet" />
 
@@ -71,8 +74,9 @@
 
             <div class="border tag-select collapsed">
                 <input type="text" class="search-bar" placeholder="Search tags...">
+                <input type="text" class="search-bar-placeholder hidden" readonly>
+
                 <div class="border tag-menu">
-                    <!-- <div class="tag border adapt-tag hidden"></div> -->
                     <p class="empty-msg hidden">No tags found</p>
                 </div>
             </div>

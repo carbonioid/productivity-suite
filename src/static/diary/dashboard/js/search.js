@@ -3,26 +3,7 @@ import { yyyymmdd_to_date } from "../../../general/js/utils.js"
 import { search } from "../../js/api.js"
 import { loadEntry, loadAllEntries } from "./compile.js"
 import { getEntry } from "../../js/cache.js"
-
-function getSelectedTags(form) {
-    return Array.from(form.querySelector('.tag-menu').children)
-    .filter(tag => {return tag.classList.contains('selected')})
-}
-
-function setSelectedTags(tagNames, form) {
-    /*
-    Add .selected class to all tags with .textContent matching a value in tagNames. Case sensitive (but tag names are always lowercase).
-    Affects tags from `form`.
-    */
-    const tags = getSelectedTags(form);
-    for (const tag of tags) {
-        if (tagNames.includes(tag.textContent)) {
-            tag.classList.add("selected")
-        } else {
-            tag.classList.remove("selected")
-        }
-    }
-}
+import { getSelectedTags, setSelectedTags } from "./tag-select.js"
 
 function getFormData() {
     const form = document.querySelector('.search-form')
