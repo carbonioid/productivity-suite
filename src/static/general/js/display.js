@@ -1,32 +1,114 @@
-export {showEmptyMessage, hideEmptyMessage}
+export { init }
+/*
+Consistent API to handle display options
+*/
 
-function showEmptyMessage(container, titleMessage, message) {
-    const messageContainer = document.createElement('div');
-    messageContainer.classList.add("empty-container")
+/*
+Class to watch for mutation on class of other object.
+Thank you to TechWisdom on stackoverflow for the base of this code (I have modified it for my use-case.)
+*/
+class ClassWatcher {
+    constructor(targetNode, classToWatch, callback) {
+        this.targetNode = targetNode
+        this.classToWatch = classToWatch
+        this.callback = callback
 
-    let icon = document.createElement('span');
-    icon.classList.add("material-symbols-outlined")
-    icon.classList.add("empty-icon")
-    icon.textContent = "blur_on";
+        this.observer = null
+        this.lastClassState = targetNode.classList.contains(this.classToWatch)
 
-    let title = document.createElement('h2');
-    title.classList.add("empty-title")
-    title.textContent = titleMessage
+        this.init()
+    }
 
-    let content = document.createElement('p');
-    content.classList.add("empty-content")
-    content.textContent = message;
+    init() {
+        this.observer = new MutationObserver(this.mutationCallback)
+        this.observe()
+    }
 
-    messageContainer.appendChild(icon);
-    messageContainer.appendChild(title);
-    messageContainer.appendChild(content);
+    observe() {
+        this.observer.observe(this.targetNode, { attributes: true })
+    }
 
-    container.appendChild(messageContainer)
+    mutationCallback = mutationsList => {
+        for(let mutation of mutationsList) {
+            if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+                let currentClassState = mutation.target.classList.contains(this.classToWatch)
+                if(this.lastClassState !== currentClassState) {
+                    this.lastClassState = currentClassState
+                    this.callback(this.targetNode.classList.contains(this.classToWatch))
+                }
+            }
+        }
+    }
 }
 
-function hideEmptyMessage(container) {
-    const emptyContainer = container.querySelector('.empty-container');
-    if (emptyContainer) {
-        emptyContainer.remove();
+function initDisplayOption(targetNode, targetClass, targetFunction, triggerNode, triggerClass) {
+    // Create new watcher for mutation events
+    let _  = new ClassWatcher(targetNode, targetClass, (hasClass) => {
+        if (hasClass) triggerNode.classList.add(triggerClass)
+        else          triggerNode.classList.remove(triggerClass)
+    })
+
+    triggerNode.addEventListener("click", () => {
+        // Run triger function if exists.
+        // Invert the value because we want to give the value for what
+        // the state will be after this click, not before.
+        if (targetFunction) {
+            targetFunction(!Boolean(triggerNode.classList.contains(triggerClass)))
+        }
+
+        // Add and remove class from targetNode - this will trigger the dom watcher, 
+        // which will in turn modify the classes for this button.
+        // This is so that any mutations on these classes are automatically 
+        // registered on display buttons. However, it must be ensured that the classes
+        // of these buttons are never programatically changed.
+        if (targetClass) {
+            if (triggerNode.classList.contains(triggerClass)) {
+                targetNode.classList.remove(targetClass)
+            } else {
+                targetNode.classList.add(targetClass)
+            }
+        }
+    })
+
+    // TODO: set cookies
+}
+
+function init(config) {
+    /*
+    Main entry point for configuring display options.
+    Config format:
+    [
+        {
+            targetNode: Node,
+            targetClass: str (optional, if targetFunction is passed)
+            targetFunction: function (optional, if targetClass is passed - is run on trigger, passed boolean of triggerNode has triggerClass)
+            triggerNode: Node,
+            triggerClass: str (optional - defaults to "switched"),
+            default: bool (optional - whether the objects should start with their classes switched on)
+        },
+        ...
+    ]
+
+    IMPORTANT:
+    all triggerNodes must begin without triggerClass and all targetNodes must begin without targetClass.
+    Otherwise listeners will not be activated properly. P
+    */
+    for (const row of config) {
+        // First, validate that all needed config is present.
+        if (!row.targetNode || !row.triggerNode || !(row.targetClass || row.targetFunction)) {
+            console.error(`Please ensure all options are passed correctly to display options config (offending row: ${row}`)
+            return;
+        }
+
+        initDisplayOption(row.targetNode, row.targetClass, row.targetFunction,
+                          row.triggerNode, row.triggerClass || "switched")
+        
+        if (row.default) {
+            row.triggerNode.dispatchEvent(new Event("click"))
+        }
     }
+
+
+
+    // TOOD: load from cookies
 }
