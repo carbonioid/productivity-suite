@@ -74,7 +74,7 @@ function deselectTag(tag) {
         selectedTags.at(-1).after(tag)
     }
 
-    setIndicatorValue()
+    setIndicatorValue(tagForm)
 }
 
 function addTagListeners(tag) {
