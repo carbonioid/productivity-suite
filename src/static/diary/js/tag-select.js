@@ -106,6 +106,8 @@ function setIndicatorValue(tagForm) {
     if (selectedTags.length > 0) {
         // Add appropriate content to indicator
         indicator.value = parseTagNames(selectedTags).join(' • ')
+    } else {
+        indicator.value = "";
     }
 }
 

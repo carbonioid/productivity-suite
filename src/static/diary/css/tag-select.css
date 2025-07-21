@@ -24,14 +24,13 @@ Tag input
 /* Search bar */
 .tag-select.collapsed .search-bar {
     height:100%;
+    height:2rem;
 }
 
 .tag-select .search-bar {
     border:none;
     width:100%;
     background: none;
-
-    height:2rem;
 }
 
 .tag-select .search-bar-placeholder {
