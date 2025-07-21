@@ -3,8 +3,9 @@ import { yyyymmdd_to_date } from "../../../general/js/utils.js";
 export {getDateMinusDays, getPageDate, dashboardRedirect }
 
 function getDateMinusDays(date, days) {
+    const millisecondsInDay = 86400000
     const newDate = new Date();
-    newDate.setDate(date.getDate() - days); // Subtract 'days' from the current date
+    newDate.setTime(date.getTime() - days*millisecondsInDay); // Subtract 'days' from the current date via milliseconds, so that it can roll over into months and years.
     return newDate
 }
 

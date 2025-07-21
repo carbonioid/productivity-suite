@@ -1,11 +1,10 @@
 export { initCollapseButtonListeners, addSliderListeners, initMemorySelectListener, 
-    initTagListeners, initEntryInputListeners, initSubmitButtonListeners, 
+    initEntryInputListeners, initSubmitButtonListeners, 
     initDeleteButtonListeners, addBackButtonListeners }
 
 import { format_date } from "../../../general/js/utils.js"
 import { getEntry } from "../../js/cache.js"
 import { getDateMinusDays, getPageDate, dashboardRedirect } from "./utils.js"
-import { loadTag } from "./compile.js"
 import { getFormData } from "./form.js"
 import { addEntry, editEntry, deleteEntry, getSettings } from "../../js/api.js"
 
@@ -72,45 +71,6 @@ function initMemorySelectListener() {
     memorySelect.dispatchEvent(new Event('change')) // Trigger change to load initial value
 }
 
-function initTagListeners() {
-    /*
-    Initialize the tag listeners.
-    - Add click listener to add button to add a new tag
-    */
-
-    const addTag = document.querySelector('.add-tag')
-    const addButton = addTag.querySelector('.add-tag span')
-    const tagInput = addTag.querySelector('.tag-input')
-
-    addButton.addEventListener('click', () => {
-        tagInput.classList.remove('hidden')
-        tagInput.focus()
-    })
-
-    // listen for keydown instead of submit so that the page doesn't reload 
-    // (we can prevent the event before it bubbles to submit stage)
-    tagInput.addEventListener('keydown', (event) => { 
-        if (event.key === 'Enter') {
-            event.preventDefault(); // Prevent default behavior
-
-            const tagName = tagInput.value.trim();
-            tagInput.value = ""; 
-            tagInput.classList.add('hidden');
-
-            if (tagName) {
-                // Create tag if name not empty
-                const container = document.querySelector('.tag-container');
-                loadTag(container, tagName)
-            }
-        }
-        
-        if (event.key === 'Escape') {
-            // Hide input if Escape is pressed
-            tagInput.classList.add('hidden');
-            tagInput.value = ""; // Clear input
-        }
-    });
-}
 
 function initEntryInputListeners() {
     const entryInput = document.querySelector('.entry-input');

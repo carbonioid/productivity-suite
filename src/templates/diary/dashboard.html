@@ -8,8 +8,11 @@
     <script src="{{ url_for('static', filename='diary/dashboard/js/run.js') }}" type="module"></script>
     
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+
     <link href="{{ url_for('static', filename='diary/dashboard/styles.css') }}" rel="stylesheet" />
     <link href="{{ url_for('static', filename='diary/dashboard/search.css') }}" rel="stylesheet" />
+    <link href="{{ url_for('static', filename='diary/css/tag-select.css') }}" rel="stylesheet" />
+
     <link href="{{ url_for('static', filename='diary/css/diarystyles.css') }}" rel="stylesheet" />
     <link href="{{ url_for('static', filename='general/css/general.css') }}" rel="stylesheet" />
 
@@ -69,8 +72,10 @@
                 <input class="name-search" type="text" placeholder="Search text..." id="search-bar" autocomplete="off">
             </div>
 
-            <div class="border tag-select collapsed">
+            <div class="border tag-select collapsed" style="--width:10rem; --e:0px;">
                 <input type="text" class="search-bar" placeholder="Search tags...">
+                <input type="text" class="search-bar-placeholder" readonly placeholder="Search tags..." autocomplete="off">
+
                 <div class="border tag-menu">
                     <p class="empty-msg hidden">No tags found</p>
                 </div>
@@ -80,7 +85,26 @@
                 <label>Strict</label>
             </div>
         </form>
+        <div class="display-options border">
+            <div class="switch view">
+                <button class="icon-button hoverable first">
+                    <span class="material-symbols-outlined">apps</span>
+                </button>
+                <button class="icon-button hoverable second">
+                    <span class="material-symbols-outlined">list</span>
+                </button>
+            </div>
+            <div class="switch show-empty">
+                <button class="icon-button hoverable first">
+                    <span class="material-symbols-outlined">timer</span>
+                </button>
+                <button class="icon-button hoverable second">
+                    <span class="material-symbols-outlined">timer_off</span>
+                </button>
+            </div>
+        </div>
     </nav>
+
     <div class="results-indicator hidden">
         <div class="icon-button hoverable exit-search-button">
             <span class="material-symbols-outlined">arrow_back</span>

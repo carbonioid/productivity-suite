@@ -1,8 +1,9 @@
-export { loadSearchResults, getSearchResults, getFormData, exitSearchResults }
-import { date_to_yyyymmdd, yyyymmdd_to_date } from "../../../general/js/utils.js"
+export { loadSearchResults, getSearchResults, getFormData, exitSearchResults, clearForm}
+import { yyyymmdd_to_date } from "../../../general/js/utils.js"
 import { search } from "../../js/api.js"
 import { loadEntry, loadAllEntries } from "./compile.js"
 import { getEntry } from "../../js/cache.js"
+import { getSelectedTags, setSelectedTags } from "../../js/tag-select.js"
 
 function getFormData() {
     const form = document.querySelector('.search-form')
@@ -11,21 +12,28 @@ function getFormData() {
     const text = form.querySelector('.text-input')
     const tSearchType = text.querySelector('.options').value
     const tSearchText = text.querySelector('#search-bar').value
-
-    // Tags search
-    const selectedTags = Array.from(form.querySelector('.tag-menu').children)
-        .filter(tag => {return tag.classList.contains('selected')})
-        .map(tag => {return tag.textContent})
     
-    // Strict matching?
+    // Strict matching option (checkbox)
     const strict = document.querySelector(".strict-matching").checked
     
     return {
         "text-type": tSearchType,
         "text-text": tSearchText,
-        "tags": selectedTags,
+        "tags": getSelectedTags(form).map(tag => tag.textContent),
         "strict": strict
     }
+}
+
+function clearForm() {
+    const form = document.querySelector('.search-form')
+
+    const text = form.querySelector('.text-input')
+    text.querySelector('.options').value = 'all'
+    text.querySelector('#search-bar').value = ''
+
+    document.querySelector(".strict-matching").checked = false
+
+    setSelectedTags([], form)
 }
 
 async function getSearchResults(formData) {

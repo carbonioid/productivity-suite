@@ -2,12 +2,12 @@
 This file uses templates to load entries and other HTML components into the page itself.
 */
 export { loadPageContent, loadEntry, loadAllEntries }
-import { allEntries, populateCache, getEntry } from "../../js/cache.js"
+import { allEntries, populateCache } from "../../js/cache.js"
 import { loadTemplate } from "../../../general/js/template.js"
-import { addEditListener, addTagListeners, initFormListeners } from "./listeners.js"
+import { addEditListener, initFormListeners, initNavListeners } from "./listeners.js"
 import { date_to_yyyymmdd, format_date } from "../../../general/js/utils.js"
 import { showEmptyMessage } from "../../../general/js/display.js"
-import { getTagIndex } from "../../js/api.js"
+import { loadTagInput } from "../../js/tag-select.js"
 
 function loadEntry(entryData, container) {
     /*
@@ -86,25 +86,10 @@ async function loadPageContent() {
     */
 
     initFormListeners();
+    initNavListeners();
 
-    // Load tags into search box
-    const tagContainer = document.querySelector(".tag-menu")
-
-    const tags = Object.entries(await getTagIndex());
-    tags.sort((a, b) => b[1]-a[1]) // Sort, putting items with most instances at the top.
-    for (const tag of tags) {
-        const [name, _] = tag;
-        const tagObj = loadTemplate(document, 'tag-template', {"name": name});
-        addTagListeners(tagObj);
-
-        tagContainer.appendChild(tagObj)
-    }
-
-    // Show empty message if there are no tags
-    if (tags.length == 0) {
-        document.querySelector(".empty-msg").classList.remove("hidden")
-    }
-
+    await loadTagInput(document.querySelector(".tag-select"), false); // The version for this page is not adaptable because the user shouldn't be able to add custom tags (hence false)
+    
     // Populate cache and load entries
     await populateCache()
     loadAllEntries();

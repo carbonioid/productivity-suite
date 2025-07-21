@@ -9,8 +9,10 @@
     <link href="{{ url_for('static', filename='diary/favicon.ico') }}" rel="shortcut icon" />
 
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
-    <link href="{{ url_for('static', filename='general/css/general.css') }}" rel="stylesheet" />
     <link href="{{ url_for('static', filename='diary/edit/styles.css') }}" rel="stylesheet" />
+    <link href="{{ url_for('static', filename='diary/css/tag-select.css') }}" rel="stylesheet" />
+
+    <link href="{{ url_for('static', filename='general/css/general.css') }}" rel="stylesheet" />
     <link href="{{ url_for('static', filename='diary/css/diarystyles.css') }}" rel="stylesheet" />
 
     <template id="slider-template">
@@ -24,49 +26,49 @@
     </template>
 
     <template id="tag-template">
-        <div class="tag border">
-            <span class="material-symbols-outlined close-button">close_small</span> <p class="tag-name"><span data-bind="name"></span></p>
-        </div>
+        <div class="tag border"><span data-bind="name"></span></div>
     </template>
 </head>
 <body>
     <nav class="page-title">
-        <div class="icon-button hoverable back-button">
-            <span class="material-symbols-outlined">arrow_back</span>
+        <div class="icons">
+            <div class="icon-button hoverable back-button">
+                <span class="material-symbols-outlined">arrow_back</span>
+            </div>
+            <h3>Entry for <span class="title-date-value"></span></h3>
+            <div class="icon-button hoverable submit-button" title=save>
+                <span class="material-symbols-outlined">task_alt</span>
+            </div>
+            <div class="icon-button hoverable delete-button" title="delete">
+                <span class="material-symbols-outlined">delete</span>
+            </div>
+            <div class="icon-button hoverable stats-button" title="Statistics">
+                <span class="material-symbols-outlined">open_in_new</span>
+            </div>
         </div>
-        <h3>Entry for <span class="title-date-value"></span></h3>
+        <div class="hoz-line"></div>
     </nav>
     <main class="page-container">
         <div class="left-sidebar">
-            <div class="left-sidebar-form border">
-                <div class="rating-container">
+            <div class="left-sidebar-form">
+                <div class="rating-container border">
 
                 </div>
-                <div class="hoz-line"></div>
-                <div class="tag-container">
-                    <form class="tag add-tag border" action="">
-                        <span class="material-symbols-outlined">add</span>
-                        <input type="text" class="tag-input hidden" placeholder="Tag name..." name="tag-input">
-                    </form>
+                <div class="border tag-select collapsed" style="--width:100%; --e:2px;">
+                    <input type="text" class="search-bar" placeholder="Search or add tags...">
+                    <input type="text" class="search-bar-placeholder" readonly placeholder="Search or add tags..." autocomplete="off">
+    
+                    <div class="border tag-menu">
+                        <div class="tag border adapt-tag hidden"></div>
+                    </div>
                 </div>
             </div>
-            <button class="impact-button stats-button" style="--color:var(--regular);">
-                Stats for <span class="stats-date"></span> <span class="material-symbols-outlined">open_in_new</span> 
-            </button>  
         </div>
         <main class="entry-container">
             <form class="entry-form border">
                 <input class="entry-title" placeholder="Title">
                 <textarea class="entry-input" placeholder="Write here..."></textarea>
             </form>
-            <div class="entry-actions">
-                <button class="impact-button submit-button" style="--color:#42ab57;">
-                    <span class="material-symbols-outlined">task_alt</span> Save entry
-                </button>
-                <button class="impact-button delete-button hidden" style="--color:#e65a3b;">
-                    <span class="material-symbols-outlined">delete</span> Delete entry
-                </button>
-            </div>
         </main>
         <div class="right-sidebar">
             <div class="collapse-button switch">

@@ -2,8 +2,10 @@
     box-sizing: border-box;
 }
 
-body {
+html body {
     box-sizing: content-box; /* The body sizing breaks otherwise */
+
+    padding-top:0;
 }
 
 /***************
@@ -21,14 +23,17 @@ MAIN PAGE LAYOUT
 HEADER STYLES
 ***************/
 .page-title {
+    position:sticky;
+    top:0;
+    z-index:15;
+    background:white;
+}
+
+.page-title .icons {
     display:flex;
     align-items: center;
     gap:.5rem;
-}
-
-.back-button {
-    text-decoration: none;
-    color: inherit;
+    padding-top:.5rem;
 }
 
 .back-button:hover {
@@ -41,14 +46,13 @@ ENTRY & ENTRY CONTAINER
 
 .entry-container {
     display:grid;
-    grid-template-rows:minmax(14rem,auto) 1fr;
+    grid-template-rows:minmax(14rem,auto);
     gap:1rem;
 }
 
 .entry-form {
     width:100%;
     display:grid;
-    overflow:hidden;
     grid-template-rows:auto 1fr;
 }
 
@@ -87,19 +91,6 @@ ENTRY & ENTRY CONTAINER
     justify-self: bottom;
 }
 
-/* buttons */
-.entry-container button {
-    width:max-content;
-}
-
-.entry-actions > * {
-    display:inline-block;
-}
-
-.submit-button {
-    margin-right:1rem;
-}
-
 /***************
 LEFT SIDEBAR
 ***************/
@@ -111,15 +102,18 @@ LEFT SIDEBAR
 }
 
 .left-sidebar-form {
-    min-height:14rem;
     height:min-content;
-    background-color:var(--off-white);
+
+    display:grid;
+    grid-template-rows:auto auto;
+    gap:1rem;
 }
 
-.rating-container, .tag-container {
+.rating-container  {
     padding:0.4rem;
     width:100%;
     border-color:var(--off-white);
+    background-color:var(--off-white);
 }
 
 .stats-button {
@@ -177,51 +171,6 @@ TAG STYLES
 .tag-container {
     flex-grow:1;
 }
-
-.tag {
-    margin-left:0.2rem;
-    display: inline-flex;
-    align-items: center;
-    padding:0.2rem 0.4rem;
-
-    width:auto;
-    margin-bottom:0.2rem;
-    background-color:var(--light);
-    position: relative;
-
-    height:25px;
-
-    vertical-align: middle; /* fix stupidity with icons */
-}
-
-.tag span {
-    font-size:1rem;
-    cursor:pointer;
-    margin-left:-0.2rem;
-}
-
-.tag:not(.add-tag):hover span {
-    opacity:1;
-}
-
-.tag:not(.add-tag) span {
-    position: absolute;
-    background-color:var(--light);
-    opacity:0;
-    transition: opacity 0.05s linear;
-}
-
-.add-tag {
-    padding-right:0.2rem;
-}
-
-.tag-input {
-    width:auto;
-    background-color:transparent;
-    border:none;
-    width:90%;
-}
-
 /*****
 MEMORY STYLES / RIGHT SIDEBAR
 *****/

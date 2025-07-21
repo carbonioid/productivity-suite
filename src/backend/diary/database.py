@@ -69,8 +69,9 @@ def update_tag_index(tags, remove=False):
             change = -1 if remove else 1
             new_value = file_content.get(tag, 0)+change # account for the tag not yet tracked using get()
             
-            if new_value > 0: file_content[tag] = new_value
-            else: del file_content[tag]
+            if new_value == 0: del file_content[tag]
+            elif new_value > 0: file_content[tag] = new_value
+            else: print("WARNING: tag index resolved to negative number. Tag index is likely not up to date.")
 
     with open(TAG_INDEX_PATH, 'w') as file:
         json.dump(file_content, file)
