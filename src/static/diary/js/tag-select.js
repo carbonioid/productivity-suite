@@ -1,4 +1,4 @@
-export { getSelectedTags, setSelectedTags, loadTagInput }
+export { getSelectedTags, setSelectedTags, loadTagInput, parseTagNames }
 import { getTagIndex } from "./api.js"
 import { loadTemplate } from "../../general/js/template.js"
 
@@ -17,9 +17,8 @@ function parseTagNames(tags) {
 }
 
 function setSelectedTags(tagNames, form) {
-    // TODO: better
     /*
-    Add .selected class and move them to top of list) to all tags with .textContent matching a value in tagNames. 
+    Add .selected class (and move to top of list) for all tags with .textContent matching a value in tagNames. 
     Case sensitive (but tag names are always lowercase).
     Affects tags from `form`.
     */
@@ -38,6 +37,9 @@ function selectTag(tag) {
     /*
     Select this tag and move it upwards, if necessary.
     Parent is assumed to be tag.parentElement
+
+    IMPORTANT: this should be the only way that tags are selected.
+    Otherwise, the value of the indicator will be out of sync because it is only called here.
     */
     if (!tag) {throw Error("Tag provided to selectTag was undefined. Expected Node object.")}
     
@@ -52,6 +54,8 @@ function selectTag(tag) {
     } else {
         tags.at(-1).after(tag)
     }
+
+    setIndicatorValue(tagMenu.parentElement)
 }
 
 function addTagListeners(tag) {
@@ -75,6 +79,16 @@ function addAdaptTagListeners(adaptTag, tagForm) {
     })
 }
 
+function setIndicatorValue(tagForm) {
+    const indicator = tagForm.querySelector(".search-bar-placeholder")
+
+    const selectedTags = getSelectedTags(tagForm)
+    if (selectedTags.length > 0) {
+        // Add appropriate content to indicator
+        indicator.value = parseTagNames(selectedTags).join(' • ')
+    }
+}
+
 function addCollapseListeners(tagForm) {
     const tagInput = tagForm.querySelector(".search-bar")
     const indicator = tagForm.querySelector(".search-bar-placeholder")
@@ -83,22 +97,11 @@ function addCollapseListeners(tagForm) {
     document.addEventListener("click", (event) => {
         if (!tagForm.contains(event.target)) {
             tagForm.classList.add("collapsed")
-
-            // Add indicator for selected tags on focusout, if any selected
-            const selectedTags = getSelectedTags(tagForm)
-            if (selectedTags.length > 0) {
-                // Add appropriate content to indicator
-                indicator.value = parseTagNames(selectedTags).join(' • ')
-            }
         }
-        else if (tagInput.contains(event.target) || indicator.contains(event.target)) {
-            if (tagForm.classList.contains("collapsed")) {
-                // If clicking onto collapsed form, show real input and focus it
-                // Also, uncollapse form.
-                tagForm.classList.remove("collapsed")
-
-                tagInput.focus()
-            }
+        else if (tagForm.classList.contains("collapsed") && indicator.contains(event.target)) {
+            // Uncollapse form and focus real input (because the user will have clicked on the indicator)
+            tagForm.classList.remove("collapsed")
+            tagInput.focus()
         }
     })
 }
@@ -159,9 +162,7 @@ function loadTag(name, container) {
     Load a tag into `container` with name `name`. Returns
     the Node object of the tag that was just added.
     */
-    if (container == undefined) {
-        container = document.querySelector(".tag-menu")
-    }
+    if (container == undefined) container = document.querySelector(".tag-menu")
     
     const tagObj = loadTemplate(document, 'tag-template', {"name": name});
     addTagListeners(tagObj);
