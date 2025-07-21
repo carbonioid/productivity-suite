@@ -25,10 +25,8 @@ function setSelectedTags(tagNames, form) {
     const tags = getTags(form);
     
     for (const tag of tags) {
-        tag.classList.remove('selected')
-        if (tagNames.includes(tag.textContent)) {
-            selectTag(tag)
-        }
+        if (tag.classList.contains("selected")) deselectTag(tag)
+        if (tagNames.includes(tag.textContent)) selectTag(tag)
     }
 }
 
@@ -44,18 +42,39 @@ function selectTag(tag) {
     if (!tag) {throw Error("Tag provided to selectTag was undefined. Expected Node object.")}
     
     const tagMenu = tag.parentElement
+    const tagForm = tagMenu.parentElement
     tag.classList.add("selected")
 
     // Move to top of menu (after all selected tags)
-    const tags = getSelectedTags(tagMenu.parentElement).filter(ctag => ctag.textContent != tag.textContent) // Get all tags except ourselves
+    const tags = getSelectedTags(tagForm).filter(ctag => ctag.textContent != tag.textContent) // Get all tags except ourselves
     if (tags.length === 0) {
-        const allTags = getTags(tagMenu.parentElement);
+        const allTags = getTags(tagForm);
         tagMenu.insertBefore(tag, allTags[0])
     } else {
         tags.at(-1).after(tag)
     }
 
-    setIndicatorValue(tagMenu.parentElement)
+    setIndicatorValue(tagForm)
+}
+
+function deselectTag(tag) {
+    /*
+    Deselect a tag:
+    - Remove the selected class
+    - Move below all selected tags
+    */
+    const tagMenu = tag.parentElement
+    const tagForm = tagMenu.parentElement
+    tag.classList.remove("selected")
+
+    const selectedTags = getSelectedTags(tagForm)
+
+    // If there are any selected tags, move this tag to exactly after the last one.
+    if (selectedTags.length > 0) {
+        selectedTags.at(-1).after(tag)
+    }
+
+    setIndicatorValue()
 }
 
 function addTagListeners(tag) {
@@ -63,6 +82,7 @@ function addTagListeners(tag) {
         tag.classList.toggle("selected")
 
         if (tag.classList.contains("selected")) selectTag(tag)
+        else deselectTag(tag)
     })
 }
 
