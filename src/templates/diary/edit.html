@@ -31,10 +31,22 @@
 </head>
 <body>
     <nav class="page-title">
-        <div class="icon-button hoverable back-button">
-            <span class="material-symbols-outlined">arrow_back</span>
+        <div class="icons">
+            <div class="icon-button hoverable back-button">
+                <span class="material-symbols-outlined">arrow_back</span>
+            </div>
+            <h3>Entry for <span class="title-date-value"></span></h3>
+            <div class="icon-button hoverable submit-button" title=save>
+                <span class="material-symbols-outlined">task_alt</span>
+            </div>
+            <div class="icon-button hoverable delete-button" title="delete">
+                <span class="material-symbols-outlined">delete</span>
+            </div>
+            <div class="icon-button hoverable stats-button" title="Statistics">
+                <span class="material-symbols-outlined">open_in_new</span>
+            </div>
         </div>
-        <h3>Entry for <span class="title-date-value"></span></h3>
+        <div class="hoz-line"></div>
     </nav>
     <main class="page-container">
         <div class="left-sidebar">
@@ -51,23 +63,12 @@
                     </div>
                 </div>
             </div>
-            <button class="impact-button stats-button" style="--color:var(--regular);">
-                Stats for <span class="stats-date"></span> <span class="material-symbols-outlined">open_in_new</span> 
-            </button>  
         </div>
         <main class="entry-container">
             <form class="entry-form border">
                 <input class="entry-title" placeholder="Title">
                 <textarea class="entry-input" placeholder="Write here..."></textarea>
             </form>
-            <div class="entry-actions">
-                <button class="impact-button submit-button" style="--color:#42ab57;">
-                    <span class="material-symbols-outlined">task_alt</span> Save entry
-                </button>
-                <button class="impact-button delete-button hidden" style="--color:#e65a3b;">
-                    <span class="material-symbols-outlined">delete</span> Delete entry
-                </button>
-            </div>
         </main>
         <div class="right-sidebar">
             <div class="collapse-button switch">

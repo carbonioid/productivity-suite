@@ -2,8 +2,10 @@
     box-sizing: border-box;
 }
 
-body {
+html body {
     box-sizing: content-box; /* The body sizing breaks otherwise */
+
+    padding-top:0;
 }
 
 /***************
@@ -21,14 +23,17 @@ MAIN PAGE LAYOUT
 HEADER STYLES
 ***************/
 .page-title {
+    position:sticky;
+    top:0;
+    z-index:15;
+    background:white;
+}
+
+.page-title .icons {
     display:flex;
     align-items: center;
     gap:.5rem;
-}
-
-.back-button {
-    text-decoration: none;
-    color: inherit;
+    padding-top:.5rem;
 }
 
 .back-button:hover {
@@ -41,14 +46,13 @@ ENTRY & ENTRY CONTAINER
 
 .entry-container {
     display:grid;
-    grid-template-rows:minmax(14rem,auto) 1fr;
+    grid-template-rows:minmax(14rem,auto);
     gap:1rem;
 }
 
 .entry-form {
     width:100%;
     display:grid;
-    overflow:hidden;
     grid-template-rows:auto 1fr;
 }
 
@@ -85,19 +89,6 @@ ENTRY & ENTRY CONTAINER
 .submit-button, .delete-button {
     height:1.5rem;
     justify-self: bottom;
-}
-
-/* buttons */
-.entry-container button {
-    width:max-content;
-}
-
-.entry-actions > * {
-    display:inline-block;
-}
-
-.submit-button {
-    margin-right:1rem;
 }
 
 /***************
