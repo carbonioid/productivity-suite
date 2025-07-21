@@ -1,4 +1,4 @@
-export { fetchDay, getDay, populateCache }
+export { fetchDay, getDay, populateCache, getAllEntryDates }
 
 let cache = new Map();
 
@@ -22,8 +22,7 @@ function getDay(name) {
 
 async function populateCache() {
     /*
-    Populate the cache with all entries from the backend and return the names
-    of the resulting entries
+    Populate the cache with all entries from the backend
     */
     const names = []
    
@@ -39,8 +38,10 @@ async function populateCache() {
         Object.entries(data).forEach(pair => {
             const [name, value] = pair;
             cache.set(name, value)
-            names.push(name)
         })
     })
-    return names
+}
+
+function getAllEntryDates() {
+    return Array.from(cache.keys())
 }

@@ -3,13 +3,13 @@ This file handles taking input form the server and compiling it to HTML.
 It also handles adding, editing and deleting elements.
 */
 
-export {  addElement, editElement, deleteElement, load, initialiseContainers };
+export {  addElement, editElement, deleteElement, load, initialiseContainers, populateContent };
 import {  format_mins, duration, dayOfWeek, getAllDays } from './utils.js'
 import { format_yyyymmdd } from '../../general/js/utils.js';
 import {  registerWeekCollapseIcon, displayError, getDisplayOptions } from "./ui.js";
 import { registerPopup, registerContextMenu } from "../../general/js/popup.js"
 import { registerEditing, registerAddToButton } from './form.js';
-import { fetchDay, getDay } from "./cache.js"
+import { fetchDay, getDay, getAllEntryDates } from "./cache.js"
 import { loadTemplate } from '../../general/js/template.js';
 
 function addEntryPadding(entries) {
@@ -60,7 +60,7 @@ function loadWeekContainer(date, parent) {
   return template.querySelector('.days')
 }
 
-async function initialiseContainers(names) {
+function initialiseContainers(names) {
   names = names.reverse()
 
   const parent = document.querySelector('.parent-container');
@@ -71,13 +71,14 @@ async function initialiseContainers(names) {
     currentWeekContainer = loadWeekContainer(names[0], parent)
   } // it will be set on the next iteration if the day is already sunday
 
-  // This syntactic mess reverses the object
+  // Iterate through names and add appropriate containers
   names.forEach(name => {
     // Update week separator if relevant
     if (dayOfWeek(name) == 'Sunday') {
       currentWeekContainer = loadWeekContainer(name, parent)
     }
 
+    // Load empty div
     const dayObject = document.createElement('div')
     dayObject.id = name;
     dayObject.classList.add('container')
@@ -276,6 +277,22 @@ async function load(name, reloadCache) {
 
   container.innerHTML = ''; // Clear previous content because we are replacing it
   loadDay(container, name, entries)
+}
+
+function populateContent() {
+  /*
+  Load page content from cache. Assumes cache has already been initialised with populateCache()
+  */
+  const container = document.querySelector('.parent-container')
+  container.innerHTML = ''
+
+  const dates = getAllEntryDates()
+  initialiseContainers(dates) // Create containers
+  dates.forEach(date => { load(date, false) }) // Create elements themselves, but do not reload cache    
+
+  if (dates.length === 1 && getDay(names[0]).length === 0) {
+      showEmptyMessage(container, "No data", "You haven't added any data yet. Use the form at the top to get started.") // Show empty message if no entries exist
+  }
 }
 
 /* Query API and reload days */

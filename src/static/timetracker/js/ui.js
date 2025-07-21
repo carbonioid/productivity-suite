@@ -4,7 +4,7 @@ This file handles the main UI of the page, except the form. That is managed by f
 
 export { showOthers, displayError, setCompact, setDisplayOptionsFromCookie,
    addCheckboxListeners, registerWeekCollapseIcon, getDisplayOptions }
-import { load } from "./compile.js"
+import { load, populateContent } from "./compile.js"
 import { getCookies, getAllDays } from "./utils.js"
 
 /*
@@ -67,32 +67,14 @@ function showOthers() {
   const hidden = getDisplayOptions()['show-others']
   const parent = document.querySelector('.parent-container')
 
-  // First, hide all week containers.
-  let weeks = parent.children
-  weeks = Array.from(weeks); // Do not include first element
-  weeks.forEach(week => {
-    if (hidden) { week.classList.add("hidden"); }
-    else        { week.classList.remove("hidden"); }
-  })
-
-  if (hidden) {
-      // Then, find the first day and move that to a different location where it can be seen
-    parent.appendChild(getAllDays()[0])
-  } else {
-    // If we are unhiding, there are two conditions:
-    // (1) either this is on load, and there is no element to move back,
-    // (2) or we are unchecking the hidden option, and we need to move an item back
-    let toMove = parent.lastElementChild;
-    let moveTo = parent.firstElementChild.querySelector('.days');
-    if (toMove.classList.contains('container')) { // If the first item is a day, we need to move it back
-      moveTo.prepend(toMove)
-    }
-  }
+  if (hidden) { parent.classList.add("hide-others"); }
+  else        { parent.classList.remove("hide-others"); }
 }
 
 function setCompact() {
   let compact = getDisplayOptions()['compact-mode']
-  document.documentElement.style.setProperty('--padding', compact ? '1rem' : '0rem')
+  if (compact) { document.body.classList.add("padding-on"); }
+  else        { document.body.classList.remove("padding-on"); }
 }
 
 function getDisplayOptions() {
@@ -131,9 +113,7 @@ function addCheckboxListeners() {
 
   document.querySelector('#rigid-mode').addEventListener('click', (event) => {
     const rigid = getDisplayOptions()['rigid-mode']
-    getAllDays().forEach(day => {
-      load(day.id, false) // Load the day without clearing the cache so that the rigidity is changed
-    })
+    populateContent(); // reload page content
     document.cookie = `display-rigid-mode=${rigid}`
   })
 }
