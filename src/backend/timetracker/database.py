@@ -160,8 +160,6 @@ def combination_check(filename):
             edit_row(filename, row['id'], row['name'], prev_item['start'], row['end'], row['color'])
             delete_row(filename, prev_item['id'])
 
-            print(f"editing {row['name']} ({row['id']}) and deleting {prev_item['name']} ({prev_item['id']})")
-
         prev_item = row
     
     # Some IDs are now not sequential, which will mess with the rest of the code - fix this.
