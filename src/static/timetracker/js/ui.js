@@ -3,7 +3,7 @@ This file handles the main UI of the page, except the form. That is managed by f
 */
 
 export { displayError, registerWeekCollapseIcon, getDisplayOptions }
-import { getCookies } from "./utils.js"
+import { getCookies } from "../../general/js/utils.js";
 
 /*
 Error displaying

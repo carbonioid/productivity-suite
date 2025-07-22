@@ -1,4 +1,5 @@
 export { init }
+import { getCookies } from "./utils.js"
 /*
 Consistent API to handle display options
 */
@@ -41,7 +42,7 @@ class ClassWatcher {
     }
 }
 
-function initDisplayOption(targetNode, targetClass, targetFunction, triggerNode, triggerClass) {
+function initDisplayOption(id, targetNode, targetClass, targetFunction, triggerNode, triggerClass, _default) {
     // Create new watcher for mutation events
     if (targetClass) {
         let _  = new ClassWatcher(targetNode, targetClass, (hasClass) => {
@@ -77,9 +78,22 @@ function initDisplayOption(targetNode, targetClass, targetFunction, triggerNode,
         if (targetFunction) {
             targetFunction(!state)
         }
+
+        // Set cookie noting the new state. If true, this means it is switched on (triggerNode has triggerClass)
+        document.cookie = `display-options-${id}=${!state}`
     })
 
-    // TODO: set cookies
+    // Set value from document cookies
+    const cookies = getCookies();
+    const value = cookies[`display-options-${id}`]
+
+    // If either
+    // (a) the state of the cookie is stored as on in cookies;
+    // (b) or there is no stored state and the default is on, then:
+    // set the row to on.
+    if (value === 'true' || (_default && value == undefined)) {
+        triggerNode.dispatchEvent(new Event("click"))
+    }
 }
 
 function init(config) {
@@ -88,36 +102,29 @@ function init(config) {
     Config format:
     [
         {
+            id: str (the id of this option in cookies - all ids must be unique),
             targetNode: Node,
             targetClass: str (optional, if targetFunction is passed)
             targetFunction: function (optional, if targetClass is passed - is run on trigger, passed boolean of triggerNode has triggerClass)
             triggerNode: Node,
             triggerClass: str (optional - defaults to "switched"),
-            default: bool (optional - whether the objects should start with their classes switched on)
+            default: bool (optional - whether the objects should start with their classes switched on),
         },
         ...
     ]
 
     IMPORTANT:
     all triggerNodes must begin without triggerClass and all targetNodes must begin without targetClass.
-    Otherwise listeners will not be activated properly. P
+    Otherwise listeners will not be activated properly.
     */
     for (const row of config) {
         // First, validate that all needed config is present.
-        if (!row.targetNode || !row.triggerNode || !(row.targetClass || row.targetFunction)) {
+        if (!row.id || !row.targetNode || !row.triggerNode || !(row.targetClass || row.targetFunction)) {
             console.error(`Please ensure all options are passed correctly to display options config (offending row: ${JSON.stringify(row)})`)
             return;
         }
 
-        initDisplayOption(row.targetNode, row.targetClass, row.targetFunction,
-                          row.triggerNode, row.triggerClass || "switched")
-        
-        if (row.default) {
-            row.triggerNode.dispatchEvent(new Event("click"))
-        }
+        initDisplayOption(row.id, row.targetNode, row.targetClass, row.targetFunction,
+                          row.triggerNode, row.triggerClass || "switched", row.default)
     }
-
-
-
-    // TOOD: load from cookies
 }
