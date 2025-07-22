@@ -36,10 +36,10 @@ function initCollapseButtonListeners() {
     when the collapseButton is pressed.
     */
     const collapseButton = document.querySelector('.collapse-button')
-    const memoryContainer = document.querySelector('.memory-container')
+    const container = document.querySelector('.page-container')
 
     collapseButton.addEventListener('click', () => {
-        memoryContainer.classList.toggle('hidden')
+        container.classList.toggle("memory-collapsed")
         collapseButton.classList.toggle('switched')
     })
 }

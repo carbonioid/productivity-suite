@@ -14,9 +14,13 @@ MAIN PAGE LAYOUT
 .page-container {
     display:grid;
     column-gap:1rem;
-    grid-template-columns: 1fr 6fr 3fr;
+    grid-template-columns: auto 6fr minmax(15rem, 2fr);
     width:100%;
     height:max-content;
+}
+
+.page-container.memory-collapsed {
+    grid-template-columns: auto 6fr auto; /* Allow memory container to be as small as possible */
 }
 
 /***************
@@ -48,12 +52,14 @@ ENTRY & ENTRY CONTAINER
     display:grid;
     grid-template-rows:minmax(14rem,auto);
     gap:1rem;
+    min-width:20rem;
 }
 
 .entry-form {
     width:100%;
     display:grid;
     grid-template-rows:auto 1fr;
+    overflow:hidden;
 }
 
 .entry-input {
@@ -188,6 +194,10 @@ MEMORY STYLES / RIGHT SIDEBAR
     flex:1;
     background-color: var(--lightest);
     border-color:var(--lightest);
+}
+
+.page-container.memory-collapsed .memory-container {
+    display:none;
 }
 
 .title {
