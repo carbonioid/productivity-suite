@@ -153,22 +153,13 @@ Day titles (title popups are in popups.css)
 /*
 DISPLAY OPTIONS
 */
-.parent-container.hide-others .week-container:first-child .container:first-child {
-    display:flex;
-}
 
-.parent-container.hide-others .week-cointainer .container {
+.parent-container.hide-others .week-container:not(:first-child) {
     display:none;
 }
-
-.parent-container.hide-others .week-container:first-child {
-    display:inherit;
-}
-
 .parent-container.hide-others .week-container:first-child .week-separator {
     display:none;
 }
-
-.parent-container.hide-others .week-container {
+.parent-container.hide-others .week-container:first-child .container:not(:first-child) {
     display:none;
 }

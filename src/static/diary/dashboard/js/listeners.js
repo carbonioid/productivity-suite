@@ -1,7 +1,7 @@
 /*
 This file listens adds event listeners to the dashboard page.
 */
-export { addEditListener, initFormListeners, initNavListeners }
+export { addEditListener, initFormListeners }
 import { date_to_yyyymmdd } from "../../../general/js/utils.js";
 import { getFormData, getSearchResults, loadSearchResults, exitSearchResults, clearForm } from "./search.js";
 
@@ -52,30 +52,4 @@ function initFormListeners() {
     sortSelect.addEventListener("change", loadResults)
     orderSelect.addEventListener("change", loadResults)
 
-}
-
-function initNavListeners() {
-    // Display options listeners
-    const entryParent = document.querySelector(".entry-parent")
-    const displayOptions = document.querySelector(".display-options")
-    const view = displayOptions.querySelector(".view")
-    const showEmpty = displayOptions.querySelector(".show-empty")
-
-    view.addEventListener("click", () => {
-        view.classList.toggle("switched")
-
-        // Hide empty entries & go into reader view
-        if (view.classList.contains("switched")) {
-            entryParent.classList.add("hide-empty")
-            entryParent.classList.add("reader-view")
-        } else {
-            entryParent.classList.remove("hide-empty")
-            entryParent.classList.remove("reader-view")
-        }
-    })
-
-    showEmpty.addEventListener("click", () => {
-        showEmpty.classList.toggle("switched")
-        entryParent.classList.toggle("hide-empty")
-    })
 }

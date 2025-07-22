@@ -1,7 +1,7 @@
-import { addFormListeners, addDisplayFormListeners, addDayEditIndicator } from "./form.js";
-import { addCheckboxListeners, showOthers, setCompact, setDisplayOptionsFromCookie } from "./ui.js";
+import { addFormListeners, addDayEditIndicator } from "./form.js";
 import { populateContent } from "./compile.js"
 import { populateCache } from "./cache.js";
+import { init } from "../../general/js/display.js";
 
 /*
 This file co-ordinates any functions that need to be run (boileplate or otherwise)
@@ -14,13 +14,27 @@ populateContent();
 
 // Add listeners
 addFormListeners()
-addDisplayFormListeners()
-addCheckboxListeners()
 
-// Display options
-setDisplayOptionsFromCookie()
-showOthers()
-setCompact()
+// Init display options
+const parent = document.querySelector('.parent-container');
+init([
+    {
+        targetNode: document.body,
+        targetClass: "padding-on",
+        triggerNode: document.querySelector('#compact-mode')
+    },
+    {
+        targetNode: parent, 
+        targetClass: "hide-others",
+        triggerNode: document.querySelector("#show-others")
+    },
+    {
+        targetNode: parent,
+        targetFunction: (on) => populateContent(), // Reload page content as the value has now automatically changed
+        triggerNode: document.querySelector("#rigid-mode"),
+        default: true
+    }
+])  
 
 // Get ?date if exists and add appropriate indicator
 const url = new URL(window.location.href);
