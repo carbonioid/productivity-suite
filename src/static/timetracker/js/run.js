@@ -19,16 +19,19 @@ addFormListeners()
 const parent = document.querySelector('.parent-container');
 init([
     {
+        id: "timetracker-compact-mode",
         targetNode: document.body,
         targetClass: "padding-on",
         triggerNode: document.querySelector('#compact-mode')
     },
     {
+        id: "timetracker-show-others",
         targetNode: parent, 
         targetClass: "hide-others",
         triggerNode: document.querySelector("#show-others")
     },
     {
+        id: "timetracker-rigid-mode",
         targetNode: parent,
         targetFunction: (on) => populateContent(), // Reload page content as the value has now automatically changed
         triggerNode: document.querySelector("#rigid-mode"),

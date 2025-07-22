@@ -89,6 +89,7 @@ async function loadPageContent() {
     // Initialise display options
     init([
         {
+            id: "diary-reader-view",
             targetNode: document.querySelector(".entry-parent"),
             targetClass: "reader-view",
             targetFunction: (on) => {
@@ -98,6 +99,7 @@ async function loadPageContent() {
             triggerNode: document.querySelector(".view")
         },
         {
+            id: "diary-show-empty",
             targetNode: document.querySelector(".entry-parent"),
             targetClass: "hide-empty",
             triggerNode: document.querySelector(".show-empty"),

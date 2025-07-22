@@ -43,16 +43,24 @@ class ClassWatcher {
 }
 
 function initDisplayOption(id, targetNode, targetClass, targetFunction, triggerNode, triggerClass, _default) {
+    // Helper function that can be run to change the class and update cookies, so that there are not conflicting implementations.
+    function modifyTriggerNodeClass(remove) {
+        console.log(`removing=${true} for ${id}`)
+        if (remove) triggerNode.classList.remove(triggerClass)
+        else        triggerNode.classList.add(triggerClass)
+        
+        document.cookie = `display-options-${id}=${!remove}`
+    }
     // Create new watcher for mutation events
     if (targetClass) {
         let _  = new ClassWatcher(targetNode, targetClass, (hasClass) => {
-            if (hasClass) triggerNode.classList.add(triggerClass)
-            else          triggerNode.classList.remove(triggerClass)
+            modifyTriggerNodeClass(!hasClass) // if has class, do not remove.
         })
     }
 
     triggerNode.addEventListener("click", () => {
         const state = triggerNode.classList.contains(triggerClass)
+
         // Add and remove class from targetNode - this will trigger the dom watcher, 
         // which will in turn modify the classes for this button.
         // This is so that any mutations on these classes are automatically 
@@ -68,7 +76,7 @@ function initDisplayOption(id, targetNode, targetClass, targetFunction, triggerN
             // If we aren't editing a class, then the mutation observer will not fire
             // which means that the trigerNode's class will not be changed automaticaly. Therefore,
             // we have to do this manually.
-            triggerNode.classList.toggle(triggerClass)
+            modifyTriggerNodeClass(triggerNode.classList.contains(triggerClass))
         }
 
         // Run triger function if exists.
@@ -78,22 +86,7 @@ function initDisplayOption(id, targetNode, targetClass, targetFunction, triggerN
         if (targetFunction) {
             targetFunction(!state)
         }
-
-        // Set cookie noting the new state. If true, this means it is switched on (triggerNode has triggerClass)
-        document.cookie = `display-options-${id}=${!state}`
     })
-
-    // Set value from document cookies
-    const cookies = getCookies();
-    const value = cookies[`display-options-${id}`]
-
-    // If either
-    // (a) the state of the cookie is stored as on in cookies;
-    // (b) or there is no stored state and the default is on, then:
-    // set the row to on.
-    if (value === 'true' || (_default && value == undefined)) {
-        triggerNode.dispatchEvent(new Event("click"))
-    }
 }
 
 function init(config) {
@@ -126,5 +119,20 @@ function init(config) {
 
         initDisplayOption(row.id, row.targetNode, row.targetClass, row.targetFunction,
                           row.triggerNode, row.triggerClass || "switched", row.default)
+    }
+
+    // Initialise values only after all listeners have been set
+    for (const row of config) {
+        // Set value from document cookies
+        const cookies = getCookies();
+        const value = cookies[`display-options-${row.id}`]
+
+        // If either
+        // (a) the state of the cookie is stored as on in cookies;
+        // (b) or there is no stored state and the default is on, then:
+        // set the row to on.
+        if (value === 'true' || (row.default && value == undefined)) {
+            row.triggerNode.dispatchEvent(new Event("click"))
+        }
     }
 }
