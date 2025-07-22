@@ -1,4 +1,5 @@
-import { addFormListeners, addDayEditIndicator } from "./form.js";
+import { addFormListeners } from "./listeners.js";
+import { addDayEditIndicator } from "./form.js"
 import { populateContent } from "./compile.js"
 import { populateCache } from "./cache.js";
 import { init } from "../../general/js/display.js";

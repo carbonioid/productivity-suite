@@ -1,14 +1,13 @@
 /*
 This file handles the main form of the page. Some functionality is exported to ui.js
 */
-
+export { addDayEditIndicator, exitEditMode, enterEditMode, detectColor, setFormContent, getFormContent,
+          submitForm, startAddingTo }
 import { addElement, editElement, deleteElement } from "./compile.js";
-import { displayError } from "./ui.js"
-import { getDay } from "./cache.js"
-import { getAllDays, parseElementApiInfo } from "./utils.js";
 import { hideEmptyMessage } from "../../general/js/messages.js";
-import { date_to_yyyymmdd, format_date, format_yyyymmdd } from "../../general/js/utils.js";
-export { addFormListeners, registerEditing, addDisplayFormListeners, registerAddToButton, addDayEditIndicator }
+import { parseElementApiInfo } from "./utils.js";
+import { getDay } from "./cache.js";
+import { date_to_yyyymmdd, format_yyyymmdd } from "../../general/js/utils.js";
 
 // "dictionary" of colors for different bits of text
 let colors = [
@@ -122,8 +121,16 @@ async function submitForm() {
   }
 }
 
+function addDayEditIndicator(date) {
+  const indicator = document.querySelector('#day-editing-indicator')
+
+  indicator.classList.remove("hidden")
+  indicator.querySelector('.name-value').textContent = format_yyyymmdd(date)
+}
+
 /*
-Functions concerning editing, mainly used by ui.js
+Functions concerning editing, mainly used by listeners.js
+These mostly add indicators and restore content to the main form.
 */
 function exitEditMode() {
   // Restore the form content from the data-mode info. Used when editing is exited to get back form content from before it was created.
@@ -197,23 +204,6 @@ function enterEditMode(itemObject) {
   form.querySelector('#name').focus()
 }
 
-function registerEditing(obj) {
-  // Register the editing mode (in the form; this doesn't actually do the editing) -
-  // what this does is set the input area to the values of this object
-  // and set some parameters in the input area to let the form know we are editing
-  // So that when the form is submitted, we know what to edit.
-  obj.addEventListener('dblclick', (event) => {
-    event.preventDefault();
-    enterEditMode(obj)
-  });
-}
-
-function registerAddToButton(button, date) {
-  button.addEventListener('click', () => {
-    startAddingTo(date)
-  })
-}
-
 function startAddingTo(date) {
   const indicator = document.querySelector('#day-editing-indicator')
 
@@ -238,83 +228,18 @@ function startAddingTo(date) {
     }
 }
 
-function addDayEditIndicator(date) {
-  const indicator = document.querySelector('#day-editing-indicator')
-
-  indicator.classList.remove("hidden")
-  indicator.querySelector('.name-value').textContent = format_yyyymmdd(date)
-}
-
 /*
-Listeners for the form
+Error displaying
 */
-function addFormListeners() {
-  let form = document.querySelector(".form-body");
+function displayError(msg) {
+  let errorbox = document.querySelector(".errorbox")
 
-  // Listener for ctrl-equals - sets "end" value to the current time (even if already set) - for me, the power user.
-  // Only activates when one of the form elements is selected (hence the forEach)
-  document.addEventListener('keyup', async function (event) {
-      if (event.ctrlKey && event.key === ' ') {
-        // Get curent date in HH:mm
-        const now = new Date();
-        const hours = String(now.getHours()).padStart(2, '0');
-        const minutes = String(now.getMinutes()).padStart(2, '0');
-        let currentTime = `${hours}:${minutes}`;
+  console.log(`Receieved error: ${msg}`);
+  errorbox.classList.remove("hidden")
+  errorbox.textContent = msg;
 
-        // Set it in the form.
-        setFormContent(null, null, currentTime, null);
-
-        // Focus form for easy editing/submitting
-        form.querySelector("#add").focus()
-      }
-      // Exit editing mode on escape key press, if the form is in edit mode.
-      else if (event.key === 'Escape' && document.querySelector(".form-body").dataset.mode.startsWith('edit')) {
-        exitEditMode();
-      }
-
-      // Edit most recent item on up arrow press, if input form not selected
-      else if (event.key === 'ArrowUp' && 
-        (!document.querySelector('#name').contains(document.activeElement) || // Either, the name field is not focused
-        document.querySelector('#name').value === "") // Or, the name field is blank (so something was probably just added)
-      ) {
-        // Enter editing mode for the most recent item
-        const lastItem = getAllDays()[0].lastElementChild
-        enterEditMode(lastItem)
-      }
-    })
-
-  form.addEventListener("submit", async function (event) {
-    event.preventDefault();
-    await submitForm();
-  });
-
-  // Listener that updates selected label based on currently inputted name.
-  const nameInput = document.querySelector('#name');
-  const startInput = document.querySelector('#start');
-  nameInput.addEventListener("input", (event) => {
-    let col = detectColor(nameInput.value);
-
-    // Set appropriate radio button to selected
-    setFormContent(null, null, null, col);
-  })
-  startInput.addEventListener("input", (event) => {
-    startInput.dataset.auto = false; // The "auto" property trackers whether the info here has been automatically set; if the user edits it, it has not.
-  })
-
-  // Editing indicator Listener
-  document.querySelector('.editing-exit-button').addEventListener('click', exitEditMode)
-
-  // Day editing indicator listener
-  document.querySelector('.day-editing-exit-button').addEventListener('click', () => {
-    startAddingTo(date_to_yyyymmdd(new Date()))
-  })
-}
-
-function addDisplayFormListeners() {
-  let icons = document.querySelectorAll('.switch')
-  Array.from(icons).forEach(icon => {
-    icon.addEventListener('click', () => {
-      icon.classList.toggle('switched')
-    })
-  })
+  setTimeout(() => {
+    errorbox.classList.add("hidden");
+    errorbox.textContent = "";
+  }, 4500)
 }

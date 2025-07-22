@@ -4,14 +4,14 @@ It also handles adding, editing and deleting elements.
 */
 
 export { addElement, editElement, deleteElement, load, initialiseContainers, populateContent };
-import { format_mins, duration, dayOfWeek, getAllDays } from './utils.js'
+import { format_mins, duration, dayOfWeek } from './utils.js'
 import { format_yyyymmdd } from '../../general/js/utils.js';
-import { registerWeekCollapseIcon, displayError } from "./ui.js";
+import { registerWeekCollapseIcon, registerEditing, registerAddToButton } from "./listeners.js";
 import { registerPopup, registerContextMenu } from "../../general/js/popup.js"
-import { registerEditing, registerAddToButton } from './form.js';
 import { fetchDay, getDay, getAllEntryDates } from "./cache.js"
 import { loadTemplate } from '../../general/js/template.js';
 import { getDisplayOptions } from '../../general/js/display.js';
+import { addElement, editElement, deleteElement } from "./api.js"
 
 function addEntryPadding(entries) {
   /*
@@ -44,7 +44,6 @@ function addEntryPadding(entries) {
 }
 
 /* Load day containers */
-
 function loadWeekContainer(date, parent) {
   // Load this object from its template
   let template = Object.assign(
@@ -294,89 +293,4 @@ function populateContent() {
   if (dates.length === 1 && getDay(names[0]).length === 0) {
       showEmptyMessage(container, "No data", "You haven't added any data yet. Use the form at the top to get started.") // Show empty message if no entries exist
   }
-}
-
-/* Query API and reload days */
-
-async function addElement(name, start, end, color, day) {
-  /*
-  More general add-element which takes care of the entire process.
-  Returns True if succesful, the error message otherwise.
-  */
-
-  if (day == undefined) {day = getAllDays()[0].id}
-
-  // Prompt backend with new info using fetch()
-  var data = JSON.stringify({
-    "name": name,
-    "start": start,
-    "end": end,
-    "color": color
-  });
-
-  const response = await fetch("/timetracker/add",  {
-    method: "POST",
-    headers: {
-      'Content-Type': 'application/json',
-      'File': day
-    },
-    body: data
-  })
-
-  if (response.status == 201) {
-    // Update this change by re-loading the day we just added to 
-    await load(day, true)
-
-    return true
-  } else {
-    return (await response.text()) // return the error so form.js can deal with it.
-  }
-}
-
-async function editElement(id, name, start, end, color, day) {
-  var data = JSON.stringify({
-    "id": id,
-    "name": name,
-    "start": start,
-    "end": end,
-    "color": color
-  });
-  await fetch("/timetracker/edit",  {
-    method: "POST",
-    headers: {
-      'Content-Type': 'application/json',
-      'File': day
-    },
-    body: data
-  })
-  .then(async function(response) {
-    if (response.status == 201) {
-      // Update this change by re-loading the day we just edited
-      await load(day, true)
-    } else {
-      displayError(await response.text());
-    }
-  })
-}
-
-async function deleteElement(id, day) {
-  var data = JSON.stringify({
-    "id": id,
-  });
-  await fetch("/timetracker/delete",  {
-    method: "POST",
-    headers: {
-      'Content-Type': 'application/json',
-      'File': day
-    },
-    body: data
-  })
-  .then(async function(response) {
-    if (response.status == 201) {
-      // Update this change by re-loading the day we just edited
-      await load(day, true)
-  } else {
-      displayError(await response.text());
-    }
-  })
 }
