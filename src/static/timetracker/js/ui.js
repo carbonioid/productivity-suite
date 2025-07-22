@@ -2,7 +2,7 @@
 This file handles the main UI of the page, except the form. That is managed by form.js and some of its functionality is impoted here.
 */
 
-export { displayError, registerWeekCollapseIcon, getDisplayOptions }
+export { displayError, registerWeekCollapseIcon }
 import { getCookies } from "../../general/js/utils.js";
 
 /*
@@ -51,19 +51,5 @@ function registerWeekCollapseIcon(parent, button) {
   const savedValue = getCookies()[parent.id]
   if (savedValue == 'closed') {
     button.dispatchEvent(new Event('click'))
-  }
-}
-
-/*
-These are the options and functions for the checkboxes that edit the display
-of the days themselves. These are also used by run.js to make sure anything saved in these
-checkboxes is taken into account on refresh. These functions are added as onclick listeners
-to the checkboxes.
-*/
-function getDisplayOptions() {
-  return {
-    'show-others': document.querySelector('#show-others').classList.contains('switched'),
-    'compact-mode': document.querySelector('#compact-mode').classList.contains('switched'),
-    'rigid-mode': document.querySelector('#rigid-mode').classList.contains('switched')
   }
 }

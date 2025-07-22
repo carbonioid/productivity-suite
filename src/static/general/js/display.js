@@ -1,4 +1,4 @@
-export { init }
+export { init, getDisplayOptions }
 import { getCookies } from "./utils.js"
 /*
 Consistent API to handle display options
@@ -45,7 +45,6 @@ class ClassWatcher {
 function initDisplayOption(id, targetNode, targetClass, targetFunction, triggerNode, triggerClass, _default) {
     // Helper function that can be run to change the class and update cookies, so that there are not conflicting implementations.
     function modifyTriggerNodeClass(remove) {
-        console.log(`removing=${true} for ${id}`)
         if (remove) triggerNode.classList.remove(triggerClass)
         else        triggerNode.classList.add(triggerClass)
         
@@ -135,4 +134,22 @@ function init(config) {
             row.triggerNode.dispatchEvent(new Event("click"))
         }
     }
+}
+
+function getDisplayOptions() {
+    /*
+    Grab the current value of all display from cookies and return them as a {key: bool}
+    dictionary denoting whether they are turned on.
+    */
+
+    const result = {};
+    const cookies = getCookies();
+    for (const pair of Object.entries(cookies)) {
+        const [id, value] = pair;
+        if (id.startsWith("display-options-")) {
+            result[id.replace("display-options-", "")] = (value === 'true')
+        }
+    }
+
+    return result
 }

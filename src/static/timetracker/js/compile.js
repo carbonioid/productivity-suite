@@ -3,14 +3,15 @@ This file handles taking input form the server and compiling it to HTML.
 It also handles adding, editing and deleting elements.
 */
 
-export {  addElement, editElement, deleteElement, load, initialiseContainers, populateContent };
-import {  format_mins, duration, dayOfWeek, getAllDays } from './utils.js'
+export { addElement, editElement, deleteElement, load, initialiseContainers, populateContent };
+import { format_mins, duration, dayOfWeek, getAllDays } from './utils.js'
 import { format_yyyymmdd } from '../../general/js/utils.js';
-import {  registerWeekCollapseIcon, displayError, getDisplayOptions } from "./ui.js";
+import { registerWeekCollapseIcon, displayError } from "./ui.js";
 import { registerPopup, registerContextMenu } from "../../general/js/popup.js"
 import { registerEditing, registerAddToButton } from './form.js';
 import { fetchDay, getDay, getAllEntryDates } from "./cache.js"
 import { loadTemplate } from '../../general/js/template.js';
+import { getDisplayOptions } from '../../general/js/display.js';
 
 function addEntryPadding(entries) {
   /*
@@ -273,7 +274,7 @@ async function load(name, reloadCache) {
   const container = document.getElementById(name)
 
   let entries = reloadCache ? await fetchDay(name) : getDay(name) // fetchDay() clears the cache and getDay doesn't
-  entries = getDisplayOptions()['rigid-mode'] ? addEntryPadding(entries) : entries // show or don't show untracked time depending on rigid mode
+  entries = getDisplayOptions()['timetracker-rigid-mode'] ? addEntryPadding(entries) : entries // show or don't show untracked time depending on rigid mode
 
   container.innerHTML = ''; // Clear previous content because we are replacing it
   loadDay(container, name, entries)
