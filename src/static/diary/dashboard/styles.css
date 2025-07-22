@@ -157,13 +157,3 @@
 .nav-bar {
     display:flex;
 }
-
-.display-options {
-    display:inline-flex;
-    gap:0.4rem;
-    justify-content:center;
-
-    background-color: white;
-    margin-left: auto;
-    height:max-content;
-}
