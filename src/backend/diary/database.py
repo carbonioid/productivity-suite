@@ -1,10 +1,12 @@
 import csv, json
 import re
-from datetime import datetime, timedelta
+from flask import Response
+from datetime import datetime
 from backend.common.utils import missing_dates
 
-DATABASE_PATH = 'src/backend/diary/data/entries.csv'
-TAG_INDEX_PATH = 'src/backend/diary/data/tag_index.json'
+DATABASE_PATH = 'data/diary/entries.csv'
+TAG_INDEX_PATH = 'data/diary/tag_index.json'
+SETTINGS_PATH = 'data/diary/settings.json'
 
 def add_entry_padding(entries):
     """
@@ -175,3 +177,18 @@ def delete_entry(date):
         writer.writerows(new_rows)
     
     update_tag_index(json.loads(found_row[4]), remove=True)
+
+def generic_json_request(path):
+    try:
+        with open(path, 'r') as file:
+            return json.load(file)
+    except FileNotFoundError:
+        return Response(response='Generic file not found', status=404)
+    except json.JSONDecodeError:
+        return Response(response='Generic file is not valid JSON', status=400)
+
+def get_settings():
+    return generic_json_request(SETTINGS_PATH)
+
+def get_tag_index():
+    return generic_json_request(TAG_INDEX_PATH)

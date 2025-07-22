@@ -1,7 +1,7 @@
 import werkzeug, json
 from datetime import date
 from flask import render_template, request, Blueprint, Response, jsonify
-from backend.diary.database import fetch_db_contents, add_entry, edit_entry, delete_entry
+from backend.diary.database import fetch_db_contents, add_entry, edit_entry, delete_entry, get_settings, get_tag_index
 from backend.diary.search import evaluate_search
 
 diary_bp = Blueprint('diary', __name__)
@@ -136,25 +136,13 @@ def search_entries_route():
 @diary_bp.route("/api/settings", methods=["GET"])
 def get_settings_route():
     """Return settings from settings.json"""
-    try:
-        with open('src/backend/diary/settings.json', 'r') as file:
-            settings = json.load(file)
-    except FileNotFoundError:
-        return Response(response='Settings file not found', status=404)
-    except json.JSONDecodeError:
-        return Response(response='Settings file is not valid JSON', status=400)
-
-    return jsonify(settings), 200
+    response = get_settings()
+    if type(response) == Response: return response
+    else: return jsonify(response), 200
 
 @diary_bp.route("/api/tag-index", methods=["GET"])
 def get_tag_index_route():
-    """Return settings from settings.json"""
-    try:
-        with open('src/backend/diary/data/tag_index.json', 'r') as file:
-            tags = json.load(file)
-    except FileNotFoundError:
-        return Response(response='Tags file not found', status=404)
-    except json.JSONDecodeError:
-        return Response(response='Tags file is not valid JSON', status=400)
-
-    return jsonify(tags), 200
+    """Return tag indedx from tag_index.json"""
+    response = get_tag_index()
+    if type(response) == Response: return response
+    else: return jsonify(response), 200

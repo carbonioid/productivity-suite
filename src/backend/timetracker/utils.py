@@ -3,7 +3,7 @@ from pathlib import Path
 from datetime import datetime
 from backend.common.utils import missing_dates
 
-DIR_PATH = 'src/backend/timetracker/data/'
+DIR_PATH = 'data/timetracker/entries/'
 pathto = lambda name: Path(DIR_PATH, f'{name}.csv')
 
 def hhmm_to_minutes(string):
