@@ -147,8 +147,10 @@ function addInputListeners(tagForm, tagInput, adaptable) {
         if (adaptable) {
             const adaptTag = tagForm.querySelector(".adapt-tag")
 
-            if (tagInput.value.trim().length == 0) {
-                // If input is empty, hide the adapt tag
+            // If input is empty, hide the adapt tag
+            // If a perfect match exists, hide the tag (otherwise there are two duplicates of the same text)
+            const tagNames = parseTagNames(getTags(tagForm))
+            if (tagInput.value.trim().length == 0 || tagNames.includes(tagInput.value)) {
                 adaptTag.classList.add("hidden")
             } else {
                 adaptTag.textContent = tagInput.value
