@@ -4,10 +4,11 @@ This file uses templates to load entries and other HTML components into the page
 export { loadPageContent, loadEntry, loadAllEntries }
 import { allEntries, populateCache } from "../../js/cache.js"
 import { loadTemplate } from "../../../general/js/template.js"
-import { addEditListener, initFormListeners, initNavListeners } from "./listeners.js"
+import { addEditListener, initFormListeners } from "./listeners.js"
 import { date_to_yyyymmdd, format_date } from "../../../general/js/utils.js"
-import { showEmptyMessage } from "../../../general/js/display.js"
+import { showEmptyMessage } from "../../../general/js/messages.js"
 import { loadTagInput } from "../../js/tag-select.js"
+import { init } from "../../../general/js/display.js";
 
 function loadEntry(entryData, container) {
     /*
@@ -84,10 +85,31 @@ async function loadPageContent() {
     /*
     Load entries into page
     */
+   
+    // Initialise display options
+    init([
+        {
+            id: "diary-reader-view",
+            targetNode: document.querySelector(".entry-parent"),
+            targetClass: "reader-view",
+            targetFunction: (on) => {
+                if (on) document.querySelector(".entry-parent").classList.add("hide-empty")
+                else document.querySelector(".entry-parent").classList.remove("hide-empty")
+            },
+            triggerNode: document.querySelector(".view")
+        },
+        {
+            id: "diary-show-empty",
+            targetNode: document.querySelector(".entry-parent"),
+            targetClass: "hide-empty",
+            triggerNode: document.querySelector(".show-empty"),
+        }
+    ])
 
+    // init other listeners
     initFormListeners();
-    initNavListeners();
 
+    // load tag input
     await loadTagInput(document.querySelector(".tag-select"), false); // The version for this page is not adaptable because the user shouldn't be able to add custom tags (hence false)
     
     // Populate cache and load entries

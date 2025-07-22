@@ -78,16 +78,3 @@ EDITING INDICATOR
 #day-editing-indicator {
     margin-right:1rem;
 }
-
-/*
-DISPLAY FORM
-*/
-
-.display-form {
-    display:inline-flex;
-    gap:0.4rem;
-    justify-content:center;
-
-    background-color: white;
-    margin-left: auto;
-}

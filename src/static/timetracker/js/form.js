@@ -6,7 +6,7 @@ import { addElement, editElement, deleteElement } from "./compile.js";
 import { displayError } from "./ui.js"
 import { getDay } from "./cache.js"
 import { getAllDays, parseElementApiInfo } from "./utils.js";
-import { hideEmptyMessage } from "../../general/js/display.js";
+import { hideEmptyMessage } from "../../general/js/messages.js";
 import { date_to_yyyymmdd, format_date, format_yyyymmdd } from "../../general/js/utils.js";
 export { addFormListeners, registerEditing, addDisplayFormListeners, registerAddToButton, addDayEditIndicator }
 

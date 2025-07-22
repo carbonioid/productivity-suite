@@ -1,4 +1,17 @@
-export { format_yyyymmdd, yyyymmdd_to_date, date_to_yyyymmdd, format_date }
+export { format_yyyymmdd, yyyymmdd_to_date, date_to_yyyymmdd, format_date, getCookies }
+
+function getCookies() {
+  const cookies = {};
+  const cookieString = document.cookie;
+  if (cookieString) {
+    const cookieArray = cookieString.split('; ');
+    for (let i = 0; i < cookieArray.length; i++) {
+      const cookie = cookieArray[i].split('=');
+      cookies[decodeURIComponent(cookie[0])] = decodeURIComponent(cookie[1]);
+    }
+  }
+  return cookies;
+}
 
 function format_yyyymmdd(string, includeYear) {
   let [year, month, day] = string.split('-');

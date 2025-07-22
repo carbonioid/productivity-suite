@@ -1,6 +1,13 @@
 :root {
-    --padding:1rem;
     --container-height:2rem;
+}
+
+body.padding-on {
+    --padding:1rem;
+}
+
+body {
+    --padding:0rem;
 }
 
 /*
@@ -141,4 +148,18 @@ Day titles (title popups are in popups.css)
     padding:.1rem .4rem;
     margin-top:.3rem;
     cursor: pointer;
+}
+
+/*
+DISPLAY OPTIONS
+*/
+
+.parent-container.hide-others .week-container:not(:first-child) {
+    display:none;
+}
+.parent-container.hide-others .week-container:first-child .week-separator {
+    display:none;
+}
+.parent-container.hide-others .week-container:first-child .container:not(:first-child) {
+    display:none;
 }
