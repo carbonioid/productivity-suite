@@ -92,7 +92,7 @@ function addAdaptTagListeners(adaptTag, tagForm) {
     const tagInput = tagForm.querySelector(".search-bar")
     adaptTag.addEventListener("click", () => {
         const tagNames = parseTagNames(getTags(tagForm))
-        if (!tagNames.includes(tagInput.value)) {
+        if (!tagNames.includes(tagInput.value.toLowerCase())) {
             const tag = loadTag(tagInput.value, tagMenu) 
             selectTag(tag)
         }
@@ -147,13 +147,12 @@ function addInputListeners(tagForm, tagInput, adaptable) {
         if (adaptable) {
             const adaptTag = tagForm.querySelector(".adapt-tag")
 
-            // If input is empty, hide the adapt tag
-            // If a perfect match exists, hide the tag (otherwise there are two duplicates of the same text)
+            // If input is empty or a perfect match exists, hide the tag (otherwise there are two duplicates of the same text)
             const tagNames = parseTagNames(getTags(tagForm))
-            if (tagInput.value.trim().length == 0 || tagNames.includes(tagInput.value)) {
+            if (tagInput.value.trim().length == 0 || tagNames.includes(tagInput.value.toLowerCase())) {
                 adaptTag.classList.add("hidden")
             } else {
-                adaptTag.textContent = tagInput.value
+                adaptTag.textContent = tagInput.value.toLowerCase()
                 adaptTag.classList.remove("hidden")
             }
         } else {
