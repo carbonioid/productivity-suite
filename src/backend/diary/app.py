@@ -2,7 +2,7 @@ import werkzeug, json
 from datetime import date
 from flask import render_template, request, Blueprint, Response, jsonify
 from backend.diary.database import fetch_db_contents, add_entry, edit_entry, delete_entry, get_settings, get_tag_index
-from backend.diary.search import evaluate_search
+from backend.diary.search import handler
 
 diary_bp = Blueprint('diary', __name__)
 
@@ -127,7 +127,7 @@ def search_entries_route():
         return Response(response='The supplied body was not valid JSON', status=400)
     
     try:
-        results = evaluate_search(body)
+        results = handler.handle_search(body)
     except Exception as e:
         return str(e), 400
     

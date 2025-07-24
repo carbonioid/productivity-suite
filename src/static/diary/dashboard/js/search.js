@@ -70,7 +70,7 @@ async function getSearchResults(formData) {
                 "type": sType,
                 "required": strict,
                 "case-sensitive": false,
-                "text": tSearchText
+                "query": tSearchText
             })
         }
 
@@ -87,7 +87,7 @@ async function getSearchResults(formData) {
             tagGroup["conditions"].push({
                 "type": "tag",
                 "required": strict,
-                "name": tag
+                "query": tag
             })
         }
 
