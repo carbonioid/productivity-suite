@@ -1,5 +1,27 @@
 # Search API
-The search function is an extensible API that can be used to construct complex search queries with fairly similar setup and query construction.
+- [Search API](#search-api)
+  - [Groups](#groups)
+  - [Conditions](#conditions)
+  - [Request schema](#request-schema)
+  - [Response schema](#response-schema)
+- [Python implementation](#python-implementation)
+  - [`condition_functions`](#condition_functions)
+  - [`totals_functions` (optional)](#totals_functions-optional)
+  - [`data_function`](#data_function)
+  - [Using the `Entry` class](#using-the-entry-class)
+- [Individual implementations](#individual-implementations)
+  - [Diary](#diary)
+    - [title](#title)
+    - [body](#body)
+    - [tags](#tags)
+    - [ratings](#ratings)
+  - [Timetracker](#timetracker)
+    - [name](#name)
+    - [color](#color)
+    - [time](#time)
+    - [`totals_function`](#totals_function)
+
+The search API is an extensible interface that can be used to construct complex search queries with fairly similar setup and query construction.
 
 ## Groups
 The body of a request to an implementation of the search API consists of a list of nested match groups and conditions. 
@@ -203,3 +225,46 @@ Note that there is no case-sensitivity option because tags are already stored as
 The `min` and `max` parameters provide an additional layer of verification by constraining the `value` parameter of the rating. Various fields may be set as `null` in this request:
 1. To have either `min` or `max` not be considered, set them as `null`.
 2. To have this condition not consider the rating's name, set `name` to `null`.
+
+
+## Timetracker
+All search conditions here search through individual activities rather than whole days.
+### name
+```json
+{
+    "type": "name",
+    "query": str,
+    "required": bool,
+    "case-sensitive": bool
+}
+```
+Search by the name of the activity
+
+### color
+```json
+{
+    "type": "color",
+    "query": str,
+    "required": bool
+}
+```
+Search by the color of the activity (strict - entire string must match)
+
+### time
+```json
+{
+    "type": "time",
+    "required": bool,
+    "min": str (HH:mm),
+    "max": str (HH:mm)
+}
+```
+Constrain entries such that their start time must be after or equal to `min` and their end time before or equal to `max`.
+
+### `totals_function`
+The totals function for timetabler returns the combined length of all the activites returned (e.g. returning two one-hour activities = 2 hours total).
+```json
+{
+    "time": int (minutes)
+}
+```
