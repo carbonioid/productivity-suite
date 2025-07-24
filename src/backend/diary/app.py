@@ -118,7 +118,7 @@ def delete_entry_route():
 def search_entries_route():
     """
     Search entries using the schema provided in the request body.
-    See docs/api_diary.md for more details.
+    See docs/search.md for more details.
     """
 
     try:
