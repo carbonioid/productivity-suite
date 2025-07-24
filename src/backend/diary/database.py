@@ -107,7 +107,9 @@ def fetch_db_contents(scope: list, add_padding):
     return entries
 
 def add_entry(date, title, entry, ratings, tags):
-    tags = list(map(str.lower, tags))
+    tags = list(map(str.lower, tags)) # force lowercase
+    tags = list(set(tags)) # remove duplicates
+
     # Check that there isn't already an entry for this day
     date_entry = fetch_db_contents([date], False)
 
@@ -124,9 +126,12 @@ def add_entry(date, title, entry, ratings, tags):
 
 def edit_entry(date, new_title, new_entry, new_ratings, new_tags):
     new_tags = list(map(str.lower, new_tags))
+    new_tags = list(set(new_tags)) # remove tag duplicates
+    
     # Validate ratings
     if (message := validate_ratings(new_ratings)) is not None:
         raise ValueError(message)
+    
 
     # Get current rows
     with open(DATABASE_PATH, 'r') as file:

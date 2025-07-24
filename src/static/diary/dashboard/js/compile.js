@@ -23,7 +23,7 @@ function loadEntry(entryData, container) {
     }
     const entryObject = loadTemplate(document, "entry-container-template", {
         'date': format_date(entryData['date'], "long"),
-        'title': entryData['title'],
+        'title': entryData['title'] || "Untitled",
         'entry': entryData['entry']
     })
 
