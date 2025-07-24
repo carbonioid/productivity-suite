@@ -55,12 +55,17 @@ The implementation may choose to implement any other optional parameters to cond
 
 > When initialising an implementation of the search API, the user will pass a number of functions, each matched to a condition `type` that can evaluate a query of that type on an invidiual database entry and return an integer corresponding to the number of matches that condition has on that entry.
 
+> If the function encounters a `type` of condition that does not have a matching implementation, the `handle_search` function will throw a `ValueError`
+
+
 ## Request schema
 The body of a request to an implementation of the search API begins with a single highest-level group. Some special properties apply to this group:
 1. It must exist (not be `None`)
 2. It must be of type `group`
 3. It must have at least one condition
 4. It must be required
+
+> If any of these are failed, the `handle_search` function will throw a `ValueError`
 
 ## Response schema
 The search response consists of a list of entries, ordered by number of search hits;
@@ -133,6 +138,20 @@ An implementation for this function might look like:
 ```py
     "data_function": lambda: get_database_contents('all')
 ```
+
+## Using the `Entry` class
+Initialise the class:
+```py
+from backend.common.search_base import SearchHandler
+handler = SearchHandler(condition_functions, totals_function, data_function)
+```
+Once an instance of the search class has been initialised, you may simply get the results of a query like this:
+```py
+results = handler.handle_search(query)
+```
+Where `query` is a decoded JSON object (i.e. to a python dictionary or list). The return type is a python dictionary
+
+> This function may throw errors (e.g. if it is misconfigured or the query is malformed). It is up to the implementation itself to handle these gracefully.
 
 # Individual implementations
 Most apps in this project implement a version of the search API. Below are the lists of conditions for each individual implementation:
