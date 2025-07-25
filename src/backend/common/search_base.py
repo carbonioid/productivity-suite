@@ -87,35 +87,3 @@ def generic_string_match(condition, string):
         substring = substring.lower()
     
     return string.count(substring)
-
-# from user
-def eval_condition(condition, item):
-    if condition["type"] == "title":
-        text = condition["text"]
-        title = item["title"]
-        if not condition["case-sensitive"]:
-            title = title.lower()
-            text = text.lower()
-        
-        return text in title
-    
-    if condition["type"] == "body":
-        text = condition["text"]
-        body = item["entry"]
-        if not condition["case-sensitive"]:
-            body = body.lower()
-            text = text.lower()
-        
-        return text in body
-
-    if condition["type"] == "tag":
-        return condition["name"].lower() in item["tags"]
-
-    if condition["type"] == "rating":
-        for rating in item["ratings"]:
-            if rating["name"] == condition["name"] or condition["name"] is None and \
-                rating["value"] >= rating["min"] or rating["min"] is None and \
-                rating["value"] <= rating["max"] or rating["max"] is None:
-                return True
-        
-        return False
