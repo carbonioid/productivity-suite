@@ -1,6 +1,6 @@
 import csv, os
 from pathlib import Path
-from backend.timetracker.utils import hhmm_to_minutes, pathto
+from backend.timetracker.utils import hhmm_to_minutes, pathto, DIR_PATH
 
 def fetch_db_contents(scope: list):
     """
@@ -11,6 +11,11 @@ def fetch_db_contents(scope: list):
     Sorts them in order of start time.
     Returns None if one of the files in the scope doesn't exist.
     """
+
+    if scope == '*': # All files
+        scope = [pathto(file.split('.')[0]) for file in os.listdir(DIR_PATH) if os.path.splitext(file)[1] == '.csv']
+    else:
+        scope = [pathto(file) for file in scope.split(',')]
 
     final_json = {}
     for filename in scope: # Iterate through each day        

@@ -23,7 +23,7 @@ function initFormListeners() {
     /* Form submission */
     function loadResults() {       
         /* Helper function for loadSearchResults() call */     
-        loadSearchResults(searchCache, sortSelect.value, orderSelect.value == "ascending");
+        loadSearchResults(searchCache.results, sortSelect.value, orderSelect.value == "ascending");
     }
 
     async function submitForm() {
