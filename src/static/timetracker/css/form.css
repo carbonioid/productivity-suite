@@ -78,3 +78,35 @@ EDITING INDICATOR
 #day-editing-indicator {
     margin-right:1rem;
 }
+
+/*
+Mode select
+*/
+.page-mode-selector {
+    display:flex;
+    width:max-content;
+    margin-right:1rem;
+}
+
+.page-mode-selector div:first-child {
+    border-top-right-radius:0;
+    border-bottom-right-radius:0;
+}
+
+.page-mode-selector div:not(:first-child) {
+    border-top-left-radius:0;
+    border-bottom-left-radius:0;
+}
+
+.page-mode-selector div.selected {
+    color:var(--blue);
+}
+
+.page-mode-selector div:not(.selected) {
+    transition:color 0.15s ease-in-out;
+}
+
+.page-mode-selector div:not(.selected):hover {
+    background-color:transparent;
+    color:var(--lightblue);
+}

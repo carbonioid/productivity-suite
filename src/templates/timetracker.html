@@ -83,10 +83,16 @@
 
             <span id="editing-indicator" class="hidden">Editing "<span class="name-value"></span>" (<a class="editing-exit-button">exit</a>)</span>
         </p>
+
         <form class="form-body" action="#" data-mode="add">
-            <button class="icon-button hoverable" value="" id="add">
-                <span class="material-symbols-outlined" style="color:#1f1f1f;">add_circle</span>
-            </button>
+            <div class="page-mode-selector border">
+                <div class="selected icon-button" value="add">
+                    <span class="material-symbols-outlined">add_circle</span>
+                </div>
+                <div class="icon-button" value="search">
+                    <span class="material-symbols-outlined">document_search</span>
+                </div>
+            </div>
 
             <input class="border" type="text" placeholder="Activity name" style="width:15rem;" id="name">
 

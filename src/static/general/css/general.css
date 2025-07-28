@@ -24,6 +24,7 @@ body {
     --drop-shadow:rgba(0, 0, 0, .05);
 
     --blue:#5686e6;
+    --lightblue:color-mix(in srgb, var(--blue) 50%, white);
 
     --font-huge:1rem;
     --font-large:0.85rem;
