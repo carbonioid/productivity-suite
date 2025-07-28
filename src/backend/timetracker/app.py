@@ -95,7 +95,7 @@ def fetch_data():
     # Aliases: * for all data. Otherwise takes comma-separated filenames e.g. 2025-05-02,2025-05-03
     scope = request.headers['Scope']
 
-    data = fetch_db_contents(scope)
+    data = fetch_db_contents(scope.split(',') if scope != '*' else scope)
     if data is not None:
         return jsonify(data)
     else:

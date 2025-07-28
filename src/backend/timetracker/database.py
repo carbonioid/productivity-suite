@@ -15,7 +15,7 @@ def fetch_db_contents(scope: list):
     if scope == '*': # All files
         scope = [pathto(file.split('.')[0]) for file in os.listdir(DIR_PATH) if os.path.splitext(file)[1] == '.csv']
     else:
-        scope = [pathto(file) for file in scope.split(',')]
+        scope = [pathto(file) for file in scope]
 
     final_json = {}
     for filename in scope: # Iterate through each day        
@@ -136,7 +136,7 @@ def invalid(json, day, ignore=None):
     if '' in json.values(): return 'One or more of your fields is blank' # (2)
 
     start, end = hhmm_to_minutes(json['start']), hhmm_to_minutes(json['end'])
-    data = fetch_db_contents([pathto(day)])
+    data = fetch_db_contents([day])
     if data is None: return f"The requested file ({day}) does not exist" # (3)
 
     # Check no times overlap - (4)
@@ -153,8 +153,7 @@ def combination_check(filename):
     """
     Check if any parts of the databse need to be combined (items with same name & color that are adjacent and combine them.)
     """
-    filepath = pathto(filename)
-    data = fetch_db_contents([filepath])
+    data = fetch_db_contents([filename])
 
     # Check if the adjacent item has the same name - if so, merge
     prev_item = {'name': None, 'start': None, 'end': None, 'color': None}
@@ -168,4 +167,4 @@ def combination_check(filename):
         prev_item = row
     
     # Some IDs are now not sequential, which will mess with the rest of the code - fix this.
-    clean_file_ids(filepath)
+    clean_file_ids(pathto(filename))
