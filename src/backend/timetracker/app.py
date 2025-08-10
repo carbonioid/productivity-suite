@@ -94,7 +94,8 @@ def fetch_data():
     # We return the current contents of the the databases in the requested scope and return them.
     # Aliases: * for all data. Otherwise takes comma-separated filenames e.g. 2025-05-02,2025-05-03
     scope = request.headers['Scope']
-
+    if scope != '*':
+        scope = [pathto(filename) for filename in scope.split(',')]
     data = fetch_db_contents(scope)
     if data is not None:
         return jsonify(data)
