@@ -84,54 +84,56 @@
             <span id="editing-indicator" class="hidden">Editing "<span class="name-value"></span>" (<a class="editing-exit-button">exit</a>)</span>
         </p>
 
-        <form class="form-body" action="#" data-mode="add">
+        <nav class="form">
             <div class="page-mode-selector border">
-                <div class="selected icon-button" value="add">
+                <a class="icon-button" value="add" href="/timetracker?mode=add" id="add">
                     <span class="material-symbols-outlined">add_circle</span>
-                </div>
-                <div class="icon-button" value="search">
+                </a>
+                <a class="icon-button" value="search" href="/timetracker?mode=search" id="search">
                     <span class="material-symbols-outlined">document_search</span>
-                </div>
+                </a>
             </div>
-
-            <input class="border" type="text" placeholder="Activity name" style="width:15rem;" id="name">
-
-            <div class="vertical-line"></div>
-
-            <input class="border" type="time" style="width:3rem;" id="start" required data-auto="false">
-            <p>to</p>
-            <input class="border" type="time" style="width:3rem;" id="end" required>
-
-            <div class="vertical-line"></div>
-            <div class="tag-select border">
-                <input type="radio" name="tag" class="tag" style="--col:220, 220, 220" checked id="default-tag">
-                <input type="radio" name="tag" class="tag" style="--col:241, 154, 200"  title="Project">
-                <input type="radio" name="tag" class="tag" style="--col:219, 43, 78"    title="Physics">
-                <input type="radio" name="tag" class="tag" style="--col:250, 159, 78"   title="Chemistry">
-                <input type="radio" name="tag" class="tag" style="--col:242, 207, 31"   title="Coding">
-                <input type="radio" name="tag" class="tag" style="--col:127, 210, 81"   title="English">
-                <input type="radio" name="tag" class="tag" style="--col:8, 163, 153"    title="Misc. productive">
-                <input type="radio" name="tag" class="tag" style="--col:115, 191, 250"  title="ICT">
-                <input type="radio" name="tag" class="tag" style="--col:160, 148, 255">
-                <input type="radio" name="tag" class="tag" style="--col:141, 96, 191"   title="Psychology">
-                <input type="radio" name="tag" class="tag" style="--col:18, 72, 161"    title="Social">
-            </div>
-
-            <div class="display-options border">
-                <div class="switch hoverable icon-button" id="rigid-mode">
-                    <span class="material-symbols-outlined second" style="color:#1f1f1f;">timer</span>
-                    <span class="material-symbols-outlined first" style="color:#1f1f1f;">timer_off</span>
+    
+            <form class="form-body" action="#" data-mode="add">
+                <input class="border" type="text" placeholder="Activity name" style="width:15rem;" id="name">
+    
+                <div class="vertical-line"></div>
+    
+                <input class="border" type="time" style="width:3rem;" id="start" required data-auto="false">
+                <p>to</p>
+                <input class="border" type="time" style="width:3rem;" id="end" required>
+    
+                <div class="vertical-line"></div>
+                <div class="tag-select border">
+                    <input type="radio" name="tag" class="tag" style="--col:220, 220, 220" checked id="default-tag">
+                    <input type="radio" name="tag" class="tag" style="--col:241, 154, 200"  title="Project">
+                    <input type="radio" name="tag" class="tag" style="--col:219, 43, 78"    title="Physics">
+                    <input type="radio" name="tag" class="tag" style="--col:250, 159, 78"   title="Chemistry">
+                    <input type="radio" name="tag" class="tag" style="--col:242, 207, 31"   title="Coding">
+                    <input type="radio" name="tag" class="tag" style="--col:127, 210, 81"   title="English">
+                    <input type="radio" name="tag" class="tag" style="--col:8, 163, 153"    title="Misc. productive">
+                    <input type="radio" name="tag" class="tag" style="--col:115, 191, 250"  title="ICT">
+                    <input type="radio" name="tag" class="tag" style="--col:160, 148, 255">
+                    <input type="radio" name="tag" class="tag" style="--col:141, 96, 191"   title="Psychology">
+                    <input type="radio" name="tag" class="tag" style="--col:18, 72, 161"    title="Social">
                 </div>
-                <div class="switch hoverable icon-button" id="compact-mode">
-                    <span class="material-symbols-outlined first" style="color:#1f1f1f;">compress</span>
-                    <span class="material-symbols-outlined second" style="color:#1f1f1f;">expand</span>
+    
+                <div class="display-options border">
+                    <div class="switch hoverable icon-button" id="rigid-mode">
+                        <span class="material-symbols-outlined second" style="color:#1f1f1f;">timer</span>
+                        <span class="material-symbols-outlined first" style="color:#1f1f1f;">timer_off</span>
+                    </div>
+                    <div class="switch hoverable icon-button" id="compact-mode">
+                        <span class="material-symbols-outlined first" style="color:#1f1f1f;">compress</span>
+                        <span class="material-symbols-outlined second" style="color:#1f1f1f;">expand</span>
+                    </div>
+                    <div class="switch hoverable icon-button" id="show-others">
+                        <span class="material-symbols-outlined first" style="color:#1f1f1f;">visibility</span>
+                        <span class="material-symbols-outlined second" style="color:#1f1f1f;">visibility_off</span>
+                    </div>
                 </div>
-                <div class="switch hoverable icon-button" id="show-others">
-                    <span class="material-symbols-outlined first" style="color:#1f1f1f;">visibility</span>
-                    <span class="material-symbols-outlined second" style="color:#1f1f1f;">visibility_off</span>
-                </div>
-            </div>
-        </form>
+            </form>
+        </nav>
 
         <div class="parent-container"></div>
         <div class="errorbox hidden"></div>

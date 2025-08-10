@@ -1,6 +1,11 @@
 /*
 MAIN FORM
 */
+nav.form {
+    display:flex;
+    gap:1rem;
+}
+
 .form-body {
     display:inline-flex;
     align-items:center;
@@ -12,10 +17,6 @@ MAIN FORM
 
 .form-body p {
     margin:0 0.5rem;
-}
-
-.form-body #add {
-    margin-right:0.5rem;
 }
 
 /* Tags */
@@ -85,28 +86,35 @@ Mode select
 .page-mode-selector {
     display:flex;
     width:max-content;
-    margin-right:1rem;
+    height:max-content;
 }
 
-.page-mode-selector div:first-child {
+.page-mode-selector a {
+    transition:color 0.15s ease-in-out;
+    text-decoration: none;
+    color:black;
+}
+
+.page-mode-selector a:first-child {
     border-top-right-radius:0;
     border-bottom-right-radius:0;
 }
 
-.page-mode-selector div:not(:first-child) {
+.page-mode-selector a:not(:first-child) {
     border-top-left-radius:0;
     border-bottom-left-radius:0;
 }
 
-.page-mode-selector div.selected {
+.page-mode-selector a.selected {
     color:var(--blue);
 }
 
-.page-mode-selector div:not(.selected) {
-    transition:color 0.15s ease-in-out;
-}
-
-.page-mode-selector div:not(.selected):hover {
+.page-mode-selector a:not(.selected):hover {
     background-color:transparent;
     color:var(--lightblue);
 }
+
+input[type="time"]::-webkit-calendar-picker-indicator {
+    display:none;
+}
+ 

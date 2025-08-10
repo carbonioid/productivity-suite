@@ -1,5 +1,5 @@
 import { addFormListeners } from "./listeners.js";
-import { addDayEditIndicator } from "./form.js"
+import { addDayEditIndicator, getPageMode } from "./form.js"
 import { populateContent } from "./compile.js"
 import { populateCache } from "./cache.js";
 import { init } from "../../general/js/display.js";
@@ -46,3 +46,8 @@ const params = url.searchParams;
 if (params.has('date')) {
     addDayEditIndicator(params.get('date'))
 }
+
+// Get ?mode if exists and select appropriate item
+const mode = getPageMode();
+const button = document.getElementById(mode)
+button.classList.add("selected")
