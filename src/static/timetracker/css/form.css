@@ -78,3 +78,7 @@ EDITING INDICATOR
 #day-editing-indicator {
     margin-right:1rem;
 }
+
+input[type="time"]::-webkit-calendar-picker-indicator {
+   display:none;
+}
