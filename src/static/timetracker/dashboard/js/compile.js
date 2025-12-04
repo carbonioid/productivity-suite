@@ -4,14 +4,15 @@ It also handles adding, editing and deleting elements.
 */
 
 export { addElement, editElement, deleteElement, load, initialiseContainers, populateContent };
-import { format_mins, duration, dayOfWeek } from './utils.js'
-import { format_yyyymmdd } from '../../general/js/utils.js';
+import { format_mins, duration, dayOfWeek } from '../../js/utils.js'
+import { format_yyyymmdd } from '../../../general/js/utils.js';
 import { registerWeekCollapseIcon, registerEditing, registerAddToButton } from "./listeners.js";
-import { registerPopup, registerContextMenu } from "../../general/js/popup.js"
-import { fetchDay, getDay, getAllEntryDates } from "./cache.js"
-import { loadTemplate } from '../../general/js/template.js';
-import { getDisplayOptions } from '../../general/js/display.js';
-import { addElement, editElement, deleteElement } from "./api.js"
+import { registerPopup, registerContextMenu } from "../../../general/js/popup.js"
+import { fetchDay, getDay, getAllEntryDates } from "../../js/cache.js"
+import { loadTemplate } from '../../../general/js/template.js';
+import { getDisplayOptions } from '../../../general/js/display.js';
+import { addElement, editElement, deleteElement } from "../../js/api.js"
+import { showEmptyMessage } from '../../../general/js/messages.js';
 
 function addEntryPadding(entries) {
   /*
@@ -88,7 +89,6 @@ function initialiseContainers(names) {
 }
 
 /* Load day content */
-
 function loadItem(id, name, start, end, color, container) {
   /*
   Add element HTML with the passed data to the correct container (i.e., day)

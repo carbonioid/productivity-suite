@@ -2,12 +2,12 @@
 This file handles the main form of the page. Some functionality is exported to ui.js
 */
 export { addDayEditIndicator, exitEditMode, enterEditMode, detectColor, setFormContent, getFormContent,
-          submitForm, startAddingTo, getPageMode }
+          submitForm, startAddingTo }
 import { addElement, editElement, deleteElement } from "./compile.js";
-import { hideEmptyMessage } from "../../general/js/messages.js";
-import { parseElementApiInfo } from "./utils.js";
-import { getDay } from "./cache.js";
-import { date_to_yyyymmdd, format_yyyymmdd } from "../../general/js/utils.js";
+import { hideEmptyMessage } from "../../../general/js/messages.js";
+import { parseElementApiInfo } from "../../js/utils.js";
+import { getDay } from "../../js/cache.js";
+import { date_to_yyyymmdd, format_yyyymmdd } from "../../../general/js/utils.js";
 
 // "dictionary" of colors for different bits of text
 let colors = [
@@ -37,13 +37,6 @@ function detectColor(text) {
 /*
 Functions for getting and setting main form content - used exclusively by this file.
 */
-function getPageMode() {
-  const urlParams = new URLSearchParams(window.location.search);
-  const mode = urlParams.get('mode');
-  if (["add", "search"].includes(mode)) return mode
-  else return "add"
-}
-
 function getFormContent() {
   let form = document.querySelector(".form-body");
   let name = form.querySelector('#name').value;

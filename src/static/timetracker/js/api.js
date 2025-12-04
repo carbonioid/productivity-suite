@@ -1,6 +1,6 @@
 export { addElement, editElement, deleteElement }
 import { getAllDays } from "./utils.js";
-import { load } from "./compile.js";
+import { load } from "../dashboard/js/compile.js";
 /* Query API and reload days */
 
 async function addElement(name, start, end, color, day) {

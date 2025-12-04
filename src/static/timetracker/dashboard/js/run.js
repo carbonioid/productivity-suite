@@ -1,8 +1,8 @@
 import { addFormListeners } from "./listeners.js";
-import { addDayEditIndicator, getPageMode } from "./form.js"
+import { addDayEditIndicator } from "./form.js"
 import { populateContent } from "./compile.js"
-import { populateCache } from "./cache.js";
-import { init } from "../../general/js/display.js";
+import { populateCache } from "../../js/cache.js";
+import { init } from "../../../general/js/display.js";
 
 /*
 This file co-ordinates any functions that need to be run (boileplate or otherwise)
@@ -46,8 +46,3 @@ const params = url.searchParams;
 if (params.has('date')) {
     addDayEditIndicator(params.get('date'))
 }
-
-// Get ?mode if exists and select appropriate item
-const mode = getPageMode();
-const button = document.getElementById(mode)
-button.classList.add("selected")

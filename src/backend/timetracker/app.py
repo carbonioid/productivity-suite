@@ -16,6 +16,10 @@ def main():
 
     return render_template("timetracker.html")
 
+@timetracker_bp.route("/searching")
+def searching():
+    return render_template("searching.html")
+
 # This part of the code keeps a live, up-to-date version of the current data on-screen
 # so that it isn't lost on refresh and can be loaded when the page is opened after being closed
 # It is stored in the res/ folder

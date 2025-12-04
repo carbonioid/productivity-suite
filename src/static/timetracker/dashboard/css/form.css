@@ -1,20 +1,6 @@
 /*
 MAIN FORM
 */
-nav.form {
-    display:flex;
-    gap:1rem;
-}
-
-.form-body {
-    display:inline-flex;
-    align-items:center;
-    vertical-align: top;
-    margin-bottom:1.75rem;
-    width:100%;
-    position:relative;
-}
-
 .form-body p {
     margin:0 0.5rem;
 }
@@ -79,42 +65,3 @@ EDITING INDICATOR
 #day-editing-indicator {
     margin-right:1rem;
 }
-
-/*
-Mode select
-*/
-.page-mode-selector {
-    display:flex;
-    width:max-content;
-    height:max-content;
-}
-
-.page-mode-selector a {
-    transition:color 0.15s ease-in-out;
-    text-decoration: none;
-    color:black;
-}
-
-.page-mode-selector a:first-child {
-    border-top-right-radius:0;
-    border-bottom-right-radius:0;
-}
-
-.page-mode-selector a:not(:first-child) {
-    border-top-left-radius:0;
-    border-bottom-left-radius:0;
-}
-
-.page-mode-selector a.selected {
-    color:var(--blue);
-}
-
-.page-mode-selector a:not(.selected):hover {
-    background-color:transparent;
-    color:var(--lightblue);
-}
-
-input[type="time"]::-webkit-calendar-picker-indicator {
-    display:none;
-}
- 

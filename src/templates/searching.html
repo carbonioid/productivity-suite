@@ -1,0 +1,19 @@
+<head>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+
+    <link href="{{ url_for('static', filename='general/css/general.css') }}" rel="stylesheet" />
+    <link href="{{ url_for('static', filename='timetracker/css/genericform.css') }}" rel="stylesheet" />
+</head>
+<body>
+    <nav class="form">
+        <div class="page-mode-selector border">
+            <a class="icon-button" value="add" href="/timetracker" id="add">
+                <span class="material-symbols-outlined">add_circle</span>
+            </a>
+            <a class="icon-button selected" value="search" href="/timetracker/searching" id="search">
+                <span class="material-symbols-outlined">document_search</span>
+            </a>
+        </div>
+        <input type="text" class="border" placeholder="Search text">
+    </nav>
+</body>

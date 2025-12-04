@@ -2,9 +2,9 @@
 This file holds all functions for adding event listeners to objects.
 */
 export { registerWeekCollapseIcon, registerAddToButton, registerEditing, addFormListeners }
-import { date_to_yyyymmdd } from "../../general/js/utils.js";
-import { getAllDays } from "./utils.js";
-import { getCookies } from "../../general/js/utils.js";
+import { date_to_yyyymmdd } from "../../../general/js/utils.js";
+import { getAllDays } from "../../js/utils.js";
+import { getCookies } from "../../../general/js/utils.js";
 import { exitEditMode, enterEditMode, detectColor, setFormContent, submitForm, startAddingTo } from "./form.js"
 
 function registerWeekCollapseIcon(parent, button) {

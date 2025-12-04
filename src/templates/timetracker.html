@@ -2,15 +2,16 @@
 <head>
     <title>Timetracker</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="{{ url_for('static', filename='timetracker/js/run.js') }}" type="module"></script>
+    <script src="{{ url_for('static', filename='timetracker/dashboard/js/run.js') }}" type="module"></script>
     
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
     <link href="{{ url_for('static', filename='timetracker/favicon.ico') }}" rel="shortcut icon" />
 
     <link href="{{ url_for('static', filename='general/css/general.css') }}" rel="stylesheet" />
-    <link href="{{ url_for('static', filename='timetracker/css/form.css') }}" rel="stylesheet" />
-    <link href="{{ url_for('static', filename='timetracker/css/popups.css') }}" rel="stylesheet" />
-    <link href="{{ url_for('static', filename='timetracker/css/days.css') }}" rel="stylesheet" />
+    <link href="{{ url_for('static', filename='timetracker/dashboard/css/form.css') }}" rel="stylesheet" />
+    <link href="{{ url_for('static', filename='timetracker/dashboard/css/popups.css') }}" rel="stylesheet" />
+    <link href="{{ url_for('static', filename='timetracker/dashboard/css/days.css') }}" rel="stylesheet" />
+    <link href="{{ url_for('static', filename='timetracker/css/genericform.css') }}" rel="stylesheet" />
 
     <template id="week-container-template">
         <div class="week-container">
@@ -86,10 +87,10 @@
 
         <nav class="form">
             <div class="page-mode-selector border">
-                <a class="icon-button" value="add" href="/timetracker?mode=add" id="add">
+                <a class="icon-button selected" value="add" href="/timetracker" id="add">
                     <span class="material-symbols-outlined">add_circle</span>
                 </a>
-                <a class="icon-button" value="search" href="/timetracker?mode=search" id="search">
+                <a class="icon-button" value="search" href="/timetracker/searching" id="search">
                     <span class="material-symbols-outlined">document_search</span>
                 </a>
             </div>
